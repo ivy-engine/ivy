@@ -21,13 +21,15 @@ const floor = new Box({
 testScene.add([floor, box, box2]);
 
 box.draw = ({mesh: {position, rotation}}) => {
-  const delta = Math.sin(Date.now() / 1000) * 2;
+  const delta = Math.sin(Date.now() / 1000);
   position.set(delta, 2, delta);
   rotation.setFromVector3(position);
 }
 
-box2.draw = ({mesh: {rotation}}) => {
-  rotation.x = Math.sin(Date.now() / 1000) * 2;
+box2.draw = ({mesh: {rotation, position}}) => {
+  rotation.x = Math.sin(Date.now() / 2000) * 2;
+  rotation.z = Math.sin(Date.now() / 2000) * 2;
+  position.y = Math.sin(Date.now() / 1000);
 }
 
 

@@ -1,11 +1,12 @@
-import IvyRenderer from "../ivy-core/renderer";
+import IvyRenderer, { IvyRendererOptions } from "../ivy-core/renderer";
 import { Box } from "../ivy-core/Elements/Box";
-import { AmbientLight, BoxGeometry, DirectionalLight, HemisphereLight, Mesh, PCFSoftShadowMap, PerspectiveCamera, Scene, SpotLight, WebGLRenderer } from "three";
+import { AmbientLight, BoxGeometry, DirectionalLight, HemisphereLight, Mesh, PCFSoftShadowMap, PerspectiveCamera, Scene, ShaderChunk, SpotLight, WebGLRenderer } from "three";
+import initPCSS from "./shaders/PCSS/initPCSS";
 
 var scene = new Scene();
-const camera = new PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.25, 400 );
-camera.position.set( 0, 2, 16 );
-
+const camera = new PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.25, 400 );
+camera.position.set( 0, 2, 12 );
+camera.rotateX( - Math.PI / 20 );
 
 scene.add( new AmbientLight( 0x666666 ) );
 
@@ -29,8 +30,16 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = PCFSoftShadowMap; // default THREE.PCFShadowMap
 
 export default class IvyThree implements IvyRenderer{
-  constructor(element: HTMLElement) {
+  constructor(element: HTMLElement, options: IvyRendererOptions = {}) {
+    if (options.shadowmapPreset === 'pcss') {
+      this.loadPCSS();
+    }
+
     this.mount(element);
+  }
+ 
+  loadPCSS = () => {
+    initPCSS();   
   }
 
   mount(element: HTMLElement): void {

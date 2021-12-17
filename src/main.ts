@@ -6,7 +6,9 @@ import testScene from './demo/testScene';
 const app = document.querySelector<HTMLElement>('#ivy')!
 
 const ivy = new IvyCore({
-  renderer: new IvyThree(app),
+  renderer: new IvyThree(app, {
+    shadowmapPreset: 'pcss'
+  }), 
 });
 
 ivy.loadScene(testScene);

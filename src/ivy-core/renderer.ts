@@ -1,6 +1,10 @@
 import { Mesh } from "three";
 import { Box, BoxOptions } from "./Elements/Box";
 
+export interface IvyRendererOptions {
+    shadowmapPreset?: 'default' | 'pcss'
+}
+
 export default abstract class IvyRenderer {
     constructor() {}
 
