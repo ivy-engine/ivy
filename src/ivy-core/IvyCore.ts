@@ -31,16 +31,20 @@ export default class IvyCore {
 
   refresh = () =>{
     stats.begin();
-    this.activeScene?.render();
-    this.options.renderer.render();
+    if (this.activeScene) {
+      this.activeScene.render();
+      this.options.renderer.render(this.activeScene.rawScene, this.activeScene.camera);
+    }
     stats.end();
     requestAnimationFrame( this.refresh );
   }
 
   setupResponsiveScreen = () => {
+    this.options.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.options.renderer.setPixelRatio(window.devicePixelRatio);
+    
     window.addEventListener('resize', () => {
-      this.options.renderer.setSize(window.innerWidth, window.innerHeight);
-      this.options.renderer.setPixelRatio(window.devicePixelRatio);
+      this.activeScene?.setSize(window.innerWidth, window.innerHeight);
     });
   }
 }

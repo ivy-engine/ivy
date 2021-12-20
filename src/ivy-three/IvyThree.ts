@@ -1,24 +1,7 @@
 import IvyRenderer, { IvyRendererOptions } from "../ivy-core/renderer";
 import { Box } from "../ivy-core/Elements/Box";
-import { AmbientLight, BoxGeometry, DirectionalLight, HemisphereLight, Mesh, PCFSoftShadowMap, PerspectiveCamera, Scene, ShaderChunk, SpotLight, WebGLRenderer } from "three";
+import { AmbientLight, BoxGeometry, Camera, DirectionalLight, HemisphereLight, Mesh, Object3D, PCFSoftShadowMap, PerspectiveCamera, Scene, ShaderChunk, SpotLight, WebGLRenderer } from "three";
 import initPCSS from "./shaders/PCSS/initPCSS";
-
-var scene = new Scene();
-const camera = new PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.25, 400 );
-camera.position.set( 0, 2, 12 );
-camera.rotateX( - Math.PI / 20 );
-
-scene.add( new AmbientLight( 0x666666 ) );
-
-const light = new DirectionalLight( 0xdfebff, 1.75 );
-light.position.set( 0, 8, 0 );
-
-scene.add(light)
-
-light.castShadow = true;
-light.shadow.mapSize.width = 1024;
-light.shadow.mapSize.height = 1024;
-light.shadow.camera.far = 20;
 
 // scene.add( new AxesHelper(500));
 
@@ -47,23 +30,13 @@ export default class IvyThree implements IvyRenderer{
     element.appendChild( renderer.domElement );
   }
 
-  drawBox(box: Box): Mesh {
-    const {mesh} = box;
-    mesh.material = box.material;
-    mesh.castShadow = true; 
-    mesh.receiveShadow = true; 
-    scene.add( mesh );
-    return mesh;
-  }
-
-  render(): void {
+  render(scene: Object3D, camera: Camera): void {
     renderer.render( scene, camera );
   }
 
-
   setSize(width: number, height: number): void {
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
+    // camera.aspect = width / height;
+    // camera.updateProjectionMatrix();
 
     renderer.setSize( width, height );
   }
