@@ -1,5 +1,4 @@
-import { Camera, Mesh, Object3D } from "three";
-import { Box, BoxOptions } from "./Elements/Box";
+import { Camera, Object3D } from "three";
 
 export interface IvyRendererOptions {
     shadowmapPreset?: 'default' | 'pcss'

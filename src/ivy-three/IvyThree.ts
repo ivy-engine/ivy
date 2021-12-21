@@ -1,5 +1,4 @@
 import IvyRenderer, { IvyRendererOptions } from "../ivy-core/renderer";
-import { Box } from "../ivy-core/Elements/Box";
 import { AmbientLight, BoxGeometry, Camera, DirectionalLight, HemisphereLight, Mesh, Object3D, PCFSoftShadowMap, PerspectiveCamera, Scene, ShaderChunk, SpotLight, WebGLRenderer } from "three";
 import initPCSS from "./shaders/PCSS/initPCSS";
 

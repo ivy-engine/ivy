@@ -1,5 +1,5 @@
 import IvyRenderer from "./renderer";
-import IvyScene from "./Scene/Scene";
+import IvyScene from "./Scene/IvyScene";
 import Stats from 'stats.js'
 
 var stats = new Stats();
@@ -32,8 +32,11 @@ export default class IvyCore {
   refresh = () =>{
     stats.begin();
     if (this.activeScene) {
+      const camera = this.activeScene.camera;
+      if (!camera.object) return; 
+
       this.activeScene.render();
-      this.options.renderer.render(this.activeScene.rawScene, this.activeScene.camera);
+      this.options.renderer.render(this.activeScene.rawScene, camera.object);
     }
     stats.end();
     requestAnimationFrame( this.refresh );
