@@ -16,25 +16,34 @@ const box = new IvyBox({
   group: true, 
   color: new Color(0x00ff00),
   scale: new Vector3(0.5, 0.5, 4),
+  rotation: new Euler(0, Math.PI / 2, 0),
 });
+
 
 const box2 = new IvyBox({
   group: true,
-  position: new Vector3(0, 1, 0),
- rotation: new Euler(0, 0, -Math.PI / 2),
-  color: new Color(0x00ffff)
-});
+  rotation: new Euler(0, 0, -Math.PI / 2),
+  position: new Vector3(0, 0.25, 0),
+  geometry: new BoxGeometry(2, 0.2, 0.2),
+  color: new Color(0x0000ff)
+})
+box2.mesh.position.x = -1
 
 const box3 = new IvyBox({
  group: true, 
-  position: new Vector3(-1.5, 0, 0),
-  color: new Color(0xfff000)
+  position: new Vector3(-2, 0, 0),
+  geometry: new BoxGeometry(2, 0.2, 0.2),
+  color: new Color(0x00ff00)
 });
+box3.mesh.position.x = -1
 
 const box4 = new IvyBox({
-  position: new Vector3(-1.5, 0, 0),
-  color: new Color(0xbada55)
+ group: true, 
+  position: new Vector3(-2, 0, 0),
+  geometry: new BoxGeometry(2, 0.2, 0.2),
+  color: new Color(0xff0000)
 });
+box4.mesh.position.x = -1
 
 box.add(box2);
 box2.add(box3);
@@ -53,19 +62,15 @@ box.draw = ({group}) => {
   }
 }
 
-box2.draw = ({group}) => {
-  if (group) {
-    // group.rotation.y = Math.sin(Date.now() / 1000) * 0.5;
-  }
-}
-
 box3.draw = ({group}) => {
   if (group) {
     group.rotation.y = Math.sin(Date.now() / 1000) * 0.5;
   }
 }
-box4.draw = ({mesh}) => {
-    mesh.rotation.y = Math.sin(Date.now() / 1000) * 0.5;
+box4.draw = ({group}) => {
+  if (group) {
+    group.rotation.y = Math.sin(Date.now() / 1000) * 0.5;
+  }
 }
 
 

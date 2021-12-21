@@ -75,6 +75,7 @@ export default abstract class Abstract<TOptions extends AbstractBaseOption> {
 
   addToScene(renderer: IvyRenderer, scene?: ThreeScene) {
     if (!this.object) return;
+    
 
     if (this.group) {
       this.children.forEach((item) => item.create(renderer));
