@@ -1,12 +1,18 @@
 import IvyCore from './ivy-core/IvyCore'
 import IvyThree from './ivy-three/IvyThree';
 import './style.css'
-import testScene from './demo/testScene';
+import basicScene from './demo/basic';
+import physicsScene from './demo/physicsScene';
+import { IvyBox } from './ivy-core/Elements/IvyBox';
 
 const app = document.querySelector<HTMLElement>('#ivy')!
 
 const ivy = new IvyCore({
-  renderer: new IvyThree(app, {}), 
+  renderer: new IvyThree(app, {
+    // shadowmapPreset: 'pcss'
+  }), 
 });
 
-ivy.loadScene(testScene);
+
+
+ivy.loadScene(physicsScene);

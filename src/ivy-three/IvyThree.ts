@@ -9,7 +9,7 @@ var renderer = new WebGLRenderer({
 });
 
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = PCFSoftShadowMap; // default THREE.PCFShadowMap
+// renderer.shadowMap.type = PCFSoftShadowMap; // default THREE.PCFShadowMap
 
 export default class IvyThree implements IvyRenderer{
   constructor(element: HTMLElement, options: IvyRendererOptions = {}) {

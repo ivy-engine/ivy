@@ -25,14 +25,14 @@ export class IvyLight extends Abstract<IvyLightOptions> {
       position = new Vector3(3, 6, -3),
       type = 'directional',
     } = this.options;
-
+   
     let light;
     switch (type) {
       case 'directional':
         light = new DirectionalLight(color, intensity);
         light.shadow.camera.far = 20;
-        light.shadow.mapSize.width = 1024;
-        light.shadow.mapSize.height = 1024;
+        light.shadow.mapSize.width = 512;
+        light.shadow.mapSize.height = 512;
         light.position.copy(position);
         light.castShadow = true;
         break;

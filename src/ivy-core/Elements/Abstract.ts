@@ -79,13 +79,10 @@ export default abstract class Abstract<TOptions extends AbstractBaseOption> {
 
     if (this.group) {
       this.children.forEach((item) => item.create(renderer));
-      console.log("add to own group", this);
       scene?.add(this.group);
     } else if (this.parentGroup) {
-      console.log("add to parent group", this);
       this.parentGroup.add(this.group ?? this.object);
     } else {
-      console.log("add to scene", this);
       scene?.add(this.object);
     }
   }

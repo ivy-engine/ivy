@@ -9,7 +9,7 @@ const ambient = new IvyLight({
   type: 'ambient',
   intensity: 0.4,
 });
-testScene.add([light, ambient]);
+testScene.add([ambient, light]);
 
 const box = new IvyBox({
   name: 'box 1',
