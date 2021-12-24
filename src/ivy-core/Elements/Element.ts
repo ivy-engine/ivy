@@ -55,10 +55,8 @@ export default abstract class Element<
     this.mesh.material = this.material;
 
     if (this.physicsBody) {
-
     }
   }
-
 
   update = () => {
     this.draw?.(this);
@@ -67,7 +65,7 @@ export default abstract class Element<
   };
 
   draw?(element: Element<TOptions>): void;
- 
+
   /**
    * Physics
    */
@@ -84,14 +82,25 @@ export default abstract class Element<
     }
   }
 
-   applyAngularVelocity(x: number, y: number, z: number) {
+  applyAngularVelocity(x: number, y: number, z: number) {
     const body = this.physicsBody;
     if (body) {
-     console.log(body) 
-      var directionVector = new Vec3(x,y,z);
-      var directionVector = body.quaternion.vmult( directionVector );
-  
-      body.angularVelocity.set( directionVector.x, directionVector.y, directionVector.z );
+      var directionVector = new Vec3(x, y, z);
+      var directionVector = body.quaternion.vmult(directionVector);
+
+      body.angularVelocity.set(
+        directionVector.x,
+        directionVector.y,
+        directionVector.z
+      );
+    }
+  }
+
+  applyDirectionalVelocity(x: number, y: number, z: number) {
+    const body = this.physicsBody;
+    if (body) {
+      const impulse = new Vec3(z, y, x)
+      body.applyLocalImpulse(impulse);
     }
   }
 }

@@ -19,9 +19,10 @@ physicsScene.add([light, ambient]);
 
 const floorMaterial = new Material("tile");
 const floor = new IvyBox({
-  geometry: new BoxGeometry(12, 0.1, 12),
+  geometry: new BoxGeometry(400, 0.1, 400),
   physicsMaterial: floorMaterial,
   mass: 0,
+  color: new Color(0x333333),
 });
 
 const tileMaterial = new Material("tile");
@@ -47,23 +48,20 @@ const cubes = Array.from({ length: max }, (_, i) => {
   const y = r * Math.sin(theta * i);
   const rotate = -((i * Math.PI) / max) * 2 + Math.PI / 2;
   return new IvyBox({
-    position: new Vector3(x, 1, y),
+    position: new Vector3(x, 0.66, y),
     geometry: new BoxGeometry(0.1, 1.2, 0.5),
     rotation: new Euler(0, rotate, 0),
     physicsMaterial: tileMaterial,
     color: new Color(Math.random() * (0xffffff / 2)),
-    mass: 1,
+    mass: 1
   });
 });
 
 physicsScene.add([floor, ...cubes]);
 
 physicsScene.onSceneReady = () => {
-  console.log('init')
-  setTimeout(() => {
-    const rndCube = cubes[Math.floor(Math.random() * cubes.length)];
-    rndCube.applyAngularVelocity(0, 0, -2);
-  }, 200) 
+  const rndCube = cubes[Math.floor(Math.random() * cubes.length)];
+  rndCube.applyAngularVelocity(0, 0, -5);
 }
 
 export default physicsScene;

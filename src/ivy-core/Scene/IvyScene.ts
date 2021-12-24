@@ -29,7 +29,7 @@ export default class IvyScene {
 
   setupPhysics() {
     this.physicsWorld = new World()
-    this.physicsWorld.gravity.set(0, -9.82, 0)
+    this.physicsWorld.gravity.set(0, this.gravity, 0)
   }
 
   add(element: StackItem | Abstract<ElementBaseOption>[]): void {
