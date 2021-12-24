@@ -65,9 +65,9 @@ export default abstract class Abstract<TOptions extends AbstractBaseOption> {
 
   drawChildren = () => {
     if (this.group) {
-      this.children.forEach((element) => {
+      for (const element of this.children) {
         element.update();
-      });
+      };
     }
   };
 
@@ -78,7 +78,9 @@ export default abstract class Abstract<TOptions extends AbstractBaseOption> {
     
 
     if (this.group) {
-      this.children.forEach((item) => item.create(renderer));
+      for (const item of this.children) {
+        item.create(renderer)
+      }
       scene?.add(this.group);
     } else if (this.parentGroup) {
       this.parentGroup.add(this.group ?? this.object);

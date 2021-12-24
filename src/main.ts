@@ -15,4 +15,5 @@ const ivy = new IvyCore({
 
 
 
-ivy.loadScene(physicsScene);
+// ivy.loadScene(physicsScene);
+ivy.loadScene(basicScene);

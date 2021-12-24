@@ -28,13 +28,15 @@ export default class IvyScene {
   }
 
   setupPhysics() {
-    this.physicsWorld = new World()
-    this.physicsWorld.gravity.set(0, this.gravity, 0)
+    if (this.physics) {
+      this.physicsWorld = new World()
+      this.physicsWorld.gravity.set(0, this.gravity, 0)
+    }
   }
 
   add(element: StackItem | Abstract<ElementBaseOption>[]): void {
     let list = Array.isArray(element) ? element : [element];
-    list.forEach((element) => {
+    for (const element of list) {
         element.scene = this;
         if (element.group) {
             this.rawScene.add(element.group);
@@ -46,13 +48,13 @@ export default class IvyScene {
 
         element.scene = this;
         this.stack.push(element);
-    });
+    };
   }
 
   create(options: { renderer: IvyRenderer }) {
-    this.stack.forEach((element) => {
+    for (const element of this.stack) {
       element.create(options.renderer, scene);
-    });
+    };
   }
 
   render = () => {
@@ -60,9 +62,9 @@ export default class IvyScene {
       const delta = Math.min(clock.getDelta(), 0.1)
       this.physicsWorld.step(delta)  
     }
-    this.stack.forEach((element) => {
+    for (const element of this.stack) {
       element.update();
-    });
+    };
 
     if (this.initialRender) {
       this.initialRender = false;

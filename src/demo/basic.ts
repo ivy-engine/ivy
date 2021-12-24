@@ -3,7 +3,9 @@ import { IvyBox } from "../ivy-core/Elements/IvyBox";
 import { IvyLight } from "../ivy-core/Elements/IvyLight";
 import IvyScene from "../ivy-core/Scene/IvyScene";
 
-const testScene = new IvyScene();
+const testScene = new IvyScene({
+  physics: false,
+});
 const light = new IvyLight();
 const ambient = new IvyLight({
   type: 'ambient',
@@ -52,6 +54,7 @@ box3.add(box4)
 const floor = new IvyBox({
   geometry: new BoxGeometry(10, 0.1, 10),
   position: new Vector3(0, -0.5, 0),
+ color: new Color(0xffffff), 
 });
 
 testScene.add([floor, box]);
@@ -62,16 +65,18 @@ box.draw = ({group}) => {
   }
 }
 
-box3.draw = ({group}) => {
+box2.draw = ({group}) => {
   if (group) {
-    group.rotation.y = Math.sin(Date.now() / 1000) * 0.5;
+    group.rotation.x = Math.sin(Date.now() / 1000) * 0.5;
   }
-}
-box4.draw = ({group}) => {
-  if (group) {
-    group.rotation.y = Math.sin(Date.now() / 1000) * 0.5;
-  }
-}
+} 
 
+[box3, box4].forEach(b => {
+  b.draw = ({group}) => {
+    if (group) {
+      group.rotation.y = Math.sin(Date.now() / 1000) * 0.5;
+    }
+  } 
+})
 
 export default testScene;
