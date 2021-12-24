@@ -12,7 +12,7 @@ import {
 import IvyScene from "../Scene/IvyScene";
 import IvyRenderer from "../renderer";
 import Abstract from "./Abstract";
-import { Body, Material } from "cannon-es";
+import { Body, Material, Vec3 } from "cannon-es";
 
 export interface ElementBaseOption {
   name?: string;
@@ -59,6 +59,18 @@ export default abstract class Element<
     }
   }
 
+
+  update = () => {
+    this.draw?.(this);
+    this.updatePhysics();
+    this.drawChildren();
+  };
+
+  draw?(element: Element<TOptions>): void;
+ 
+  /**
+   * Physics
+   */
   updatePhysics() {
     const body = this.physicsBody;
     if (body) {
@@ -72,11 +84,14 @@ export default abstract class Element<
     }
   }
 
-  update = () => {
-    this.draw?.(this);
-    this.updatePhysics();
-    this.drawChildren();
-  };
-
-  draw?(element: Element<TOptions>): void;
+   applyAngularVelocity(x: number, y: number, z: number) {
+    const body = this.physicsBody;
+    if (body) {
+     console.log(body) 
+      var directionVector = new Vec3(x,y,z);
+      var directionVector = body.quaternion.vmult( directionVector );
+  
+      body.angularVelocity.set( directionVector.x, directionVector.y, directionVector.z );
+    }
+  }
 }

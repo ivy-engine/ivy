@@ -15,6 +15,7 @@ export default class IvyScene {
   camera: IvyCamera;
   physics: boolean; 
   physicsWorld?: World;
+  initialRender = true; 
   gravity = -9.82;
 
   constructor(options: {camera?: IvyCamera, physics?: boolean, gravity?: number} = {}) {
@@ -62,7 +63,14 @@ export default class IvyScene {
     this.stack.forEach((element) => {
       element.update();
     });
+
+    if (this.initialRender) {
+      this.initialRender = false;
+      this.onSceneReady();
+    }
   };
+
+  onSceneReady = () => {}
 
   // setSize = (width: number, height: number) => {
   //   camera.aspect = width / height;

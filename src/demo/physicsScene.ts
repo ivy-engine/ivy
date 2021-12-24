@@ -25,7 +25,6 @@ const floor = new IvyBox({
 });
 
 const tileMaterial = new Material("tile");
-
 const tileContact = new ContactMaterial(tileMaterial, tileMaterial, {
   friction: 0.006,
 });
@@ -57,8 +56,14 @@ const cubes = Array.from({ length: max }, (_, i) => {
   });
 });
 
-cubes[0].mesh.rotation.z = 3;
-
 physicsScene.add([floor, ...cubes]);
+
+physicsScene.onSceneReady = () => {
+  console.log('init')
+  setTimeout(() => {
+    const rndCube = cubes[Math.floor(Math.random() * cubes.length)];
+    rndCube.applyAngularVelocity(0, 0, -2);
+  }, 200) 
+}
 
 export default physicsScene;
