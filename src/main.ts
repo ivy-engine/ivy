@@ -4,7 +4,7 @@ import './style.css'
 import basicScene from './demo/basic';
 import physicsScene from './demo/physicsScene';
 import { IvyBox } from './ivy-core/Elements/IvyBox';
-import loaderScene from './demo/loader';
+import loaderScene from './demo/loaderScene';
 
 const app = document.querySelector<HTMLElement>('#ivy')!
 

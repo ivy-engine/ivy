@@ -4,6 +4,7 @@ import IvyElement, { ElementBaseOption } from "../Elements/IvyElement";
 import IvyRenderer from "../renderer";
 import { Clock, Scene } from "three";
 import { World } from "cannon-es";
+import { OrbitControls } from "../../ivy-three/controls/OrbitControls";
 
 var scene = new Scene();
 const clock = new Clock()
@@ -17,14 +18,22 @@ export default class IvyScene {
   physicsWorld?: World;
   initialRender = true; 
   gravity = -9.82;
+  controls = 'none' ;
 
-  constructor(options: {camera?: IvyCamera, physics?: boolean, gravity?: number} = {}) {
+  constructor(options: {camera?: IvyCamera, physics?: boolean, gravity?: number, controls? : 'orbit'} = {}) {
     const { camera = new IvyCamera() } = options;
 
     this.camera = camera
     this.physics = Boolean(options.physics);
     this.gravity = options.gravity ?? this.gravity;
+    this.controls = options.controls ?? this.controls;
     this.setupPhysics();
+  }
+
+  setupControls(renderer: IvyRenderer) {
+    if (this.controls === 'orbit') {
+      new OrbitControls( this.camera.object, renderer.renderer?.domElement );
+    }
   }
 
   setupPhysics() {
@@ -52,6 +61,7 @@ export default class IvyScene {
   }
 
   create(options: { renderer: IvyRenderer }) {
+    this.setupControls(options.renderer); 
     for (const element of this.stack) {
       element.create(options.renderer, scene);
     };

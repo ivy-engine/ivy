@@ -4,20 +4,19 @@ import initPCSS from "./shaders/PCSS/initPCSS";
 
 // scene.add( new AxesHelper(500));
 
-var renderer = new WebGLRenderer({
-  antialias: true
-});
-
-renderer.shadowMap.enabled = true;
 // renderer.shadowMap.type = PCFSoftShadowMap; // default THREE.PCFShadowMap
 
 export default class IvyThree implements IvyRenderer{
+  renderer= new WebGLRenderer({
+    antialias: true
+  }); 
   constructor(element: HTMLElement, options: IvyRendererOptions = {}) {
     if (options.shadowmapPreset === 'pcss') {
       this.loadPCSS();
     }
 
     this.mount(element);
+    this.renderer.shadowMap.enabled = true;
   }
  
   loadPCSS = () => {
@@ -25,22 +24,22 @@ export default class IvyThree implements IvyRenderer{
   }
 
   mount(element: HTMLElement): void {
-    renderer.setSize( window.innerWidth, window.innerHeight );
-    element.appendChild( renderer.domElement );
+    this.renderer.setSize( window.innerWidth, window.innerHeight );
+    element.appendChild( this.renderer.domElement );
   }
 
   render(scene: Object3D, camera: Camera): void {
-    renderer.render( scene, camera );
+    this.renderer.render( scene, camera );
   }
 
   setSize(width: number, height: number): void {
     // camera.aspect = width / height;
     // camera.updateProjectionMatrix();
 
-    renderer.setSize( width, height );
+    this.renderer.setSize( width, height );
   }
 
   setPixelRatio(ratio: number): void {
-    renderer.setPixelRatio( ratio );
+    this.renderer.setPixelRatio( ratio );
   }
 }

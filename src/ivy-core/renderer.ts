@@ -1,10 +1,12 @@
 import { Camera, Object3D } from "three";
+import IvyThree from "../ivy-three/IvyThree";
 
 export interface IvyRendererOptions {
     shadowmapPreset?: 'default' | 'pcss'
 }
 
 export default abstract class IvyRenderer {
+    renderer?: IvyThree;
     constructor() {}
 
     abstract mount(element: HTMLElement): void;

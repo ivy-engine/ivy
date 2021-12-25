@@ -1,5 +1,5 @@
 import { Body, Box, Vec3 } from "cannon-es";
-import { BoxGeometry, Mesh, MeshStandardMaterial, Scene, Vector3 } from "three";
+import { BoxGeometry, Color, Mesh, MeshStandardMaterial, Scene, Vector3 } from "three";
 import IvyRenderer from "../renderer";
 import IvyElement, { ElementBaseOption } from "./IvyElement";
 
@@ -17,7 +17,7 @@ export class IvyBox extends IvyElement<IvyBoxOptions> {
       this.material = new MeshStandardMaterial({ color: this.color });
       this.mesh.material = this.material;
 
-      if (this.scene?.physicsWorld) {
+      if (this.scene?.physicsWorld && typeof this.options.mass === "number") {
         const world = this.scene.physicsWorld;
         const { position, quaternion } = this.mesh;
         const { width, height, depth } = this.mesh.geometry.parameters;
