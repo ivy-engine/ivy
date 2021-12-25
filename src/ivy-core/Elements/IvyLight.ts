@@ -1,6 +1,6 @@
 import { AmbientLight, Color, DirectionalLight, Scene, Vector3 } from "three";
 import renderer from "../renderer";
-import Abstract from "./Abstract";
+import IvyAbstract from "./IvyAbstract";
 import { ElementBaseOption } from "./IvyElement";
 
 export interface IvyLightOptions extends ElementBaseOption {
@@ -13,7 +13,7 @@ export interface IvyLightOptions extends ElementBaseOption {
   type?: "directional" | "ambient" | "point" | "spot";
 }
 
-export class IvyLight extends Abstract<IvyLightOptions> {
+export class IvyLight extends IvyAbstract<IvyLightOptions> {
   constructor(options?: IvyLightOptions) {
     super(options ?? {});
   }
@@ -22,7 +22,7 @@ export class IvyLight extends Abstract<IvyLightOptions> {
     const {
       intensity = 1,
       color = 0xffffff,
-      position = new Vector3(3, 6, -3),
+      position = new Vector3(3, 6, 3),
       type = 'directional',
     } = this.options;
    
@@ -31,8 +31,8 @@ export class IvyLight extends Abstract<IvyLightOptions> {
       case 'directional':
         light = new DirectionalLight(color, intensity);
         light.shadow.camera.far = 20;
-        light.shadow.mapSize.width = 1024;
-        light.shadow.mapSize.height = 1024;
+        light.shadow.mapSize.width = 512;
+        light.shadow.mapSize.height = 512;
         light.position.copy(position);
         light.castShadow = true;
         break;

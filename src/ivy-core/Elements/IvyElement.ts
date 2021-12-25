@@ -8,10 +8,11 @@ import {
   Object3D,
   Vector3,
   Scene as ThreeScene,
+  AnimationMixer,
 } from "three";
 import IvyScene from "../Scene/IvyScene";
 import IvyRenderer from "../renderer";
-import Abstract from "./Abstract";
+import IvyAbstract from "./IvyAbstract";
 import { Body, Material, Vec3 } from "cannon-es";
 
 export interface ElementBaseOption {
@@ -28,7 +29,7 @@ export interface ElementBaseOption {
 
 export default abstract class IvyElement<
   TOptions extends ElementBaseOption
-> extends Abstract<TOptions> {
+> extends IvyAbstract<TOptions> {
   children: IvyElement<any>[] = [];
   mesh?: THREE.Mesh;
   material?: MeshStandardMaterial;
@@ -57,6 +58,9 @@ export default abstract class IvyElement<
 
   update = () => {
     this.draw?.(this);
+    if (this.mixer) {
+      this.mixer.update(0.01);
+    } 
     this.updatePhysics();
     this.drawChildren();
   };

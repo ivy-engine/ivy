@@ -16,10 +16,6 @@ import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import IvyRenderer from "../renderer";
 import IvyElement, { ElementBaseOption } from "./IvyElement";
 
-interface LoaderItem {
-  source: string;
-  loader: Loader;
-}
 export interface IvyLoaderOptions extends ElementBaseOption {
   obj: string;
   mtl?: string;
@@ -74,9 +70,17 @@ export class IvyLoaderOBJ extends IvyElement<IvyLoaderOptions> {
     // object.traverse(function (child) {
     //   if (child.isMesh) child.material.map = texture;
     // });
-
     const object = this.object;
+
+
     if (object) {
+      object.traverse(function (child) {
+        if (child.isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+      
       this.mesh = object;
       this.object = object;
       this.object?.position.copy(this.options.position ?? new Vector3());

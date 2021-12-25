@@ -1,4 +1,4 @@
-import { Euler, Group, Object3D, Vector3, Scene as ThreeScene } from "three";
+import { Euler, Group, Object3D, Vector3, Scene as ThreeScene, AnimationMixer } from "three";
 import IvyRenderer from "../renderer";
 import IvyScene from "../Scene/IvyScene";
 
@@ -10,11 +10,12 @@ export interface AbstractBaseOption {
   group?: boolean;
 }
 
-export default abstract class Abstract<TOptions extends AbstractBaseOption> {
+export default abstract class IvyAbstract<TOptions extends AbstractBaseOption> {
+  mixer?: AnimationMixer;
   name: string;
   object?: Object3D;
   options: TOptions;
-  children: Abstract<any>[] = [];
+  children: IvyAbstract<any>[] = [];
   group?: Group;
   scene?: IvyScene;
   parentGroup?: Group;
@@ -39,7 +40,7 @@ export default abstract class Abstract<TOptions extends AbstractBaseOption> {
     positioned.rotation.copy(this.options.rotation ?? new Euler());
   }
 
-  add = (element: Abstract<any>) => {
+  add = (element: IvyAbstract<any>) => {
     if (!this.group) {
       throw new Error(
         "Cannot add child to non-group element, add `group: true` to the element options"
@@ -59,6 +60,11 @@ export default abstract class Abstract<TOptions extends AbstractBaseOption> {
   };
 
   update = () => {
+    if (this.scene && this.mixer) {
+      this.mixer.update(this.scene?.delta);
+    }
+    // this.scene.del
+
     this.draw?.(this);
     this.drawChildren();
   };
@@ -94,5 +100,5 @@ export default abstract class Abstract<TOptions extends AbstractBaseOption> {
     this.addToScene(renderer, scene);
   }
 
-  draw?(element: Abstract<TOptions>): void;
+  draw?(element: IvyAbstract<TOptions>): void;
 }

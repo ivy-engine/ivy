@@ -1,6 +1,6 @@
 import { Camera, Color, DirectionalLight, Euler, Event, Object3D, PerspectiveCamera, Scene, Vector3 } from "three";
 import renderer from "../renderer";
-import Abstract from "./Abstract";
+import IvyAbstract from "./IvyAbstract";
 import { ElementBaseOption } from "./IvyElement";
 
 export interface IvyCameraOptions extends ElementBaseOption {
@@ -8,7 +8,7 @@ export interface IvyCameraOptions extends ElementBaseOption {
   rotation?: Euler;
 }
 
-export class IvyCamera extends Abstract<IvyCameraOptions> {
+export class IvyCamera extends IvyAbstract<IvyCameraOptions> {
   object?: Camera;
   constructor(options?: IvyCameraOptions) {
     super(options ?? {});
