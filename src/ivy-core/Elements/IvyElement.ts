@@ -9,6 +9,8 @@ import {
   Vector3,
   Scene as ThreeScene,
   AnimationMixer,
+  Matrix4,
+  InstancedMesh,
 } from "three";
 import IvyScene from "../Scene/IvyScene";
 import IvyRenderer from "../renderer";
@@ -25,14 +27,20 @@ export interface ElementBaseOption {
   group?: boolean;
   mass?: number;
   physicsMaterial?: Material;
+  material?: Material | MeshStandardMaterial;
+  instanced?: {
+    count: number;
+    createInstance: (element: Matrix4) => Matrix4;
+  };
 }
 
 export default abstract class IvyElement<
   TOptions extends ElementBaseOption
 > extends IvyAbstract<TOptions> {
   children: IvyElement<any>[] = [];
-  mesh = new Mesh();
-  material?: MeshStandardMaterial;
+  material?: Material | MeshStandardMaterial;
+  mesh: Mesh;
+  instanceMesh?: InstancedMesh;
   color?: Color;
   physicsBody?: Body;
   physicsMaterial?: Material;
@@ -40,19 +48,21 @@ export default abstract class IvyElement<
   constructor(options: TOptions) {
     super(options);
 
-
-    this.initMesh();
+    this.mesh = new Mesh();
+    if (this.options.instanced) {
+      this.initInstancedMesh();
+    } else {
+      this.initMesh();
+    }
     this.setPosition();
   }
 
   setup(renderer: IvyRenderer, scene?: ThreeScene) {
-    this.material = new MeshStandardMaterial({ color: this.color });
-   
+    this.material =
+      this.options.material ?? new MeshStandardMaterial({ color: this.color });
+
     if (this.mesh) {
       this.mesh.material = this.material;
-    }
-
-    if (this.physicsBody) {
     }
   }
 
@@ -60,13 +70,37 @@ export default abstract class IvyElement<
     this.draw?.(this);
     if (this.mixer) {
       this.mixer.update(0.01);
-    } 
+    }
     this.updatePhysics();
     this.drawChildren();
   };
 
   draw?(element: IvyElement<TOptions>): void;
   initMesh() {}
+
+  /**
+   * Instancing
+   */
+  initInstancedMesh() {
+    if (!this.options.instanced) {
+      return;
+    }
+
+    const { count, createInstance } = this.options.instanced;
+    this.instanceMesh = new InstancedMesh(
+      this.options.geometry ?? new BoxGeometry(1, 1, 1),
+      this.options.material ?? new MeshStandardMaterial({ color: this.color }),
+      count
+    );
+    const matrix = new Matrix4();
+
+    for (let i = 0; i < count; i++) {
+      const m = createInstance(matrix);
+      this.instanceMesh.setMatrixAt(i, m);
+    }
+
+    this.object = this.instanceMesh;
+  }
 
   /**
    * Physics
@@ -101,7 +135,7 @@ export default abstract class IvyElement<
   applyDirectionalVelocity(x: number, y: number, z: number) {
     const body = this.physicsBody;
     if (body) {
-      const impulse = new Vec3(z, y, x)
+      const impulse = new Vec3(z, y, x);
       body.applyLocalImpulse(impulse);
     }
   }

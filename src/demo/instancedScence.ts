@@ -6,6 +6,7 @@ import {
   MeshStandardMaterial,
   Vector3,
 } from "three";
+import { IvyBox } from "../ivy-core/Elements/IvyBox";
 import { IvyCamera } from "../ivy-core/Elements/IvyCamera";
 import IvyScene, { defaultLights } from "../ivy-core/Scene/IvyScene";
 
@@ -19,44 +20,39 @@ const instancedScene = new IvyScene({
   controls: "orbit",
 });
 
-const randomizeMatrix = (function () {
-  const position = new Vector3();
-  const rotation = new Euler();
+const position = new Vector3();
+const rotation = new Euler();
 
-  return function (matrix) {
-    position.x = Math.random() * 100 - 50;
-    position.y = Math.random() * 100 - 50;
-    position.z = Math.random() * 100 - 50;
+const createInstance = (matrix: Matrix4): Matrix4 => {
+  position.x = Math.random() * 200 - 10;
+  position.y = Math.random() * 200 - 10;
+  position.z = Math.random() * 200 - 10;
 
-    rotation.x = Math.random() * 2 * Math.PI;
-    rotation.y = Math.random() * 2 * Math.PI;
-    rotation.z = Math.random() * 2 * Math.PI;
+  rotation.x = Math.random() * 2 * Math.PI;
+  rotation.y = Math.random() * 2 * Math.PI;
+  rotation.z = Math.random() * 2 * Math.PI;
 
-    matrix.makeTranslation(position.x, position.y, position.z);
-    matrix.premultiply(new Matrix4().makeRotationFromEuler(rotation));
-  };
-})();
+  matrix.makeTranslation(position.x, position.y, position.z);
+  matrix.premultiply(new Matrix4().makeRotationFromEuler(rotation));
+  return matrix;
+}
 
+const InstancedBox = new IvyBox({
+  material: new MeshStandardMaterial({ color: 0x00ffff }),
+  instanced: {
+    count: 50000,
+    createInstance,
+  },
+});
 
-  const geometry = new BoxGeometry(0.1, 0.1, 0.5);
-  const material = new MeshStandardMaterial({color: 0xffffff});
+const InstancedBox2 = new IvyBox({
+  material: new MeshStandardMaterial({ color: 0xff00ff }),
+  instanced: {
+    count: 50000,
+    createInstance,
+  },
+});
 
-  const amount = 60000;
-
-  const matrix = new Matrix4();
-  const mesh = new InstancedMesh(geometry, material, amount);
-
-instancedScene.onSceneReady = () => {
-
-  const scene = instancedScene.rawScene;
-
-  for (let i = 0; i < amount; i++) {
-    randomizeMatrix( matrix );
-    mesh.setMatrixAt( i, matrix );
-  }
-
-    scene.add(mesh);
-};
-
+instancedScene.add([InstancedBox, InstancedBox2]);
 
 export default instancedScene;

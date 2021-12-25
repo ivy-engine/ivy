@@ -20,7 +20,7 @@ export class IvyBox extends IvyElement<IvyBoxOptions> {
   setup(renderer: IvyRenderer, scene?: Scene): void {
     this.mesh.castShadow = true;
     this.mesh.receiveShadow = true;
-    this.material = new MeshStandardMaterial({ color: this.color });
+    this.material = this.options.material ?? new MeshStandardMaterial({ color: this.color });
     this.mesh.material = this.material;
 
     if (this.scene?.physicsWorld && typeof this.options.mass === "number") {

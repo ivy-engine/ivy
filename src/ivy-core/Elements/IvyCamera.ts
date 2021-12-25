@@ -22,7 +22,7 @@ export class IvyCamera extends IvyAbstract<IvyCameraOptions> {
       60,
       window.innerWidth / window.innerHeight,
       0.25,
-      400
+      1000
     );
     camera.position.copy(position);
     camera.rotation.copy(rotation);

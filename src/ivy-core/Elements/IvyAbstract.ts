@@ -47,8 +47,6 @@ export default abstract class IvyAbstract<TOptions extends AbstractBaseOption> {
       );
     }
 
-    console.log("group add", element);
-
     let positioned = this.object;
     if (element.group) {
       positioned = element.group;
