@@ -1,6 +1,6 @@
 import Abstract from "../Elements/Abstract";
 import { IvyCamera } from "../Elements/IvyCamera";
-import Element, { ElementBaseOption } from "../Elements/Element";
+import IvyElement, { ElementBaseOption } from "../Elements/IvyElement";
 import IvyRenderer from "../renderer";
 import { Clock, Scene } from "three";
 import { World } from "cannon-es";
@@ -8,7 +8,7 @@ import { World } from "cannon-es";
 var scene = new Scene();
 const clock = new Clock()
 
-type StackItem = Element<ElementBaseOption>;
+type StackItem = IvyElement<ElementBaseOption>;
 export default class IvyScene {
   stack: Abstract<ElementBaseOption>[] = [];
   rawScene = scene;

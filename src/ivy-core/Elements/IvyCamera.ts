@@ -1,7 +1,7 @@
 import { Camera, Color, DirectionalLight, Euler, Event, Object3D, PerspectiveCamera, Scene, Vector3 } from "three";
 import renderer from "../renderer";
 import Abstract from "./Abstract";
-import { ElementBaseOption } from "./Element";
+import { ElementBaseOption } from "./IvyElement";
 
 export interface IvyCameraOptions extends ElementBaseOption {
   position?: Vector3;

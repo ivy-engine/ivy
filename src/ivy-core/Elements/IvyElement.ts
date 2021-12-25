@@ -26,11 +26,11 @@ export interface ElementBaseOption {
   physicsMaterial?: Material;
 }
 
-export default abstract class Element<
+export default abstract class IvyElement<
   TOptions extends ElementBaseOption
 > extends Abstract<TOptions> {
-  children: Element<any>[] = [];
-  mesh: THREE.Mesh;
+  children: IvyElement<any>[] = [];
+  mesh?: THREE.Mesh;
   material?: MeshStandardMaterial;
   color?: Color;
   physicsBody?: Body;
@@ -39,20 +39,17 @@ export default abstract class Element<
   constructor(options: TOptions) {
     super(options);
 
-    this.mesh = new Mesh();
-    this.object = this.mesh;
-    this.mesh.geometry = options.geometry ?? new BoxGeometry(1, 1, 1);
-    this.mesh.scale.copy(options.scale ?? new Vector3(1, 1, 1));
-    this.physicsMaterial = options.physicsMaterial;
 
-    this.color = this.options.color ?? new Color(0xffffff);
-
+    this.initMesh();
     this.setPosition();
   }
 
   setup(renderer: IvyRenderer, scene?: ThreeScene) {
     this.material = new MeshStandardMaterial({ color: this.color });
-    this.mesh.material = this.material;
+   
+    if (this.mesh) {
+      this.mesh.material = this.material;
+    }
 
     if (this.physicsBody) {
     }
@@ -64,14 +61,15 @@ export default abstract class Element<
     this.drawChildren();
   };
 
-  draw?(element: Element<TOptions>): void;
+  draw?(element: IvyElement<TOptions>): void;
+  initMesh() {}
 
   /**
    * Physics
    */
   updatePhysics() {
     const body = this.physicsBody;
-    if (body) {
+    if (body && this.mesh) {
       this.mesh.position.set(body.position.x, body.position.y, body.position.z);
       this.mesh.quaternion.set(
         body.quaternion.x,

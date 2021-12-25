@@ -1,7 +1,7 @@
 import { AmbientLight, Color, DirectionalLight, Scene, Vector3 } from "three";
 import renderer from "../renderer";
 import Abstract from "./Abstract";
-import { ElementBaseOption } from "./Element";
+import { ElementBaseOption } from "./IvyElement";
 
 export interface IvyLightOptions extends ElementBaseOption {
   width?: number;
