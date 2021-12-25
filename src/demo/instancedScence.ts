@@ -40,17 +40,16 @@ const InstancedBox = new IvyBox({
 });
 
 const matrix = new Matrix4();
+const r = new Euler(0, 0, 0.005);
 InstancedBox.draw = ({
   instanceCount,
   instanceMesh,
   instanceData = new Float32Array(0),
-}) => {
-  rotation.x += 0.003;
-  rotation.y += 0.01;
-  // rotation.z += 0.02;
+}) => { 
   for (let i = 0; i < instanceCount; i++) {
     const m = matrix.fromArray(instanceData, i * 16);
-    m.multiply(new Matrix4().makeRotationFromEuler(rotation));
+    m.multiply(new Matrix4().makeRotationFromEuler(r));
+    instanceData.set(m.elements, i * 16); 
     instanceMesh.setMatrixAt(i, m);
   }
 
