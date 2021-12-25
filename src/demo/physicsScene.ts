@@ -2,8 +2,7 @@ import { ContactMaterial, Material } from "cannon-es";
 import { BoxGeometry, Color, Euler, Vector3 } from "three";
 import { IvyBox } from "../ivy-core/Elements/IvyBox";
 import { IvyCamera } from "../ivy-core/Elements/IvyCamera";
-import { IvyLight } from "../ivy-core/Elements/IvyLight";
-import IvyScene from "../ivy-core/Scene/IvyScene";
+import IvyScene, { defaultLights } from "../ivy-core/Scene/IvyScene";
 
 const physicsScene = new IvyScene({
   physics: true,
@@ -11,11 +10,9 @@ const physicsScene = new IvyScene({
     position: new Vector3(0, 10, 8),
     rotation: new Euler(-Math.PI / 3.5, 0, 0),
   }),
+  elements: defaultLights(),
+  controls: 'orbit',
 });
-
-const light = new IvyLight();
-const ambient = new IvyLight({ type: "ambient", intensity: 0.4 });
-physicsScene.add([light, ambient]);
 
 const floorMaterial = new Material("tile");
 const floor = new IvyBox({
@@ -48,12 +45,12 @@ const cubes = Array.from({ length: max }, (_, i) => {
   const y = r * Math.sin(theta * i);
   const rotate = -((i * Math.PI) / max) * 2 + Math.PI / 2;
   return new IvyBox({
-    position: new Vector3(x, 0.66, y),
+    position: new Vector3(x, 0.67, y),
     geometry: new BoxGeometry(0.1, 1.2, 0.5),
     rotation: new Euler(0, rotate, 0),
     physicsMaterial: tileMaterial,
     color: new Color(Math.random() * (0xffffff / 2)),
-    mass: 1
+    mass: 0.1
   });
 });
 

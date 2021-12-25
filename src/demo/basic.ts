@@ -1,17 +1,7 @@
 import { BoxGeometry, Color, DirectionalLight, Euler, Group, Object3D, Vector3 } from "three";
 import { IvyBox } from "../ivy-core/Elements/IvyBox";
 import { IvyLight } from "../ivy-core/Elements/IvyLight";
-import IvyScene from "../ivy-core/Scene/IvyScene";
-
-const testScene = new IvyScene({
-  physics: false,
-});
-const light = new IvyLight();
-const ambient = new IvyLight({
-  type: 'ambient',
-  intensity: 0.4,
-});
-testScene.add([ambient, light]);
+import IvyScene, { defaultLights } from "../ivy-core/Scene/IvyScene";
 
 const box = new IvyBox({
   name: 'box 1',
@@ -57,7 +47,9 @@ const floor = new IvyBox({
  color: new Color(0xffffff), 
 });
 
-testScene.add([floor, box]);
+const testScene = new IvyScene({
+  elements: [box, floor, ...defaultLights()]
+});
 
 box.draw = ({group}) => {
   if (group) {

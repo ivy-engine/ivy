@@ -31,7 +31,7 @@ export default abstract class IvyElement<
   TOptions extends ElementBaseOption
 > extends IvyAbstract<TOptions> {
   children: IvyElement<any>[] = [];
-  mesh?: THREE.Mesh;
+  mesh = new Mesh();
   material?: MeshStandardMaterial;
   color?: Color;
   physicsBody?: Body;

@@ -82,7 +82,7 @@ export default class IvyScene {
   }
 
   render = () => {
-    this.delta = this.clock.getDelta() * 10
+    this.delta = this.clock.getDelta()
     if (this.physicsWorld) {
       this.physicsWorld.step(this.delta)  
     }

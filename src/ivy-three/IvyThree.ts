@@ -33,9 +33,6 @@ export default class IvyThree implements IvyRenderer{
   }
 
   setSize(width: number, height: number): void {
-    // camera.aspect = width / height;
-    // camera.updateProjectionMatrix();
-
     this.renderer.setSize( width, height );
   }
 
