@@ -41,6 +41,8 @@ export default abstract class IvyElement<
   material?: Material | MeshStandardMaterial;
   mesh: Mesh;
   instanceMesh?: InstancedMesh;
+  instanceData?: Float32Array; 
+  instanceCount?: number; 
   color?: Color;
   physicsBody?: Body;
   physicsMaterial?: Material;
@@ -87,18 +89,23 @@ export default abstract class IvyElement<
     }
 
     const { count, createInstance } = this.options.instanced;
+    this.instanceCount = count;
     this.instanceMesh = new InstancedMesh(
       this.options.geometry ?? new BoxGeometry(1, 1, 1),
       this.options.material ?? new MeshStandardMaterial({ color: this.color }),
       count
     );
     const matrix = new Matrix4();
-
+    const list = new Float32Array(count * 16);
+    
     for (let i = 0; i < count; i++) {
       const m = createInstance(matrix);
       this.instanceMesh.setMatrixAt(i, m);
+      list.set(m.elements, i * 16);
     }
 
+    this.instanceData = list;
+   
     this.object = this.instanceMesh;
   }
 

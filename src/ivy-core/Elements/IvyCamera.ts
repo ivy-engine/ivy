@@ -6,6 +6,7 @@ import { ElementBaseOption } from "./IvyElement";
 export interface IvyCameraOptions extends ElementBaseOption {
   position?: Vector3;
   rotation?: Euler;
+  lookAt?: Vector3; 
 }
 
 export class IvyCamera extends IvyAbstract<IvyCameraOptions> {
@@ -16,6 +17,7 @@ export class IvyCamera extends IvyAbstract<IvyCameraOptions> {
     const {
       rotation = new Euler(-Math.PI / 20, 0, 0),
       position = new Vector3(0, 3, 12),
+      lookAt
     } = this.options;
 
     const camera = new PerspectiveCamera(
@@ -26,6 +28,11 @@ export class IvyCamera extends IvyAbstract<IvyCameraOptions> {
     );
     camera.position.copy(position);
     camera.rotation.copy(rotation);
+
+    if (lookAt) {
+      camera.lookAt(lookAt);
+    }
+
     this.object = camera;
   }
 
