@@ -18,7 +18,7 @@ export class IvyBox extends IvyElement<IvyBoxOptions> {
     super(options ?? {});
   }
 
-  setup(renderer: IvyThree, scene?: Scene): void {
+  setup(): void {
     this.mesh.castShadow = true;
     this.mesh.receiveShadow = true;
     this.material = this.options.material ?? new MeshStandardMaterial({ color: this.color });

@@ -31,7 +31,7 @@ export class IvyLoaderOBJ extends IvyElement<IvyLoaderOptions> {
     });
   }
 
-  setup = (renderer: IvyThree, scene?: Scene) => {
+  setup = () => {
 
     // manager.onProgress = function (item, loaded, total) {
     // };

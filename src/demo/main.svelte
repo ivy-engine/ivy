@@ -20,13 +20,14 @@
   };
 
   onMount(() => {
+    console.log("mount");
     ivy = new IvyCore({
       renderer: new IvyThree(canvas, {
         // shadowmapPreset: 'pcss'
       }),
     });
 
-    ivy.loadScene(memoryScene);
+    ivy.loadScene(testScene);
   });
 </script>
 

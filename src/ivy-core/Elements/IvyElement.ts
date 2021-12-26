@@ -57,7 +57,7 @@ export default abstract class IvyElement<
     this.setPosition();
   }
 
-  setup(renderer: IvyThree, scene?: ThreeScene) {
+  setup() {
     this.material =
       this.options.material ?? new MeshStandardMaterial({ color: this.color });
 

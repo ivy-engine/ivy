@@ -30,6 +30,7 @@ interface EventListener {
 }
 
 interface IvySceneOptions {
+  name?: string;
   camera?: IvyCamera;
   physics?: boolean;
   gravity?: number;
@@ -37,6 +38,7 @@ interface IvySceneOptions {
   elements?: IvyAbstract<any>[];
 }
 export default class IvyScene {
+  name: string;
   stack: IvyAbstract<ElementBaseOption>[] = [];
   clock = new Clock();
   rawScene = new Scene();
@@ -63,21 +65,35 @@ export default class IvyScene {
     // const camera = cameraInstance.create(options.renderer, this.rawScene);
 
     this.initialElements = options.elements ?? [];
+    this.name = options.name ?? "untitled scene";
   }
  
-  // discard() {
-  //   const scene = this.rawScene;
-  //   for (const element of this.stack) {
-  //     element.discard(scene);
-  //   }
+  discard() {
+    const rs = this?.rawScene;
 
-  //   for( var i = scene.children.length - 1; i >= 0; i--) { 
-  //     const obj = scene.children[i];
-  //     scene.remove(obj); 
-  //   } 
+    if (rs) {
+      let list = this.stack;
 
-  //   this.physicsWorld = undefined;
-  // }
+      for (const element of list) {
+        element.dispose();
+      }
+
+      // for (var i = rs.children.length - 1; i >= 0; i--) {
+      //   const obj = rs.children[i];
+      //   rs.remove(obj);
+      // }
+    }
+    
+    // this.stack= [];
+    this.clock = new Clock();
+    // this.rawScene = new Scene();
+    this.camera = undefined;
+    this.delta = 0;
+    // this.physicsWorld = undefined;
+    this.initialRender = true;
+    this.pointer = new Vector2(-999, -999);
+    this._intersected = null;
+  }
 
   setupControls(renderer: IvyThree) {
     if (this.controls === "orbit" && this.camera) {
@@ -103,9 +119,10 @@ export default class IvyScene {
   add(element: StackItem | IvyAbstract<ElementBaseOption>[]): void {
     let list = Array.isArray(element) ? element : [element];
 
-    console.log('add')
     for (const element of list) {
       element.scene = this;
+      element.setup(this.renderer, this.rawScene)
+
       if (element.group) {
         this.rawScene.add(element.group);
       } else {
@@ -116,6 +133,7 @@ export default class IvyScene {
 
       element.scene = this;
       this.stack.push(element);
+
       if (this.renderer) {
         element.create(this.renderer, this.rawScene);
       }
@@ -123,7 +141,7 @@ export default class IvyScene {
   }
 
   create(options: { renderer: IvyThree }) {
-    console.log('scene create')
+    this.discard();
     const {camera = new IvyCamera(), physics, gravity, controls, elements} = this.options;
     this.renderer = options.renderer;
 
@@ -144,15 +162,16 @@ export default class IvyScene {
 
     this.addInitialElements();
   
-    for (const element of this.stack) {
-      console.log('el', element)
-      element.create(options.renderer, this.rawScene);
-    }
+    // for (const element of this.stack) {
+    //   // console.log('el', element)
+    //   // element.create(options.renderer, this.rawScene);
+    // }
   }
 
   render = () => {
     this.updateIntersected();
     this.delta = this.clock.getDelta();
+    
     if (this.physicsWorld) {
       this.physicsWorld.step(this.delta);
     }

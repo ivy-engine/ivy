@@ -55,6 +55,7 @@ export default abstract class IvyAbstract<TOptions extends AbstractBaseOption> {
     }
 
     element.parentGroup = this.group;
+    element.setup();
     this.children.push(element);
   };
 
@@ -76,7 +77,7 @@ export default abstract class IvyAbstract<TOptions extends AbstractBaseOption> {
     }
   };
 
-  setup(renderer: IvyThree, scene?: ThreeScene) {}
+  setup() {}
  
   dispose() {
     const object = this.object;
@@ -97,8 +98,12 @@ export default abstract class IvyAbstract<TOptions extends AbstractBaseOption> {
     if (object.parent) {
         object.parent.remove(object);
     }
-    // the parent might be the scene or another Object3D, but it is sure to be removed this way
-    return true;
+
+    if (this.children) {
+      this.children.forEach(child => {
+          child.dispose();
+      });
+    }
   }
 
   addToScene(renderer: IvyThree, scene?: ThreeScene) {
@@ -107,13 +112,14 @@ export default abstract class IvyAbstract<TOptions extends AbstractBaseOption> {
 
     if (this.group) {
       for (const item of this.children) {
-        item.create(renderer)
+        // item.setup(renderer)
+        // item.create(renderer)
       }
-      scene?.add(this.group);
+      // scene?.add(this.group);
     } else if (this.parentGroup) {
-      this.parentGroup.add(this.group ?? this.object);
+      // this.parentGroup.add(this.group ?? this.object);
     } else {
-      scene?.add(this.object);
+      // scene?.add(this.object);
     }
   }
 

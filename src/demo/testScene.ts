@@ -3,9 +3,6 @@ import { IvyBox } from "../ivy-core/Elements/IvyBox";
 import { IvyLight } from "../ivy-core/Elements/IvyLight";
 import IvyScene, { defaultLights } from "../ivy-core/Scene/IvyScene";
 
-const testScene = new IvyScene({
-  elements: defaultLights()
-});
 
 const box = new IvyBox({
   name: 'box 1',
@@ -15,6 +12,10 @@ const box = new IvyBox({
   rotation: new Euler(0, Math.PI / 2, 0),
 });
 
+const testScene = new IvyScene({
+  name: 'testScene',
+  elements: [...defaultLights()]
+});
 
 const box2 = new IvyBox({
   group: true,
@@ -48,7 +49,7 @@ box3.add(box4)
 const floor = new IvyBox({
   geometry: new BoxGeometry(10, 0.1, 10),
   position: new Vector3(0, -0.5, 0),
- color: new Color(0xffffff), 
+ color: new Color(0x333333), 
 });
 
 testScene.add([box, floor]);
