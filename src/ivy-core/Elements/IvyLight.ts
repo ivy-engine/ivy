@@ -44,6 +44,7 @@ export class IvyLight extends IvyAbstract<IvyLightOptions> {
     if (!light) return;
 
     this.object = light;
+    light.ivyElement = this;
 
 
     scene?.add(light);

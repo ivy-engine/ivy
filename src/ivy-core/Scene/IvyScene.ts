@@ -2,7 +2,7 @@ import IvyAbstract from "../Elements/IvyAbstract";
 import { IvyCamera } from "../Elements/IvyCamera";
 import IvyElement, { ElementBaseOption } from "../Elements/IvyElement";
 import IvyRenderer from "../renderer";
-import { Clock, Scene } from "three";
+import { Clock, Intersection, Object3D, Raycaster, Scene, Vector2 } from "three";
 import { World } from "cannon-es";
 import { OrbitControls } from "../../ivy-three/controls/OrbitControls";
 import { IvyLight } from "../Elements/IvyLight";
@@ -25,7 +25,10 @@ export default class IvyScene {
   initialElements: IvyAbstract<any>[] = [];
   initialRender = true; 
   gravity = -9.82;
-  controls = 'none' ;
+  controls = 'none';
+  pointer = new Vector2(-999, -999);
+  raycaster = new Raycaster();
+  _intersected: Intersection<Object3D> | null = null;
 
   constructor(options: {camera?: IvyCamera, physics?: boolean, gravity?: number, controls? : 'orbit', elements?: IvyAbstract<any>[]} = {}) {
     const { camera = new IvyCamera() } = options;
@@ -76,12 +79,14 @@ export default class IvyScene {
 
   create(options: { renderer: IvyRenderer }) {
     this.setupControls(options.renderer); 
+    document.addEventListener( 'mousemove', this.onPointerMove );
     for (const element of this.stack) {
       element.create(options.renderer, this.rawScene);
     };
   }
 
   render = () => {
+    this.updateIntersected();
     this.delta = this.clock.getDelta()
     if (this.physicsWorld) {
       this.physicsWorld.step(this.delta)  
@@ -97,6 +102,31 @@ export default class IvyScene {
   };
 
   onSceneReady = () => {}
+
+  onPointerMove = ( event ) => {
+    this.pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    this.pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  }
+
+  updateIntersected = () => {
+    if (!this.camera.object) return
+
+    this.raycaster.setFromCamera( this.pointer, this.camera.object );
+    const intersects = this.raycaster.intersectObjects( this.rawScene.children, false );
+
+    if ( intersects.length > 0 ) {
+      if ( this._intersected?.object != intersects[ 0 ].object ) {
+        if ( this._intersected ) this._intersected.onIntersectedLeave(this._intersected);
+
+        this._intersected = intersects[ 0 ];
+        this._intersected.object.ivyElement.onIntersectedEnter(this._intersected);
+      }
+
+    } else {
+      if ( this._intersected ) this._intersected.object.ivyElement.onIntersectedLeave(this._intersected);
+      this._intersected = null;
+    }
+  }
 
   // setSize = (width: number, height: number) => {
   //   camera.aspect = width / height;

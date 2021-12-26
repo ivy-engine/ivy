@@ -6,6 +6,7 @@ import physicsScene from './demo/physicsScene';
 import { IvyBox } from './ivy-core/Elements/IvyBox';
 import loaderScene from './demo/loaderScene';
 import instancedScene from './demo/instancedScence';
+import interactionScene from './demo/interactionScene';
 
 const app = document.querySelector<HTMLElement>('#ivy')!
 
@@ -20,4 +21,5 @@ const ivy = new IvyCore({
 // ivy.loadScene(physicsScene);
 // ivy.loadScene(basicScene);
 // ivy.loadScene(loaderScene);
-ivy.loadScene(instancedScene);
+// ivy.loadScene(instancedScene);
+ivy.loadScene(interactionScene);

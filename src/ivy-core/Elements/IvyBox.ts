@@ -50,6 +50,7 @@ export class IvyBox extends IvyElement<IvyBoxOptions> {
   initMesh(): void {
     const { geometry, scale } = this.options;
     this.object = this.mesh;
+    this.mesh.ivyElement = this;
     this.mesh.geometry = geometry ?? new BoxGeometry(1, 1, 1);
     this.mesh.scale.copy(scale ?? new Vector3(1, 1, 1));
     this.physicsMaterial = this.physicsMaterial;

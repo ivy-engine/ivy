@@ -11,6 +11,7 @@ import {
   AnimationMixer,
   Matrix4,
   InstancedMesh,
+  Intersection,
 } from "three";
 import IvyScene from "../Scene/IvyScene";
 import IvyRenderer from "../renderer";
@@ -78,6 +79,8 @@ export default abstract class IvyElement<
   };
 
   draw?(element: IvyElement<TOptions>): void;
+  onIntersectedEnter?(intersection: Intersection<Object3D>): void;
+  onIntersectedLeave?(intersection: Intersection<Object3D>): void;
   initMesh() {}
 
   /**

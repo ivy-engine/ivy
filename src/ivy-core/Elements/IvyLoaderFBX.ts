@@ -33,6 +33,7 @@ export class IvyLoaderFBX extends IvyElement<IvyLoaderOptions> {
     if (object) {
       this.mesh = object;
       this.object = object;
+      object.ivyElement = this;
       this.object?.position.copy(this.options.position ?? new Vector3());
       this.object?.rotation.copy(this.options.rotation ?? new Euler());
       this.object?.scale.copy(this.options.scale ?? new Vector3(1,1,1));
@@ -54,6 +55,7 @@ export class IvyLoaderFBX extends IvyElement<IvyLoaderOptions> {
       });
 
       this.object = object;
+      object.ivyElement = this;
       this.injectObj()
 
       const aniIndex = this.options.initialAnimation;

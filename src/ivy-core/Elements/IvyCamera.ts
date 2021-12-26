@@ -34,6 +34,7 @@ export class IvyCamera extends IvyAbstract<IvyCameraOptions> {
     }
 
     this.object = camera;
+    camera.ivyElement = camera;
   }
 
   create(renderer: renderer, scene?: Scene): void {}

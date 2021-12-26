@@ -72,7 +72,6 @@ export class IvyLoaderOBJ extends IvyElement<IvyLoaderOptions> {
     // });
     const object = this.object;
 
-
     if (object) {
       object.traverse(function (child) {
         if (child.isMesh) {
@@ -81,6 +80,7 @@ export class IvyLoaderOBJ extends IvyElement<IvyLoaderOptions> {
         }
       });
       
+      object.ivyElement = this;
       this.mesh = object;
       this.object = object;
       this.object?.position.copy(this.options.position ?? new Vector3());
@@ -101,6 +101,7 @@ export class IvyLoaderOBJ extends IvyElement<IvyLoaderOptions> {
       loader.load(
         this.options.obj,
         (obj) => {
+          obj.ivyElement = this;
           this.object = obj;
         },
         fn,
