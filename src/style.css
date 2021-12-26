@@ -13,3 +13,13 @@ html {
   margin: 0;
   background: #000;
 }
+
+#stats {
+  position: fixed;
+  left: 200px;
+  top: 0;
+}
+
+#stats div {
+  position: relative !important;
+}

@@ -5,7 +5,10 @@ import IvyThree from "../ivy-three/IvyThree";
 
 var stats = new Stats();
 stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-document.body.appendChild( stats.dom );
+const el = document.createElement('div');
+el.id="stats";
+el.appendChild(stats.dom)
+document.body.appendChild(el);
 
 interface IvyCoreOptions {
   renderer: IvyThree;
@@ -13,10 +16,12 @@ interface IvyCoreOptions {
 
 export default class IvyCore {
   private options: IvyCoreOptions;
+  element: HTMLElement;
   activeScene?: IvyScene;
 
   constructor(options: IvyCoreOptions) {
       this.options = options;
+      this.element = options.renderer.loadPCSS
       this.init();
   }
 
@@ -25,6 +30,23 @@ export default class IvyCore {
   }
 
   loadScene = (scene: IvyScene) => {
+    if (scene === this.activeScene) return;
+    console.log('load. old; ', this.activeScene)
+    // this.activeScene?.discard();
+
+    const rs = this.activeScene?.rawScene
+
+    if (this.activeScene && rs) {
+    for (const element of this.activeScene.stack) {
+      element.dispose();
+    }
+    for( var i = rs.children.length - 1; i >= 0; i--) { 
+      const obj = rs.children[i];
+      rs.remove(obj); 
+    } 
+    }
+    console.log(scene);
+    
     this.activeScene = scene;
     this.activeScene.create({renderer: this.options.renderer})
     this.refresh();
@@ -44,11 +66,12 @@ export default class IvyCore {
   }
 
   setupResponsiveScreen = () => {
-    this.options.renderer.setSize(window.innerWidth, window.innerHeight);
+    const el = this.options.renderer.element;
+    this.options.renderer.setSize(el.clientWidth, el.clientHeight);
     this.options.renderer.setPixelRatio(window.devicePixelRatio);
     
     window.addEventListener('resize', () => {
-      this.activeScene?.setSize(window.innerWidth, window.innerHeight);
+      this.activeScene?.setSize(el.clientWidth, el.clientHeight);
     });
   }
 }

@@ -3,6 +3,10 @@ import { IvyBox } from "../ivy-core/Elements/IvyBox";
 import { IvyLight } from "../ivy-core/Elements/IvyLight";
 import IvyScene, { defaultLights } from "../ivy-core/Scene/IvyScene";
 
+const testScene = new IvyScene({
+  elements: defaultLights()
+});
+
 const box = new IvyBox({
   name: 'box 1',
   group: true, 
@@ -47,9 +51,7 @@ const floor = new IvyBox({
  color: new Color(0xffffff), 
 });
 
-const testScene = new IvyScene({
-  elements: [box, floor, ...defaultLights()]
-});
+testScene.add([box, floor]);
 
 box.draw = ({group}) => {
   if (group) {

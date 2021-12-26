@@ -14,7 +14,7 @@ import {
 import IvyRenderer from "../renderer";
 import IvyAbstract from "./IvyAbstract";
 import { Body, Material, Vec3 } from "cannon-es";
-
+import IvyThree from "../../ivy-three/IvyThree";
 export interface ElementBaseOption {
   name?: string;
   geometry?: BoxGeometry;
@@ -57,7 +57,7 @@ export default abstract class IvyElement<
     this.setPosition();
   }
 
-  setup(renderer: IvyRenderer, scene?: ThreeScene) {
+  setup(renderer: IvyThree, scene?: ThreeScene) {
     this.material =
       this.options.material ?? new MeshStandardMaterial({ color: this.color });
 

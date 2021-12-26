@@ -1,4 +1,5 @@
 import { Euler, Group, Object3D, Vector3, Scene as ThreeScene, AnimationMixer } from "three";
+import IvyThree from "../../ivy-three/IvyThree";
 import IvyRenderer from "../renderer";
 import IvyScene from "../Scene/IvyScene";
 
@@ -75,9 +76,32 @@ export default abstract class IvyAbstract<TOptions extends AbstractBaseOption> {
     }
   };
 
-  setup(renderer: IvyRenderer, scene?: ThreeScene) {}
+  setup(renderer: IvyThree, scene?: ThreeScene) {}
+ 
+  dispose() {
+    const object = this.object;
+    if (!(object instanceof Object3D)) return false;
+    // for better memory management and performance
+    if (object.geometry) {
+        object.geometry.dispose();
+    }
+    if (object.material) {
+        if (object.material instanceof Array) {
+            // for better memory management and performance
+            object.material.forEach(material => material.dispose());
+        } else {
+            // for better memory management and performance
+            object.material.dispose();
+        }
+    }
+    if (object.parent) {
+        object.parent.remove(object);
+    }
+    // the parent might be the scene or another Object3D, but it is sure to be removed this way
+    return true;
+  }
 
-  addToScene(renderer: IvyRenderer, scene?: ThreeScene) {
+  addToScene(renderer: IvyThree, scene?: ThreeScene) {
     if (!this.object) return;
     
 
@@ -93,7 +117,9 @@ export default abstract class IvyAbstract<TOptions extends AbstractBaseOption> {
     }
   }
 
-  create(renderer: IvyRenderer, scene?: ThreeScene): void {
+  create(renderer: IvyThree, scene?: ThreeScene): void {
+    if (this.object) return;
+    
     this.setup(renderer, scene);
     this.addToScene(renderer, scene);
   }

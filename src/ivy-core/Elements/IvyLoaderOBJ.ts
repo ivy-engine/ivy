@@ -13,6 +13,7 @@ import {
 } from "three";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import IvyThree from "../../ivy-three/IvyThree";
 import IvyRenderer from "../renderer";
 import IvyElement, { ElementBaseOption } from "./IvyElement";
 
@@ -30,7 +31,7 @@ export class IvyLoaderOBJ extends IvyElement<IvyLoaderOptions> {
     });
   }
 
-  setup = (renderer: IvyRenderer, scene?: Scene) => {
+  setup = (renderer: IvyThree, scene?: Scene) => {
 
     // manager.onProgress = function (item, loaded, total) {
     // };

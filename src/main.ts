@@ -1,25 +1,7 @@
-import IvyCore from './ivy-core/IvyCore'
-import IvyThree from './ivy-three/IvyThree';
 import './style.css'
-import basicScene from './demo/basic';
-import physicsScene from './demo/physicsScene';
-import { IvyBox } from './ivy-core/Elements/IvyBox';
-import loaderScene from './demo/loaderScene';
-import instancedScene from './demo/instancedScence';
-import interactionScene from './demo/interactionScene';
 
-const app = document.querySelector<HTMLElement>('#ivy')!
+import Main from './demo/main.svelte';
 
-const ivy = new IvyCore({
-  renderer: new IvyThree(app, {
-    // shadowmapPreset: 'pcss'
-  }), 
+new Main({
+  target: document.querySelector('#app'),
 });
-
-
-
-// ivy.loadScene(physicsScene);
-// ivy.loadScene(basicScene);
-// ivy.loadScene(loaderScene);
-// ivy.loadScene(instancedScene);
-ivy.loadScene(interactionScene);

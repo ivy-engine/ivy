@@ -7,6 +7,7 @@ import {
   Scene,
   Vector3,
 } from "three";
+import IvyThree from "../../ivy-three/IvyThree";
 import IvyRenderer from "../renderer";
 import IvyElement, { ElementBaseOption } from "./IvyElement";
 
@@ -17,7 +18,7 @@ export class IvyBox extends IvyElement<IvyBoxOptions> {
     super(options ?? {});
   }
 
-  setup(renderer: IvyRenderer, scene?: Scene): void {
+  setup(renderer: IvyThree, scene?: Scene): void {
     this.mesh.castShadow = true;
     this.mesh.receiveShadow = true;
     this.material = this.options.material ?? new MeshStandardMaterial({ color: this.color });
