@@ -2,18 +2,15 @@ import {
   BoxGeometry,
   Color,
   Euler,
-  Group,
   Mesh,
   MeshStandardMaterial,
   Object3D,
   Vector3,
   Scene as ThreeScene,
-  AnimationMixer,
   Matrix4,
   InstancedMesh,
   Intersection,
 } from "three";
-import IvyScene from "../Scene/IvyScene";
 import IvyRenderer from "../renderer";
 import IvyAbstract from "./IvyAbstract";
 import { Body, Material, Vec3 } from "cannon-es";
@@ -42,8 +39,8 @@ export default abstract class IvyElement<
   material?: Material | MeshStandardMaterial;
   mesh: Mesh;
   instanceMesh?: InstancedMesh;
-  instanceData?: Float32Array; 
-  instanceCount?: number; 
+  instanceData?: Float32Array;
+  instanceCount?: number;
   color?: Color;
   physicsBody?: Body;
   physicsMaterial?: Material;
@@ -83,6 +80,19 @@ export default abstract class IvyElement<
   onIntersectedLeave?(intersection: Intersection<Object3D>): void;
   initMesh() {}
 
+  addEventListener(
+    event: string,
+    fn: (intersection: Intersection<Object3D>) => void
+  ) {
+    if (this.object && this.scene) {
+      this.scene.addEventListener({
+        event,
+        fn,
+        object: this.object,
+      });
+    }
+  }
+
   /**
    * Instancing
    */
@@ -100,7 +110,7 @@ export default abstract class IvyElement<
     );
     const matrix = new Matrix4();
     const list = new Float32Array(count * 16);
-    
+
     for (let i = 0; i < count; i++) {
       const m = createInstance(matrix);
       this.instanceMesh.setMatrixAt(i, m);
@@ -108,7 +118,7 @@ export default abstract class IvyElement<
     }
 
     this.instanceData = list;
-   
+
     this.object = this.instanceMesh;
   }
 

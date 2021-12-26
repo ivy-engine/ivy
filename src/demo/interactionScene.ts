@@ -10,19 +10,28 @@ const interactionScene = new IvyScene({
 });
 
 const box = new IvyBox({
-  // material: new MeshStandardMaterial({ color: 0x22ddaa }),
+  position: new Vector3(-2, 0, 0)
+});
+const box1 = new IvyBox({ });
+const box2 = new IvyBox({
+  position: new Vector3(2, 0, 0)
 });
 
-box.onIntersectedEnter = (event) => {
-  const mesh = event.object;
-  mesh.currentHex = mesh.material.emissive.getHex();
-  mesh.material.emissive.setHex( 0xff0000 );
-}
-box.onIntersectedLeave = (event) => {
-  const mesh = event.object;
-  mesh.material.emissive.setHex( mesh.currentHex );
+interactionScene.onSceneReady = () => {
+  box.addEventListener('click', (event) => {
+    const mesh = event.object;
+    mesh.scale.addScalar(0.2);
+  })
+  box1.addEventListener('click', (event) => {
+    const mesh = event.object;
+    mesh.scale.addScalar(0.2);
+  })
+  box2.addEventListener('click', (event) => {
+    const mesh = event.object;
+    mesh.scale.addScalar(0.2);
+  })
 }
 
-interactionScene.add([box]);
+interactionScene.add([box, box1, box2]);
 
 export default interactionScene;
