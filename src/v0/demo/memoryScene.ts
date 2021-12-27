@@ -1,11 +1,5 @@
 import { BoxGeometry, Color, DirectionalLight, Euler, Group, Object3D, Scene, Vector3 } from "three";
-import { IvyBox } from "../ivy-core/Elements/IvyBox";
-import { IvyLight } from "../ivy-core/Elements/IvyLight";
-import IvyScene, { defaultLights } from "../ivy-core/Scene/IvyScene";
-
-
-
-const memoryScene = new IvyScene({
+import { IvyBox } from "../ivy-core/Elements/IvyBoximport { IvyLight } from "../../ivy-core/Elements/IvyLightort IvyScene, { defaultLights } from "../ivy../ivy-core/Scene/IvyScenest memoryScene = new IvyScene({
   elements: defaultLights(),
   controls: "orbit",
 });

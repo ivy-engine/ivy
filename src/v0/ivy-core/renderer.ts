@@ -1,5 +1,5 @@
 import { Camera, Object3D } from "three";
-import IvyThree from "../ivy-three/IvyThree";
+import IvyThree from "../v0/ivy-three/IvyThreeree";
 
 export interface IvyRendererOptions {
     shadowmapPreset?: 'default' | 'pcss'

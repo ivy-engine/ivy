@@ -1,10 +1,6 @@
 import { ContactMaterial, Material } from "cannon-es";
 import { BoxGeometry, Color, Euler, Vector3 } from "three";
-import { IvyBox } from "../ivy-core/Elements/IvyBox";
-import { IvyCamera } from "../ivy-core/Elements/IvyCamera";
-import IvyScene, { defaultLights } from "../ivy-core/Scene/IvyScene";
-
-const physicsScene = new IvyScene({
+import { IvyBox } from "../ivy-core/Elements/IvyBoximport { IvyCamera } from "../../ivy-core/Elements/IvyCameraort IvyScene, { defaultLights } from "../ivy../ivy-core/Scene/IvyScene physicsScene = new IvyScene({
   physics: true,
   camera: new IvyCamera({
     position: new Vector3(0, 10, 8),

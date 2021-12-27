@@ -1,4 +1,4 @@
-import IvyRenderer, { IvyRendererOptions } from "../ivy-core/renderer";
+import IvyRenderer, { IvyRendererOptions } from "../ivy-core/rendererrer";
 import {
   AmbientLight,
   BoxGeometry,

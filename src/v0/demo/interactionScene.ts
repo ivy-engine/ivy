@@ -1,10 +1,5 @@
 import { Euler, Intersection, Matrix4, MeshStandardMaterial, Object3D, Vector3 } from "three";
-import { IvyBox } from "../ivy-core/Elements/IvyBox";
-import { IvyCamera } from "../ivy-core/Elements/IvyCamera";
-import { IvyLight } from "../ivy-core/Elements/IvyLight";
-import IvyScene, { defaultLights } from "../ivy-core/Scene/IvyScene";
-
-const interactionScene = new IvyScene({
+import { IvyBox } from "../ivy-core/Elements/IvyBoximport { IvyCamera } from "../../ivy-core/Elements/IvyCameraort { IvyLight } from "../ivy../ivy-core/Elements/IvyLight IvyScene, { defaultLights } from "../ivy-co../ivy-core/Scene/IvySceneteractionScene = new IvyScene({
   controls: "orbit",
   elements: defaultLights(),
 });

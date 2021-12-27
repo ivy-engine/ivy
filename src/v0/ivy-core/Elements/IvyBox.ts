@@ -7,7 +7,7 @@ import {
   Scene,
   Vector3,
 } from "three";
-import IvyThree from "../../ivy-three/IvyThree";
+import IvyThree from "../../v0/ivy-three/IvyThreeree";
 import IvyRenderer from "../renderer";
 import IvyElement, { ElementBaseOption } from "./IvyElement";
 

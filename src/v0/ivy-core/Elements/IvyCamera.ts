@@ -1,5 +1,5 @@
 import { Camera, Color, DirectionalLight, Euler, Event, Object3D, PerspectiveCamera, Scene, Vector3 } from "three";
-import IvyThree from "../../ivy-three/IvyThree";
+import IvyThree from "../../v0/ivy-three/IvyThreeree";
 import renderer from "../renderer";
 import IvyAbstract from "./IvyAbstract";
 import { ElementBaseOption } from "./IvyElement";

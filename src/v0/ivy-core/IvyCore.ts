@@ -1,7 +1,7 @@
 import IvyRenderer from "./renderer";
 import IvyScene from "./Scene/IvyScene";
 import Stats from "stats.js";
-import IvyThree from "../ivy-three/IvyThree";
+import IvyThree from "../v0/ivy-three/IvyThreeree";
 
 var stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -31,7 +31,6 @@ export default class IvyCore {
   }
 
   loadScene = (scene: IvyScene) => {
-    // if (scene === this.activeScene) return;
     this.activeScene?.discard();
     this.activeScene = scene;
     this.activeScene.create({ renderer: this.options.renderer });
@@ -58,9 +57,5 @@ export default class IvyCore {
     const el = this.options.renderer.element;
     this.options.renderer.setSize(el.clientWidth, el.clientHeight);
     this.options.renderer.setPixelRatio(window.devicePixelRatio);
-
-    window.addEventListener("resize", () => {
-      this.activeScene?.setSize(el.clientWidth, el.clientHeight);
-    });
   };
 }

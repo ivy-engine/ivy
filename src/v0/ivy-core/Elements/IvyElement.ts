@@ -14,7 +14,7 @@ import {
 import IvyRenderer from "../renderer";
 import IvyAbstract from "./IvyAbstract";
 import { Body, Material, Vec3 } from "cannon-es";
-import IvyThree from "../../ivy-three/IvyThree";
+import IvyThree from "../../v0/ivy-three/IvyThreeree";
 export interface ElementBaseOption {
   name?: string;
   geometry?: BoxGeometry;

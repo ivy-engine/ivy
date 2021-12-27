@@ -13,7 +13,7 @@ import {
 } from "three";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
-import IvyThree from "../../ivy-three/IvyThree";
+import IvyThree from "../../v0/ivy-three/IvyThreeree";
 import IvyRenderer from "../renderer";
 import IvyElement, { ElementBaseOption } from "./IvyElement";
 

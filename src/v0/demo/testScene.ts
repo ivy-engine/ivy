@@ -1,10 +1,5 @@
 import { BoxGeometry, Color, DirectionalLight, Euler, Group, Object3D, Vector3 } from "three";
-import { IvyBox } from "../ivy-core/Elements/IvyBox";
-import { IvyLight } from "../ivy-core/Elements/IvyLight";
-import IvyScene, { defaultLights } from "../ivy-core/Scene/IvyScene";
-
-
-const box = new IvyBox({
+import { IvyBox } from "../ivy-core/Elements/IvyBoximport { IvyLight } from "../../ivy-core/Elements/IvyLightort IvyScene, { defaultLights } from "../ivy../ivy-core/Scene/IvyScenet box = new IvyBox({
   name: 'box 1',
   group: true, 
   color: new Color(0x00ff00),

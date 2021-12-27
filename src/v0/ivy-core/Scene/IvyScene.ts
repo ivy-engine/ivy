@@ -11,9 +11,9 @@ import {
   Vector2,
 } from "three";
 import { World } from "cannon-es";
-import { OrbitControls } from "../../ivy-three/controls/OrbitControls";
+import { OrbitControls } from "../../v0/ivy-three/controls/OrbitControlsols";
 import { IvyLight } from "../Elements/IvyLight";
-import IvyThree from "../../ivy-three/IvyThree";
+import IvyThree from "../../v0/ivy-three/IvyThreeree";
 
 type StackItem = IvyElement<ElementBaseOption>;
 

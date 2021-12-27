@@ -1,5 +1,5 @@
 import { Euler, Group, Object3D, Vector3, Scene as ThreeScene, AnimationMixer } from "three";
-import IvyThree from "../../ivy-three/IvyThree";
+import IvyThree from "../../v0/ivy-three/IvyThreeree";
 import IvyRenderer from "../renderer";
 import IvyScene from "../Scene/IvyScene";
 

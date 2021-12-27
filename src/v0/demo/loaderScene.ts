@@ -1,10 +1,5 @@
 import { BoxGeometry, Euler, Vector3 } from "three";
-import { IvyBox } from "../ivy-core/Elements/IvyBox";
-import { IvyLoaderFBX } from "../ivy-core/Elements/IvyLoaderFBX";
-import { IvyLoaderOBJ } from "../ivy-core/Elements/IvyLoaderOBJ";
-import IvyScene, { defaultLights } from "../ivy-core/Scene/IvyScene";
-
-const char = new IvyLoaderOBJ({
+import { IvyBox } from "../ivy-core/Elements/IvyBoximport { IvyLoaderFBX } from "../../ivy-core/Elements/IvyLoaderFBXort { IvyLoaderOBJ } from "../ivy../ivy-core/Elements/IvyLoaderOBJ IvyScene, { defaultLights } from "../ivy-co../ivy-core/Scene/IvyScenear = new IvyLoaderOBJ({
   obj: '/kurenai_asset/KURENAI_lowpoly.obj',
   mtl: '/assets/kurenai_asset/KURENAI_lowpoly.mtl',
   position: new Vector3(2, -3, 2),
