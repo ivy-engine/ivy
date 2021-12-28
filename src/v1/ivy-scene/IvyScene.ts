@@ -15,7 +15,6 @@ export default class IvyScene {
   options: IvySceneOptions;
   objectStack: IvyObject[] = [];
   threeScene = new Scene();
-  initialItem = false;
   core?: Ivy; 
   mounted = false; 
   onMount?: () => void;
@@ -34,7 +33,7 @@ export default class IvyScene {
       if (this.mounted) {
         object.mount()
       } else {
-        this.initialItem = true;
+        object.initialItem = true;
       }
     }
   }
@@ -54,7 +53,6 @@ export default class IvyScene {
   }
 
   destroy = () => {
-    this.mounted = false;
     this.onDestroy?.();
     
     for (const object of this.threeScene.children) {
@@ -64,10 +62,12 @@ export default class IvyScene {
     for (const object of this.objectStack) {
       object.destroy();
     }
+    this.mounted = false;
   }
 
   removeFromStack = async (object: IvyObject) => {
-    if (this.initialItem) return 
+    if (object.initialItem) return 
+
     const index = this.objectStack.indexOf(object);
     if (index === -1) return;
     this.objectStack.splice(index, 1);

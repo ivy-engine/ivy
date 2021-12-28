@@ -15,11 +15,15 @@
     (scene, options = {}) =>
     (e) => {
       e.preventDefault();
-      console.log(options);
-      showWarning = !!options.warning;
-      console.log({ showWarning });
+      const disabled = window.localStorage.getItem("ivy-warning") === "false";
+      if (!disabled) showWarning = !!options.warning;
       ivy.loadScene(scene);
     };
+
+  const disableWarning = () => {
+    window.localStorage.setItem("ivy-warning", "false");
+    showWarning = false;
+  };
 
   onMount(() => {
     ivy = new Ivy({
@@ -45,7 +49,7 @@
     <h1>WARNING</h1>
     <p>This scene contains flashing images.</p>
 
-    <button on:click={() => (showWarning = false)}>Thats OK, Continue</button>
+    <button on:click={disableWarning}>Thats OK, Continue</button>
   </div>
 </div>
 

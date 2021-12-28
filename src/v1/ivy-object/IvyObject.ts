@@ -17,6 +17,7 @@ export interface IvyObjectOptions {
 export default class IvyObject {
   name: string;
   options: IvyObjectOptions;
+  initialItem = false;
   object?: Object3D;
   scene?: IvyScene;
   update?: () => void;
