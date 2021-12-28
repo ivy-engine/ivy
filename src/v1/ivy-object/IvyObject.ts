@@ -1,7 +1,8 @@
-import { BoxGeometry, Color, Euler, Mesh, MeshStandardMaterial, Object3D, Vector3 } from "three";
+import { AmbientLight, BoxGeometry, Color, Euler, Light, Material, Mesh, MeshStandardMaterial, MeshToonMaterial, Object3D, Vector3 } from "three";
 import IvyScene from "../ivy-scene/IvyScene";
+import destroyObject from "../lib/destroyObject";
 
-interface IvyObjectOptions {
+export interface IvyObjectOptions {
   name?: string;
   pos?: Vector3;
   rot?: Euler;
@@ -9,6 +10,8 @@ interface IvyObjectOptions {
   color?: number | Color;
   material?: MeshStandardMaterial; 
   geometry?: BoxGeometry;
+  shadow?: boolean; 
+  light?: Light; 
 }
 
 export default class IvyObject {
@@ -20,7 +23,7 @@ export default class IvyObject {
   pos?: Vector3;
   rot?: Euler;
   scale?: Vector3;
-  material?: MeshStandardMaterial; 
+  material?: Material; 
   geometry?: BoxGeometry;
 
   constructor(options: IvyObjectOptions) {
@@ -28,45 +31,57 @@ export default class IvyObject {
     this.name = options.name ?? "unnamed";
   }
 
-  mount() {
+  mount = () => {
+    const light = this.options.light;
+    if (light) {
+      this.mountLight();
+    } else {
+      this.mountObject();
+    }
+  }
+
+  setObjectSize = () => {
+    if (!this.object) return;
+
+    this.object.position.copy(this.options.pos ?? new Vector3(0, 0, 0));
+    this.pos = this.object.position;
+
+    this.object.rotation.copy(this.options.rot ?? new Euler(0, 0, 0));
+    this.rot = this.object.rotation;
+
+    this.object.scale.copy(this.options.scale ?? new Vector3(1, 1, 1));
+    this.scale = this.object.scale;
+  }
+
+  mountLight = () => {
+    const light = this.options.light;
+    if (!light) return;
+    this.object = light;
+    light.position.copy(this.options.pos ?? new Vector3(0, 0, 0));
+    
+    this.scene?.threeScene.add( this.object );
+    light.castShadow = this.options.shadow ?? false;
+
+    this.setObjectSize();
+  }
+
+  mountObject = () => {
     const geometry = this.options.geometry ?? new BoxGeometry( 1, 1, 1 ); 
     this.geometry = geometry;
     const material = this.options.material ?? new MeshStandardMaterial( {color: this.options.color ?? 0x00ff00} );
     this.material = material;
-
-    const cube = new Mesh( geometry, material );
-
-    cube.position.copy(this.options.pos ?? new Vector3(0, 0, 0));
-    this.pos = cube.position;
-
-    cube.rotation.copy(this.options.rot ?? new Euler(0, 0, 0));
-    this.rot = cube.rotation;
-
-    cube.scale.copy(this.options.scale ?? new Vector3(1, 1, 1));
-    this.scale = cube.scale;
-    
-    this.scene?.threeScene.add( cube );
-    this.object = cube;
+    this.object = new Mesh( geometry, material );
+    this.scene?.threeScene.add( this.object );
+   
+    if (this.options.shadow) {
+      this.object.castShadow = true;
+      this.object.receiveShadow = true;
+    }
+    this.setObjectSize();
   }
  
-  destroy() {
-    const object = this.object;
-    if (!(object instanceof Object3D)) return false;
-    // for better memory management and performance
-    if (object.geometry) {
-        object.geometry.dispose();
-    }
-    if (object.material) {
-        if (object.material instanceof Array) {
-            // for better memory management and performance
-            object.material.forEach(material => material.dispose());
-        } else {
-            // for better memory management and performance
-            object.material.dispose();
-        }
-    }
-    if (object.parent) {
-        object.parent.remove(object);
-    }
+  destroy = () => {
+    this.object && destroyObject(this.object)
+    void this.scene?.removeFromStack(this);
   }
 }

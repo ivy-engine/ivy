@@ -1,6 +1,7 @@
 import { PerspectiveCamera, WebGLRenderer } from "three";
 import IvyScene from "./ivy-scene/IvyScene";
 import Stats from "stats.js";
+import { OrbitControls } from "../v0/ivy-three/controls/OrbitControls";
 
 var stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -25,16 +26,13 @@ export default class Ivy {
 
   constructor(options: IvyOptions) {
     this.mainCamera = new PerspectiveCamera();
-    this.mainCamera.position.z = 5; 
+    this.mainCamera.position.z = -15; 
+    this.mainCamera.position.y = 5; 
     this.mainCamera.lookAt(0, 0, 0); 
 
     this.target = options.target;
     this.mount();
-    // this.renderer.shadowMap.enabled = true
-    // this.renderer.physicallyCorrectLights = true;
-   
-    console.log('new Ivy')
-   
+    this.renderer.shadowMap.enabled = true;
     window.removeEventListener("resize", this.updateSize);
     window.addEventListener("resize", this.updateSize);
   }
@@ -44,17 +42,15 @@ export default class Ivy {
   }
 
   loadScene = (scene: IvyScene) => {
-    console.log('Load Scene')
     this.loadedSceneAt = Date.now();
     const sameScene = scene.loadedAt === this.loadedSceneAt;
-    scene.loadedAt = Date.now();
     this.scene?.destroy();
 
     this.scene = scene;
     scene.core = this;
 
     if (!sameScene) {
-      console.log('new scene', this.scene)
+      scene.loadedAt = Date.now();
       scene.threeScene.add(this.mainCamera);
       scene.mount();
     }
@@ -63,6 +59,7 @@ export default class Ivy {
     if (!window.ivyRunning) {
       this.refresh();
       window.ivyRunning = true;
+      new OrbitControls(this.mainCamera, this.target);
     }
   }
 
