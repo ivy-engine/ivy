@@ -1,4 +1,4 @@
-import { AmbientLight, BoxGeometry, DirectionalLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, MeshToonMaterial, Scene } from "three";
+import { AmbientLight, BoxGeometry, Camera, DirectionalLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, MeshToonMaterial, Scene } from "three";
 import Ivy from "../Ivy";
 import IvyObject from "../ivy-object/IvyObject";
 import destroyObject from "../lib/destroyObject";
@@ -17,7 +17,7 @@ export default class IvyScene {
   threeScene = new Scene();
   core?: Ivy; 
   mounted = false; 
-  onMount?: () => void;
+  onMount?: (camera: Camera) => void;
   onDestroy?: () => void;
 
   constructor(name: string, options: IvySceneOptions = {}) {
@@ -40,7 +40,9 @@ export default class IvyScene {
  
   mount = () => {
     this.mounted = true;
-    this.onMount?.();
+    if (this.core?.mainCamera) {
+      this.onMount?.(this.core?.mainCamera);
+    }
     for (const object of this.objectStack) {
       object.mount();
     }
@@ -48,7 +50,7 @@ export default class IvyScene {
 
   update = () => {
     for (const object of this.objectStack) {
-      object.update?.();
+      object.update?.(object);
     }
   }
 

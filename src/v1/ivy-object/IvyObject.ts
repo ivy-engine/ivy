@@ -20,7 +20,7 @@ export default class IvyObject {
   initialItem = false;
   object?: Object3D;
   scene?: IvyScene;
-  update?: () => void;
+  update?: (object: IvyObject) => void;
   pos?: Vector3;
   rot?: Euler;
   scale?: Vector3;
