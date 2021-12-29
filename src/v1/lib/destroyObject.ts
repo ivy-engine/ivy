@@ -1,11 +1,14 @@
-import { Object3D } from "three";
+import { Group, Object3D } from "three";
 
-export default function destroyObject(object: Object3D) {
-  if (!(object instanceof Object3D)) return false;
+export default function destroyObject(object: Object3D | Group) {
+  if (!(object instanceof Object3D)) {
+      return false
+  };
   // for better memory management and performance
   if (object.geometry) {
       object.geometry.dispose();
   }
+
   if (object.material) {
       if (object.material instanceof Array) {
           // for better memory management and performance
@@ -15,6 +18,7 @@ export default function destroyObject(object: Object3D) {
           object.material.dispose();
       }
   }
+
   if (object.parent) {
       object.parent.remove(object);
   }

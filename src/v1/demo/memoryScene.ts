@@ -25,6 +25,7 @@ new IvyObject({
 let to: any = 0;
 memoryScene.onMount = () => {
   to = setInterval(() => {
+    const z = Math.random() * 1; 
     const b = new IvyObject({
       material: new MeshPhongMaterial( { 
         color: 0xffffff * Math.random(),
@@ -34,12 +35,13 @@ memoryScene.onMount = () => {
     } ) ,
     
       pos: new Vector3(
-        0,
+        Math.random() * 5 - 2.5,
         15,
+        z
         // ((i / 10) - 5) * -1,
       ),
      
-      scale: new Vector3(5,.15,.1),
+      scale: new Vector3(0.1,0.5,.1),
     });
     b.update = (o) => {
       if (o.pos.y < -15) {

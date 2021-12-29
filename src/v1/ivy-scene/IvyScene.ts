@@ -1,4 +1,4 @@
-import { AmbientLight, BoxGeometry, Camera, DirectionalLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, MeshToonMaterial, Scene } from "three";
+import { AmbientLight, BoxGeometry, Camera, DirectionalLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, MeshToonMaterial, PerspectiveCamera, Scene } from "three";
 import Ivy from "../Ivy";
 import IvyObject from "../ivy-object/IvyObject";
 import destroyObject from "../lib/destroyObject";
@@ -30,6 +30,7 @@ export default class IvyScene {
     for (const object of objects) {
       object.scene = this;
       this.objectStack.push(object);
+
       if (this.mounted) {
         object.mount()
       } else {
@@ -39,12 +40,14 @@ export default class IvyScene {
   }
  
   mount = () => {
+    this.destroy(); 
+
     this.mounted = true;
-    if (this.core?.mainCamera) {
-      this.onMount?.(this.core?.mainCamera);
-    }
     for (const object of this.objectStack) {
       object.mount();
+    }
+    if (this.core?.mainCamera) {
+      this.onMount?.(this.core?.mainCamera);
     }
   }
 
@@ -55,19 +58,22 @@ export default class IvyScene {
   }
 
   destroy = () => {
+    this.mounted = false;
     this.onDestroy?.();
-    
-    for (const object of this.threeScene.children) {
+   
+    const children = this.threeScene.children;
+    for (const object of children) {
       destroyObject(object);
     }
     
     for (const object of this.objectStack) {
       object.destroy();
     }
-    this.mounted = false;
+
+    this.objectStack = this.objectStack.filter(o => o.initialItem);
   }
 
-  removeFromStack = async (object: IvyObject) => {
+  removeFromStack = (object: IvyObject) => {
     if (object.initialItem) return 
 
     const index = this.objectStack.indexOf(object);

@@ -1,10 +1,11 @@
 <script>
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import testScene from "./v1/demo/testScene";
   import memoryScene from "./v1/demo/memoryScene";
   import shadowScene from "./v1/demo/shadowScene";
   import Ivy from "./v1/Ivy";
   import xScene from "./v1/demo/xScene";
+  import surfaceScatteringScene from "./v1/demo/surfaceScatteringScene";
 
   let ivy;
   let canvas;
@@ -30,13 +31,20 @@
       target: canvas,
     });
 
-    ivy.loadScene(shadowScene);
+    ivy.loadScene(surfaceScatteringScene);
+  });
+
+  onDestroy(() => {
+    ivy.destroy();
   });
 </script>
 
 <div class="sidebar">
   <button on:click={handleClick(memoryScene, { warning: true })}
     >Memory Test</button
+  >
+  <button on:click={handleClick(surfaceScatteringScene)}
+    >Surface Scattering</button
   >
   <button on:click={handleClick(shadowScene)}>Shadow Scene</button>
   <button on:click={handleClick(testScene)}>Test Scene</button>

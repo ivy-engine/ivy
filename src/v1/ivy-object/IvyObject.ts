@@ -1,4 +1,18 @@
-import { AmbientLight, BoxGeometry, Color, Euler, Light, Material, Mesh, MeshStandardMaterial, MeshToonMaterial, Object3D, Vector3 } from "three";
+import {
+  AmbientLight,
+  BoxGeometry,
+  BufferGeometry,
+  Color,
+  Euler,
+  Group,
+  Light,
+  Material,
+  Mesh,
+  MeshStandardMaterial,
+  MeshToonMaterial,
+  Object3D,
+  Vector3,
+} from "three";
 import IvyScene from "../ivy-scene/IvyScene";
 import destroyObject from "../lib/destroyObject";
 
@@ -8,10 +22,12 @@ export interface IvyObjectOptions {
   rot?: Euler;
   scale?: Vector3;
   color?: number | Color;
-  material?: MeshStandardMaterial; 
-  geometry?: BoxGeometry;
-  shadow?: boolean; 
-  light?: Light; 
+  material?: Material;
+  geometry?: BufferGeometry;
+  shadow?: boolean;
+  light?: Light;
+  addToScene?: boolean;
+  group?: boolean;
 }
 
 export default class IvyObject {
@@ -21,68 +37,107 @@ export default class IvyObject {
   object?: Object3D;
   scene?: IvyScene;
   update?: (object: IvyObject) => void;
-  pos?: Vector3;
-  rot?: Euler;
+  pos: Vector3 = new Vector3();
+  rot: Euler = new Euler();
   scale?: Vector3;
-  material?: Material; 
-  geometry?: BoxGeometry;
+  material?: Material;
+  geometry?: BufferGeometry;
+  group?: Group;
 
   constructor(options: IvyObjectOptions) {
     this.options = options;
     this.name = options.name ?? "unnamed";
+    if (options.pos) {
+      this.pos.copy(options.pos);
+    }
+    if (options.rot) {
+      this.rot.copy(options.rot);
+    }
+    if (options.scale) {
+      this.scale = options.scale;
+    }
+    this.material =
+      options.material ??
+      new MeshStandardMaterial({ color: options.color ?? 0x00ff00 });
+    if (options.geometry) {
+      this.geometry = options.geometry;
+    }
+
+    console.log(this.material, this.geometry);
+    if (this.material && this.geometry) {
+      this.object = new Mesh(this.geometry, this.material);
+    }
+
+    if (options.group) {
+      this.group = new Group();
+    }
   }
 
   mount = () => {
     const light = this.options.light;
+    if (this.group) {
+      this.scene?.threeScene.add(this.group);
+    }
+
     if (light) {
       this.mountLight();
     } else {
       this.mountObject();
     }
-  }
+  };
 
   setObjectSize = () => {
     if (!this.object) return;
+    const target = this.group ? this.group : this.object;
 
-    this.object.position.copy(this.options.pos ?? new Vector3(0, 0, 0));
-    this.pos = this.object.position;
+    target.position.copy(this.options.pos ?? this.pos);
+    this.pos = target.position;
 
-    this.object.rotation.copy(this.options.rot ?? new Euler(0, 0, 0));
-    this.rot = this.object.rotation;
+    target.rotation.copy(this.options.rot ?? this.rot);
+    this.rot = target.rotation;
 
-    this.object.scale.copy(this.options.scale ?? new Vector3(1, 1, 1));
-    this.scale = this.object.scale;
-  }
+    target.scale.copy(this.options.scale ?? new Vector3(1, 1, 1));
+    this.scale = target.scale;
+  };
 
   mountLight = () => {
     const light = this.options.light;
     if (!light) return;
     this.object = light;
-    light.position.copy(this.options.pos ?? new Vector3(0, 0, 0));
-    
-    this.scene?.threeScene.add( this.object );
+    light.position.copy(this.options.pos ?? this.pos);
+
+    if (this.options.addToScene !== false) {
+      const target = this.group ? this.group : this.scene?.threeScene;
+      target?.add(this.object);
+    }
+
     light.castShadow = this.options.shadow ?? false;
 
     this.setObjectSize();
-  }
+  };
 
   mountObject = () => {
-    const geometry = this.options.geometry ?? new BoxGeometry( 1, 1, 1 ); 
+    const geometry = this.geometry ?? new BoxGeometry(1, 1, 1);
     this.geometry = geometry;
-    const material = this.options.material ?? new MeshStandardMaterial( {color: this.options.color ?? 0x00ff00} );
+    const material = this.material;
     this.material = material;
-    this.object = new Mesh( geometry, material );
-    this.scene?.threeScene.add( this.object );
-   
-    if (this.options.shadow) {
-      this.object.castShadow = true;
-      this.object.receiveShadow = true;
+    this.object = this.object ?? new Mesh(geometry, material);
+
+    if (this.options.addToScene !== false) {
+      const target = this.group ? this.group : this.scene?.threeScene;
+
+      target?.add(this.object);
+      if (this.options.shadow) {
+        this.object.castShadow = true;
+        this.object.receiveShadow = true;
+      }
     }
+
     this.setObjectSize();
-  }
- 
-  destroy = () => {
-    this.object && destroyObject(this.object)
-    void this.scene?.removeFromStack(this);
-  }
+  };
+
+  destroy = (): boolean => {
+    this.object && destroyObject(this.object);
+    return this.scene?.removeFromStack(this) ?? true;
+  };
 }

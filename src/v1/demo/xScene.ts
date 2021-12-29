@@ -15,10 +15,17 @@ xScene.add(new IvyObject({
   shadow: true, 
 }))
 
-xScene.add(new IvyObject({
+const x = new IvyObject({
   name: 'box',
+  pos: new Vector3(0.5, 0, 0), 
   shadow: true, 
   color: 0xaaafff,
-}))
+})
+xScene.add(x);
+
+
+x.update = (o) => {
+  o.rot.y -= 0.01;
+}
 
 export default xScene;

@@ -17,6 +17,7 @@ shadowScene.add(new IvyObject({
 
 shadowScene.add(new IvyObject({
   name: 'box',
+  pos: new Vector3(-0.5, 0, 0), 
   shadow: true, 
   color: 0x0f20f3,
 }))
