@@ -4,6 +4,7 @@ import {
   BufferGeometry,
   Color,
   Euler,
+  Float32BufferAttribute,
   Group,
   Light,
   Material,
@@ -11,8 +12,10 @@ import {
   MeshStandardMaterial,
   MeshToonMaterial,
   Object3D,
+  Points,
   Vector3,
 } from "three";
+import type { MeshSurfaceSampler } from "three/examples/jsm/math/MeshSurfaceSampler";
 import IvyScene from "../ivy-scene/IvyScene";
 import destroyObject from "../lib/destroyObject";
 
@@ -28,6 +31,11 @@ export interface IvyObjectOptions {
   light?: Light;
   addToScene?: boolean;
   group?: boolean;
+  surfaceScattering?: {
+    count: number; 
+    sampler: typeof MeshSurfaceSampler;
+    pointMaterial: Material;
+  };
 }
 
 export default class IvyObject {
@@ -37,8 +45,8 @@ export default class IvyObject {
   object?: Object3D;
   scene?: IvyScene;
   update?: (object: IvyObject) => void;
-  pos: Vector3 = new Vector3();
-  rot: Euler = new Euler();
+  pos: Vector3;
+  rot: Euler;
   scale?: Vector3;
   material?: Material;
   geometry?: BufferGeometry;
@@ -47,29 +55,26 @@ export default class IvyObject {
   constructor(options: IvyObjectOptions) {
     this.options = options;
     this.name = options.name ?? "unnamed";
-    if (options.pos) {
-      this.pos.copy(options.pos);
-    }
-    if (options.rot) {
-      this.rot.copy(options.rot);
-    }
-    if (options.scale) {
-      this.scale = options.scale;
-    }
-    this.material =
-      options.material ??
-      new MeshStandardMaterial({ color: options.color ?? 0x00ff00 });
-    if (options.geometry) {
-      this.geometry = options.geometry;
-    }
+    this.pos = options.pos ?? new Vector3();
+    this.rot = options.rot ?? new Euler();
+    this.scale = options.scale;
 
-    console.log(this.material, this.geometry);
-    if (this.material && this.geometry) {
-      this.object = new Mesh(this.geometry, this.material);
+    if (!options.light) {
+      this.material =
+        options.material ?? new MeshStandardMaterial({ color: options.color });
+      this.geometry = options.geometry ?? new BoxGeometry(1, 1, 1);
+
+      if (this.material && this.geometry) {
+        this.object = new Mesh(this.geometry, this.material);
+      }
     }
 
     if (options.group) {
       this.group = new Group();
+    }
+   
+    if (options.surfaceScattering) {
+      this.initSurfaceScattering(options.surfaceScattering);
     }
   }
 
@@ -117,7 +122,7 @@ export default class IvyObject {
   };
 
   mountObject = () => {
-    const geometry = this.geometry ?? new BoxGeometry(1, 1, 1);
+    const geometry = this.geometry;
     this.geometry = geometry;
     const material = this.material;
     this.material = material;
@@ -135,6 +140,27 @@ export default class IvyObject {
 
     this.setObjectSize();
   };
+
+  initSurfaceScattering = ({ sampler, pointMaterial, count }: any) => {
+    if (!this.group) {
+      throw Error("Surface scattering requires a group");
+    }
+
+    const samplerInstance = new sampler(this.object).build();
+
+    const vertices = new Float32Array(count * 3);
+    const tmpPos = new Vector3();
+    for (let i = 0; i < count; i++) {
+      samplerInstance.sample(tmpPos);
+      vertices.set([tmpPos.x, tmpPos.y, tmpPos.z], i * 3);
+    }
+
+    const pointGeo = new BufferGeometry();
+    pointGeo.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+
+    const points = new Points(pointGeo, pointMaterial);
+    this.group.add(points);
+  }
 
   destroy = (): boolean => {
     this.object && destroyObject(this.object);
