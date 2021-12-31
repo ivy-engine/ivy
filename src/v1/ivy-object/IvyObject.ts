@@ -13,6 +13,7 @@ import {
   MeshToonMaterial,
   Object3D,
   Points,
+  PointsMaterial,
   Vector3,
 } from "three";
 import type { MeshSurfaceSampler } from "three/examples/jsm/math/MeshSurfaceSampler";
@@ -35,6 +36,7 @@ export interface IvyObjectOptions {
     count: number; 
     sampler: typeof MeshSurfaceSampler;
     pointMaterial: Material;
+    color?: number | Color | ((i: number, pos: Vector3, obj: IvyObject) => [number, number, number]);
   };
 }
 
@@ -141,22 +143,41 @@ export default class IvyObject {
     this.setObjectSize();
   };
 
-  initSurfaceScattering = ({ sampler, pointMaterial, count }: any) => {
+  initSurfaceScattering = ({ sampler, pointMaterial, count, color = 0xffffff }: any) => {
     if (!this.group) {
       throw Error("Surface scattering requires a group");
+    }
+
+    let uniqueColor = typeof color === "function";
+    let colors: Float32Array = new Float32Array(0);
+
+    if (uniqueColor) {
+      colors = new Float32Array(count * 3);
+      pointMaterial.vertexColors = true;
+    } else {
+      pointMaterial.color.set(color);
     }
 
     const samplerInstance = new sampler(this.object).build();
 
     const vertices = new Float32Array(count * 3);
     const tmpPos = new Vector3();
+
+    
+    const pointGeo = new BufferGeometry();
+    
     for (let i = 0; i < count; i++) {
       samplerInstance.sample(tmpPos);
       vertices.set([tmpPos.x, tmpPos.y, tmpPos.z], i * 3);
+
+      if (uniqueColor) {
+        colors.set(color(i, tmpPos, this), i * 3);
+      }
     }
 
-    const pointGeo = new BufferGeometry();
     pointGeo.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+    pointGeo.setAttribute('color', new Float32BufferAttribute(colors, 3));
+
 
     const points = new Points(pointGeo, pointMaterial);
     this.group.add(points);
