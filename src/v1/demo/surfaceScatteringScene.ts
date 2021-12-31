@@ -6,17 +6,17 @@ import dotTexture from "../textures/dotTexture";
 
 const scene = new IvyScene('Shadow Scene');
 const colorPalette = [
-  new Color(0xFF3D68),
+  new Color(0xaa3D68),
   new Color(0xFFA824),
+  new Color(0x22E822), 
 ]
 
 const obj = new IvyObject({
-  geometry: new TorusKnotGeometry(4, 1.3, 100, 16) ,
+  geometry: new TorusKnotGeometry(3, 1.4, 100, 20, 2, 1) ,
   addToScene: false,
-  pos: new Vector3(0, -.5, 0), 
   group: true,
   surfaceScattering: {
-    count: 15000, 
+    count: 30000, 
     sampler: MeshSurfaceSampler,
     pointMaterial: new PointsMaterial({
       size: 0.08,
@@ -24,7 +24,8 @@ const obj = new IvyObject({
       map: new TextureLoader().load(dotTexture),
     }),
     color: (_, pos) => {
-      const x = new Color(colorPalette[0]).lerp(colorPalette[1], pos.y / 4);
+      let x = new Color(colorPalette[0]).lerp(colorPalette[1], pos.y / 5);
+      x = x.lerp(colorPalette[2], pos.z / 4);
       return [x.r, x.g, x.b];
     },
   }
