@@ -1,21 +1,14 @@
-import { group_outros } from "svelte/internal";
-import { BoxGeometry, BufferGeometry, Color, Euler, Float32BufferAttribute, Group, Mesh, PlaneGeometry, Points, PointsMaterial, TextureLoader, TorusKnotGeometry, Vector3 } from "three";
+import {Color, PointsMaterial, TextureLoader, TorusKnotGeometry, Vector3 } from "three";
 import {MeshSurfaceSampler} from 'three/examples/jsm/math/MeshSurfaceSampler'
-import defaultLights from "../defaultLights";
 import IvyObject from "../ivy-object/IvyObject";
 import IvyScene from "../ivy-scene/IvyScene";
 import dotTexture from "../textures/dotTexture";
 
 const scene = new IvyScene('Shadow Scene');
-
-scene.add(...defaultLights());
-
 const colorPalette = [
   new Color(0xFF3D68),
   new Color(0xFFA824),
 ]
-
-
 
 const obj = new IvyObject({
   geometry: new TorusKnotGeometry(4, 1.3, 100, 16) ,
@@ -27,7 +20,7 @@ const obj = new IvyObject({
     sampler: MeshSurfaceSampler,
     pointMaterial: new PointsMaterial({
       size: 0.08,
-      alphaTest: 0.3, 
+      alphaTest: 0.6, 
       map: new TextureLoader().load(dotTexture),
     }),
     color: (_, pos) => {
