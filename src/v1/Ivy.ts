@@ -41,7 +41,7 @@ export default class Ivy {
 
   resetCamera(): void {
     this.mainCamera = new PerspectiveCamera();
-    this.mainCamera.position.z = -15;
+    this.mainCamera.position.z = 15;
     this.mainCamera.position.y = 5;
     this.mainCamera.lookAt(0, 0, 0);
     if (this.scene) {
