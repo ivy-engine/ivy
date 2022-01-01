@@ -15,10 +15,10 @@ const obj = new IvyObject({
   geometry: new TorusKnotGeometry(3, 1.4, 100, 20, 2, 1) ,
   addToScene: false,
   surfaceScattering: {
-    count: 30000, 
+    count: 20000, 
     sampler: MeshSurfaceSampler,
     pointMaterial: new PointsMaterial({
-      size: 0.08,
+      size: 0.1,
       alphaTest: 0.6, 
       map: new TextureLoader().load(dotTexture),
     }),

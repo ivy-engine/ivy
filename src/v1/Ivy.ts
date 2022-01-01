@@ -1,4 +1,4 @@
-import { PerspectiveCamera, WebGLRenderer } from "three";
+import { Camera, PerspectiveCamera, WebGLRenderer } from "three";
 import IvyScene from "./ivy-scene/IvyScene";
 import Stats from "stats.js";
 import { OrbitControls } from "./ivy-three/controls/OrbitControls";
@@ -20,7 +20,7 @@ export default class Ivy {
   renderer = new WebGLRenderer({
     antialias: true,
   });
-  mainCamera: PerspectiveCamera;
+  mainCamera: Camera;
   scene?: IvyScene;
   alive = true;
 
@@ -50,6 +50,14 @@ export default class Ivy {
     } else {
       console.warn("No scene to add camera to");
     }
+  }
+
+  setMainCamera = (camera: Camera) => {
+    this.mainCamera = camera;
+    this.scene?.threeScene.remove(this.mainCamera);
+    this.scene?.threeScene.add(this.mainCamera);
+    new OrbitControls(this.mainCamera, this.renderer.domElement);
+    this.updateSize();
   }
 
   destroy = () => {

@@ -19,7 +19,7 @@ export default function createText(
 
   const textGeo = new TextGeometry(text, {
     font: font,
-    size: ((options.size || 1) * 0.8) * scale,
+    size: ((options.size || 10) * 0.8) * scale,
     height: ((options.height || 0.05) * 0.98) * scale,
     curveSegments: options.curveSegments || 20,
     bevelEnabled: options.bevelEnabled || true,

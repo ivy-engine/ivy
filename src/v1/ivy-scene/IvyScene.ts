@@ -7,6 +7,7 @@ interface IvySceneOptions {
   physics?: boolean;
   gravity?: number;
   controls?: "orbit";
+  camera?: Camera;
 }
 
 export default class IvyScene {
@@ -24,7 +25,7 @@ export default class IvyScene {
   constructor(name: string, options: IvySceneOptions = {}) {
     this.loadedAt = 0;
     this.options = options;
-    this.name = name;
+    this.name = name; 
   }
  
   add = (...objects: IvyObject[]) => {
@@ -43,6 +44,10 @@ export default class IvyScene {
   mount = () => {
     this.destroy(); 
 
+    if (this.options.camera) {
+      this.setMainCamera(this.options.camera);
+    }
+
     this.mounted = true;
     for (const object of this.objectStack) {
       object?.mount();
@@ -56,6 +61,10 @@ export default class IvyScene {
     for (const object of this.objectStack) {
       object?._active && object.update?.(object);
     }
+  }
+ 
+  setMainCamera = (camera: Camera) => {
+    this.core?.setMainCamera(camera);
   }
 
   destroy = () => {

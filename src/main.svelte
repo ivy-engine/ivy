@@ -1,26 +1,31 @@
 <script>
   import { onDestroy, onMount } from "svelte";
-  import testScene from "./v1/demo/testScene";
-  import memoryScene from "./v1/demo/memoryScene";
-  import shadowScene from "./v1/demo/shadowScene";
   import Ivy from "./v1/Ivy";
-  import xScene from "./v1/demo/xScene";
-  import surfaceScatteringScene from "./v1/demo/surfaceScatteringScene";
-  import textScene from "./v1/demo/text/textScene";
-  import testScatterScene from "./v1/demo/text/testScatterScene";
+  const testScene = () => import("./v1/demo/testScene");
+  const memoryScene = () => import("./v1/demo/memoryScene");
+  const shadowScene = () => import("./v1/demo/shadowScene");
+  const xScene = () => import("./v1/demo/xScene");
+  const surfaceScatteringScene = () =>
+    import("./v1/demo/surfaceScatteringScene");
+  const textScene = () => import("./v1/demo/text/textScene");
+  const testScatterScene = () => import("./v1/demo/text/testScatterScene");
+  const areaLightScene = () => import("./v1/demo/lights/areaLightScene");
 
   let ivy;
   let canvas;
   let currentScene;
   let showWarning = false;
 
-  const handleClick =
+  const launch =
     (scene, options = {}) =>
     (e) => {
-      e.preventDefault();
+      e?.preventDefault();
       const disabled = window.localStorage.getItem("ivy-warning") === "false";
       if (!disabled) showWarning = !!options.warning;
-      ivy.loadScene(scene);
+
+      scene().then((res) => {
+        ivy.loadScene(res.default);
+      });
     };
 
   const disableWarning = () => {
@@ -33,7 +38,7 @@
       target: canvas,
     });
 
-    ivy.loadScene(memoryScene);
+    launch(surfaceScatteringScene)();
   });
 
   onDestroy(() => {
@@ -42,18 +47,21 @@
 </script>
 
 <div class="sidebar">
-  <button on:click={handleClick(memoryScene, { warning: true })}
-    >Memory Test</button
-  >
-  <button on:click={handleClick(surfaceScatteringScene)}
-    >Surface Scattering</button
-  >
-  <button on:click={handleClick(textScene)}>Text (TTF)</button>
-  <button on:click={handleClick(testScatterScene)}>Text Point Scattering</button
-  >
-  <button on:click={handleClick(shadowScene)}>Shadow Scene</button>
-  <button on:click={handleClick(testScene)}>Test Scene</button>
-  <button on:click={handleClick(xScene)}>X Scene</button>
+  <h3>Sampling</h3>
+  <button on:click={launch(surfaceScatteringScene)}>Surface Scattering</button>
+
+  <h3>Text</h3>
+  <button on:click={launch(textScene)}>Text (TTF)</button>
+  <button on:click={launch(testScatterScene)}>Text Point Scattering</button>
+
+  <h3>Light</h3>
+  <button on:click={launch(areaLightScene)}>Light Area Rect</button>
+
+  <h3>Other</h3>
+  <button on:click={launch(shadowScene)}>Shadow Scene</button>
+  <button on:click={launch(testScene)}>Test Scene</button>
+  <button on:click={launch(xScene)}>X Scene</button>
+  <button on:click={launch(memoryScene, { warning: true })}>Memory Test</button>
 </div>
 
 <div bind:this={canvas} class="scene" id="scene " />
@@ -70,6 +78,11 @@
   button {
     display: block;
     width: 100%;
+  }
+
+  h3 {
+    margin: 1em 0 0.2em 0.2em;
+    font-size: 0.8em;
   }
 
   .sidebar {
