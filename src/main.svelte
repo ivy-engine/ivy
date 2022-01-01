@@ -33,7 +33,7 @@
       target: canvas,
     });
 
-    ivy.loadScene(testScatterScene);
+    ivy.loadScene(memoryScene);
   });
 
   onDestroy(() => {

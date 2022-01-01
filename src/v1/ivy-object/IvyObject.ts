@@ -52,6 +52,7 @@ export interface IvyObjectOptions {
   surfaceScattering?: SurfaceScatteringOptions;
   font?: IvyObjectFontOptions;
   text?: string;
+  props?: { [key: string]: any }; 
 }
 
 export default class IvyObject {
@@ -67,6 +68,8 @@ export default class IvyObject {
   material?: Material;
   geometry?: BufferGeometry;
   group?: Group;
+  props: { [key: string]: any };
+  _active = false;
 
   get _target() {
     return this.group ?? this.scene?.threeScene;
@@ -79,6 +82,7 @@ export default class IvyObject {
     this.rot = options.rot ?? new Euler();
     this.scale = options.scale ?? new Vector3(1, 1, 1);
     this.geometry = options.geometry;
+    this.props = options.props ?? {};
 
     this.initGeneral();
   }
@@ -196,6 +200,7 @@ export default class IvyObject {
   };
 
   mountObject = () => {
+    this._active = true;
     const geometry = this.geometry;
     this.geometry = geometry;
     const material = this.material;
@@ -222,9 +227,9 @@ export default class IvyObject {
     group.add(points);
   };
 
-  destroy = (): boolean => {
+  destroy = () => {
+    this._active = false; 
     this.object && destroyObject(this.object);
     this.group && destroyObject(this.group); 
-    return this.scene?.removeFromStack(this) ?? true;
   };
 }

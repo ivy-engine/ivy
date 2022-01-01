@@ -13,12 +13,13 @@ export default class IvyScene {
   loadedAt: number;
   name: string;
   options: IvySceneOptions;
-  objectStack: IvyObject[] = [];
+  objectStack: Array<IvyObject | undefined> = [];
   threeScene = new Scene();
   core?: Ivy; 
-  mounted = false; 
+  mounted = false;  
   onMount?: (camera: Camera) => void;
   onDestroy?: () => void;
+  _tidyInterval = 0;
 
   constructor(name: string, options: IvySceneOptions = {}) {
     this.loadedAt = 0;
@@ -44,7 +45,7 @@ export default class IvyScene {
 
     this.mounted = true;
     for (const object of this.objectStack) {
-      object.mount();
+      object?.mount();
     }
     if (this.core?.mainCamera) {
       this.onMount?.(this.core?.mainCamera);
@@ -53,7 +54,7 @@ export default class IvyScene {
 
   update = () => {
     for (const object of this.objectStack) {
-      object.update?.(object);
+      object?._active && object.update?.(object);
     }
   }
 
@@ -67,17 +68,9 @@ export default class IvyScene {
     }
     
     for (const object of this.objectStack) {
-      object.destroy();
+      object?.destroy();
     }
 
-    this.objectStack = this.objectStack.filter(o => o.initialItem);
-  }
-
-  removeFromStack = (object: IvyObject) => {
-    if (object.initialItem) return 
-
-    const index = this.objectStack.indexOf(object);
-    if (index === -1) return;
-    this.objectStack.splice(index, 1);
+    this.objectStack = this.objectStack.filter(o => o?.initialItem);
   }
 }
