@@ -23,6 +23,7 @@ export default class Ivy {
   mainCamera: Camera;
   scene?: IvyScene;
   alive = true;
+  controls?: OrbitControls; 
 
   constructor(options: IvyOptions) {
     this.mainCamera = new PerspectiveCamera();
@@ -32,6 +33,7 @@ export default class Ivy {
     this.target.innerHTML = "";
     this.target.appendChild(this.renderer.domElement);
     this.renderer.shadowMap.enabled = true;
+    // this.renderer.toneMappingExposure = 0.2;
 
     window.removeEventListener("resize", this.updateSize);
     window.addEventListener("resize", this.updateSize);
@@ -46,7 +48,8 @@ export default class Ivy {
     this.mainCamera.lookAt(0, 0, 0);
     if (this.scene) {
       this.scene.threeScene.add(this.mainCamera);
-      new OrbitControls(this.mainCamera, this.renderer.domElement);
+      this.controls?.dispose?.();
+      this.controls = new OrbitControls(this.mainCamera, this.renderer.domElement);
     } else {
       console.warn("No scene to add camera to");
     }
@@ -56,7 +59,8 @@ export default class Ivy {
     this.mainCamera = camera;
     this.scene?.threeScene.remove(this.mainCamera);
     this.scene?.threeScene.add(this.mainCamera);
-    new OrbitControls(this.mainCamera, this.renderer.domElement);
+    this.controls?.dispose?.();
+    this.controls = new OrbitControls(this.mainCamera, this.renderer.domElement);
     this.updateSize();
   }
 
@@ -86,6 +90,9 @@ export default class Ivy {
   };
 
   render(): void {
+    if (this.controls) {
+      this.controls.update?.();
+    }
     if (this.scene) {
       this.scene.update();
       this.renderer.render(this.scene.threeScene, this.mainCamera);
@@ -93,8 +100,10 @@ export default class Ivy {
   }
 
   setSize(width: number, height: number): void {
-    this.mainCamera.aspect = width / height;
-    this.mainCamera.updateProjectionMatrix();
+    if (this.mainCamera instanceof PerspectiveCamera) {
+      this.mainCamera.aspect = width / height;
+      this.mainCamera.updateProjectionMatrix();
+    }
     this.renderer.setSize(width, height);
   }
 

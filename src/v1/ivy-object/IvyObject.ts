@@ -32,10 +32,10 @@ export interface IvyObjectFontOptions {
   size?: number;
   height?: number;
   curveSegments?: number;
-   bevelEnabled?: boolean;
-   bevelSegments?: number;
-   bevelSize?: number;
-   bevelThickness?: number;
+  bevelEnabled?: boolean;
+  bevelSegments?: number;
+  bevelSize?: number;
+  bevelThickness?: number;
 }
 export interface IvyObjectOptions {
   name?: string;
@@ -52,7 +52,8 @@ export interface IvyObjectOptions {
   surfaceScattering?: SurfaceScatteringOptions;
   font?: IvyObjectFontOptions;
   text?: string;
-  props?: { [key: string]: any }; 
+  props?: { [key: string]: any };
+  object?: Object3D;
 }
 
 export default class IvyObject {
@@ -83,6 +84,7 @@ export default class IvyObject {
     this.scale = options.scale ?? new Vector3(1, 1, 1);
     this.geometry = options.geometry;
     this.props = options.props ?? {};
+    this.object = options.object;
 
     this.initGeneral();
   }
@@ -90,6 +92,10 @@ export default class IvyObject {
   initGeneral() {
     if (this.options.group) {
       this.setupGroup();
+    }
+
+    if (this.options.object) {
+      return;
     }
 
     this.material =
@@ -100,21 +106,25 @@ export default class IvyObject {
   initAsLight() {}
 
   initAsText() {
-    const {ttfFile} = this.options.font ?? {};
+    const { ttfFile } = this.options.font ?? {};
     const text = this.options.text!;
 
     this.setupGroup();
-    
 
     if (!ttfFile) {
       throw new Error("No font file provided: `font.ttfFile`");
-    };
+    }
 
     loadFont(ttfFile).then((font) => {
       if (!this.material) {
         throw new Error("Text requires material");
-      }; 
-      const {object, position} = createText(text, font, this.material, this.options.font!)
+      }
+      const { object, position } = createText(
+        text,
+        font,
+        this.material,
+        this.options.font!
+      );
       this.object = object;
       this.mountObject();
 
@@ -137,7 +147,7 @@ export default class IvyObject {
       this.initSurfaceScattering(this.options.surfaceScattering);
     }
   }
- 
+
   setupGroup(): Group {
     if (!this.group) {
       this.group = new Group();
@@ -151,6 +161,13 @@ export default class IvyObject {
     this.destroy();
 
     const light = this.options.light;
+
+    if (this.options.object) {
+      this._target?.add(this.options.object);
+      return;
+    }
+
+    
     if (this.options.light) {
       this.initAsLight();
     } else if (this.options.text) {
@@ -167,7 +184,7 @@ export default class IvyObject {
       this.mountLight();
     } else {
       this.mountObject();
-    } 
+    }
   };
 
   setObjectSize = () => {
@@ -217,7 +234,10 @@ export default class IvyObject {
     this.setObjectSize();
   };
 
-  initSurfaceScattering = (options: SurfaceScatteringOptions, position: Vector3 = new Vector3()) => {
+  initSurfaceScattering = (
+    options: SurfaceScatteringOptions,
+    position: Vector3 = new Vector3()
+  ) => {
     const group = this.setupGroup();
     if (!this.object) {
       throw Error("Surface scattering requires an object");
@@ -228,8 +248,8 @@ export default class IvyObject {
   };
 
   destroy = () => {
-    this._active = false; 
+    this._active = false;
     this.object && destroyObject(this.object);
-    this.group && destroyObject(this.group); 
+    this.group && destroyObject(this.group);
   };
 }

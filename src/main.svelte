@@ -1,6 +1,7 @@
 <script>
   import { onDestroy, onMount } from "svelte";
   import Ivy from "./v1/Ivy";
+  const skyScene = () => import("./v1/demo/skyScene");
   const testScene = () => import("./v1/demo/testScene");
   const memoryScene = () => import("./v1/demo/memoryScene");
   const shadowScene = () => import("./v1/demo/shadowScene");
@@ -38,7 +39,7 @@
       target: canvas,
     });
 
-    launch(surfaceScatteringScene)();
+    launch(skyScene)();
   });
 
   onDestroy(() => {
@@ -57,10 +58,13 @@
   <h3>Light</h3>
   <button on:click={launch(areaLightScene)}>Light Area Rect</button>
 
+  <h3>Sky</h3>
+  <button on:click={launch(skyScene)}>Sky Sunset</button>
+
   <h3>Other</h3>
   <button on:click={launch(shadowScene)}>Shadow Scene</button>
   <button on:click={launch(testScene)}>Test Scene</button>
-  <button on:click={launch(xScene)}>X Scene</button>
+  <button on:click={launch(skyScene)}>Sky</button>
   <button on:click={launch(memoryScene, { warning: true })}>Memory Test</button>
 </div>
 

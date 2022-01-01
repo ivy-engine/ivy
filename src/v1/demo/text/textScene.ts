@@ -1,7 +1,6 @@
 import IvyScene from "../../ivy-scene/IvyScene";
 import defaultLights from "../../defaultLights";
 import IvyObject from "../../ivy-object/IvyObject";
-import { Euler } from "three";
 
 const ivyScene = new IvyScene('Text Scene');
 ivyScene.add(...defaultLights());
