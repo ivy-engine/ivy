@@ -1,7 +1,10 @@
-import { Camera, PerspectiveCamera, WebGLRenderer } from "three";
+import { Camera, Clock, PerspectiveCamera, WebGLRenderer } from "three";
 import IvyScene from "./ivy-scene/IvyScene";
 import Stats from "stats.js";
 import { OrbitControls } from "./ivy-three/controls/OrbitControls";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { Pass } from "three/examples/jsm/postprocessing/Pass";
 
 var stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -23,7 +26,11 @@ export default class Ivy {
   mainCamera: Camera;
   scene?: IvyScene;
   alive = true;
-  controls?: OrbitControls; 
+  controls?: OrbitControls;
+  clock = new Clock();
+  composer?: EffectComposer;
+  renderScene?: Pass;
+  composerLayers: Pass[] = [];
 
   constructor(options: IvyOptions) {
     this.mainCamera = new PerspectiveCamera();
@@ -33,7 +40,6 @@ export default class Ivy {
     this.target.innerHTML = "";
     this.target.appendChild(this.renderer.domElement);
     this.renderer.shadowMap.enabled = true;
-    // this.renderer.toneMappingExposure = 0.2;
 
     window.removeEventListener("resize", this.updateSize);
     window.addEventListener("resize", this.updateSize);
@@ -49,7 +55,10 @@ export default class Ivy {
     if (this.scene) {
       this.scene.threeScene.add(this.mainCamera);
       this.controls?.dispose();
-      this.controls = new OrbitControls(this.mainCamera, this.renderer.domElement);
+      this.controls = new OrbitControls(
+        this.mainCamera,
+        this.renderer.domElement
+      );
     } else {
       console.warn("No scene to add camera to");
     }
@@ -60,9 +69,13 @@ export default class Ivy {
     this.scene?.threeScene.remove(this.mainCamera);
     this.scene?.threeScene.add(this.mainCamera);
     this.controls?.dispose();
-    this.controls = new OrbitControls(this.mainCamera, this.renderer.domElement);
+    this.controls = new OrbitControls(
+      this.mainCamera,
+      this.renderer.domElement
+    );
     this.updateSize();
-  }
+    this.setupComposer();
+  };
 
   destroy = () => {
     this.alive = false;
@@ -82,20 +95,33 @@ export default class Ivy {
     this.scene = scene;
     scene.core = this;
 
+
     this.resetCamera();
     this.updateSize();
+    
+    this.setupComposer();
 
     scene.mount();
     this.render();
   };
 
+  setupComposer(): void {
+    if (!this.scene) return;
+
+    this.renderScene = new RenderPass(this.scene.threeScene, this.mainCamera);
+    this.composer = new EffectComposer(this.renderer);
+    this.composer.addPass(this.renderScene);
+
+    this.composerLayers = [this.renderScene];
+  }
+
   render(): void {
+    if (this.scene) {
+      this.scene.update(this.clock);
+      this.composer?.render();
+    }
     if (this.controls) {
       this.controls.update?.();
-    }
-    if (this.scene) {
-      this.scene.update();
-      this.renderer.render(this.scene.threeScene, this.mainCamera);
     }
   }
 
@@ -105,6 +131,9 @@ export default class Ivy {
       this.mainCamera.updateProjectionMatrix();
     }
     this.renderer.setSize(width, height);
+    for (const layer of this.composerLayers) {
+      layer.setSize(width, height);
+    }
   }
 
   updateSize = () => {

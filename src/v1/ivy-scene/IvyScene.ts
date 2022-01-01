@@ -1,4 +1,5 @@
-import { AmbientLight, BoxGeometry, Camera, DirectionalLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, MeshToonMaterial, PerspectiveCamera, Scene } from "three";
+import { AmbientLight, BoxGeometry, Camera, Clock, DirectionalLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, MeshToonMaterial, PerspectiveCamera, Scene } from "three";
+import { Pass } from "three/examples/jsm/postprocessing/Pass";
 import Ivy from "../Ivy";
 import IvyObject from "../ivy-object/IvyObject";
 import destroyObject from "../lib/destroyObject";
@@ -42,6 +43,14 @@ export default class IvyScene {
     }
   }
  
+  addComposerPass(pass: Pass) {
+    if (this.core?.composer) {
+      this.core.composer.addPass(pass);
+      this.core.composerLayers.push(pass);
+      this.core.updateSize(); 
+    }
+  }
+ 
   mount = () => {
     this.destroy(); 
 
@@ -56,9 +65,9 @@ export default class IvyScene {
     this.onMount?.(this);
   }
 
-  update = () => {
+  update = (clock: Clock) => {
     for (const object of this.objectStack) {
-      object?._active && object.update?.(object);
+      object?._active && object.update?.(object, clock);
     }
     this.onUpdate?.(this);
   }

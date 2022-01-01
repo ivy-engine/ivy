@@ -2,6 +2,7 @@ import {
   AmbientLight,
   BoxGeometry,
   BufferGeometry,
+  Clock,
   Color,
   Euler,
   Float32BufferAttribute,
@@ -62,7 +63,7 @@ export default class IvyObject {
   initialItem = false;
   object?: Object3D;
   scene?: IvyScene;
-  update?: (object: IvyObject) => void;
+  update?: (object: IvyObject, clock: Clock) => void;
   pos: Vector3;
   rot: Euler;
   scale: Vector3;

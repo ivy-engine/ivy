@@ -10,9 +10,20 @@ import {
   PerspectiveCamera,
   PlaneGeometry,
   RectAreaLight,
+  ShaderMaterial,
   TorusKnotGeometry,
+  Vector2,
   Vector3,
 } from "three";
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
+
+import bloomVertexShader from "../lib/shaders/bloom/vertex.glsl";
+import bloomFragmentShader from "../lib/shaders/bloom/frag.glsl";
+
+
 
 const cam = new PerspectiveCamera();
 cam.position.copy(new Vector3(0, 0, 13));
@@ -61,9 +72,59 @@ const obj = new IvyObject({
 
 ivyScene.add(obj, ...lights);
 
+// BLOOM
+const params = {
+  exposure: 1,
+  bloomStrength: .5,
+  bloomThreshold: .01,
+  bloomRadius: 0.1
+};
+
+ivyScene.onMount = (scene) => {
+  // const renderScene = scene.core!.renderScene!;
+  // const renderer = scene.core!.renderer!;
+
+  // const bloomPass = new UnrealBloomPass( new Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
+	// 			bloomPass.threshold = params.bloomThreshold;
+	// 			bloomPass.strength = params.bloomStrength;
+	// 			bloomPass.radius = params.bloomRadius;
+ 
+  // const bloomComposer = new EffectComposer( renderer );
+	// 		bloomComposer.renderToScreen = false;
+	// 		bloomComposer.addPass( renderScene );
+	// 		bloomComposer.addPass( bloomPass );
+
+  // scene.addComposerPass( bloomPass );
+
+  // const finalPass = new ShaderPass(
+  //   new ShaderMaterial( {
+  //     uniforms: {
+  //       baseTexture: { value: null },
+  //       bloomTexture: { value: bloomComposer.renderTarget2.texture }
+  //     },
+  //     vertexShader: bloomVertexShader,
+  //     fragmentShader: bloomFragmentShader,
+  //     defines: {}
+  //   } ), "baseTexture"
+  // );
+  // finalPass.needsSwap = true;
+  
+  // scene.addComposerPass( finalPass );
+  // scene.addComposerPass( bloomPass );
+
+
+  const bloomPass = new UnrealBloomPass( new Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
+				bloomPass.threshold = params.bloomThreshold;
+				bloomPass.strength = params.bloomStrength;
+				bloomPass.radius = params.bloomRadius;
+
+  scene.addComposerPass( bloomPass );
+}
+
 obj.update = ({ rot }) => {
   rot.z += 0.005;
 };
+
 
 const bloomScene = ivyScene;
 export default bloomScene;
