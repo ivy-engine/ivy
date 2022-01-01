@@ -48,7 +48,7 @@ export default class Ivy {
     this.mainCamera.lookAt(0, 0, 0);
     if (this.scene) {
       this.scene.threeScene.add(this.mainCamera);
-      this.controls?.dispose?.();
+      this.controls?.dispose();
       this.controls = new OrbitControls(this.mainCamera, this.renderer.domElement);
     } else {
       console.warn("No scene to add camera to");
@@ -59,7 +59,7 @@ export default class Ivy {
     this.mainCamera = camera;
     this.scene?.threeScene.remove(this.mainCamera);
     this.scene?.threeScene.add(this.mainCamera);
-    this.controls?.dispose?.();
+    this.controls?.dispose();
     this.controls = new OrbitControls(this.mainCamera, this.renderer.domElement);
     this.updateSize();
   }

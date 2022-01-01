@@ -1,0 +1,1 @@
+import{V as e,D as a,A as i}from"./vendor.cc2cfa35.js";import{a as t}from"./IvyScene.bf968ae4.js";const n=()=>new t({name:"lightA",pos:new e(2,4,1),light:new a(16777215,1),shadow:!0}),o=()=>new t({name:"lightB",light:new i(16777215,.3)});var r=()=>[n(),o()];export{r as d};

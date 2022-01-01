@@ -1,0 +1,1 @@
+import{t as a,V as t,y as s}from"./vendor.cc2cfa35.js";import{d as r}from"./defaultLights.27a53020.js";import{I as n,a as o}from"./IvyScene.bf968ae4.js";const e=new n("Test Scene");e.add(...r());e.add(new o({geometry:new a(10,1,10),pos:new t(0,-2,0),rot:new s(0,.1,0),name:"floor",shadow:!0}));e.add(new o({name:"box",shadow:!0,color:11154176}));export{e as default};
