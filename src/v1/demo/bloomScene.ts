@@ -58,7 +58,7 @@ RectAreaLightUniformsLib.init();
 const lights = [
   ...createLight(new Vector3(-7, 0, -5), 0xff0000),
   ...createLight(new Vector3(0, 0, -5), 0x0000ff),
-  ...createLight(new Vector3(7, 0, -5), 0x00ff00),
+  ...createLight(new Vector3(7, 0, -5), 0x00ff00),  
 ];
 
 const obj = new IvyObject({
@@ -74,45 +74,13 @@ ivyScene.add(obj, ...lights);
 
 // BLOOM
 const params = {
-  exposure: 1,
-  bloomStrength: .5,
-  bloomThreshold: .01,
-  bloomRadius: 0.1
+  exposure: 0,
+  bloomStrength: .7,
+  bloomThreshold: 0,
+  bloomRadius: 0.2
 };
 
 ivyScene.onMount = (scene) => {
-  // const renderScene = scene.core!.renderScene!;
-  // const renderer = scene.core!.renderer!;
-
-  // const bloomPass = new UnrealBloomPass( new Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
-	// 			bloomPass.threshold = params.bloomThreshold;
-	// 			bloomPass.strength = params.bloomStrength;
-	// 			bloomPass.radius = params.bloomRadius;
- 
-  // const bloomComposer = new EffectComposer( renderer );
-	// 		bloomComposer.renderToScreen = false;
-	// 		bloomComposer.addPass( renderScene );
-	// 		bloomComposer.addPass( bloomPass );
-
-  // scene.addComposerPass( bloomPass );
-
-  // const finalPass = new ShaderPass(
-  //   new ShaderMaterial( {
-  //     uniforms: {
-  //       baseTexture: { value: null },
-  //       bloomTexture: { value: bloomComposer.renderTarget2.texture }
-  //     },
-  //     vertexShader: bloomVertexShader,
-  //     fragmentShader: bloomFragmentShader,
-  //     defines: {}
-  //   } ), "baseTexture"
-  // );
-  // finalPass.needsSwap = true;
-  
-  // scene.addComposerPass( finalPass );
-  // scene.addComposerPass( bloomPass );
-
-
   const bloomPass = new UnrealBloomPass( new Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
 				bloomPass.threshold = params.bloomThreshold;
 				bloomPass.strength = params.bloomStrength;
