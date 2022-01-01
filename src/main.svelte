@@ -11,6 +11,7 @@
   const textScene = () => import("./v1/demo/text/textScene");
   const testScatterScene = () => import("./v1/demo/text/testScatterScene");
   const areaLightScene = () => import("./v1/demo/lights/areaLightScene");
+  const bloomScene = () => import("./v1/demo/bloomScene");
 
   let ivy;
   let canvas;
@@ -21,6 +22,11 @@
     (scene, options = {}) =>
     (e) => {
       e?.preventDefault();
+      const id = e?.target?.id;
+      if (id) {
+        window.location.hash = id;
+      }
+
       const disabled = window.localStorage.getItem("ivy-warning") === "false";
       if (!disabled) showWarning = !!options.warning;
 
@@ -39,7 +45,8 @@
       target: canvas,
     });
 
-    launch(testScatterScene)();
+    const id = window.location.hash.split("#")[1];
+    document.getElementById(id)?.click();
   });
 
   onDestroy(() => {
@@ -49,23 +56,29 @@
 
 <div class="sidebar">
   <h3>Sampling</h3>
-  <button on:click={launch(surfaceScatteringScene)}>Surface Scattering</button>
+  <button on:click={launch(surfaceScatteringScene)} id="1"
+    >Surface Scattering</button
+  >
 
   <h3>Text</h3>
-  <button on:click={launch(textScene)}>Text (TTF)</button>
-  <button on:click={launch(testScatterScene)}>Text Point Scattering</button>
+  <button on:click={launch(textScene)} id="2">Text (TTF)</button>
+  <button on:click={launch(testScatterScene)} id="3"
+    >Text Point Scattering</button
+  >
 
   <h3>Light</h3>
-  <button on:click={launch(areaLightScene)}>Light Area Rect</button>
+  <button on:click={launch(areaLightScene)} id="4">Light Area Rect</button>
+  <button on:click={launch(bloomScene)} id="bloom">Bloom</button>
 
   <h3>Sky</h3>
-  <button on:click={launch(skyScene)}>Sky Sunset</button>
+  <button on:click={launch(skyScene)} id="5">Sky Sunset</button>
 
   <h3>Other</h3>
-  <button on:click={launch(shadowScene)}>Shadow Scene</button>
-  <button on:click={launch(testScene)}>Test Scene</button>
-  <button on:click={launch(skyScene)}>Sky</button>
-  <button on:click={launch(memoryScene, { warning: true })}>Memory Test</button>
+  <button on:click={launch(shadowScene)} id="6">Shadow Scene</button>
+  <button on:click={launch(testScene)} id="7">Test Scene</button>
+  <button on:click={launch(memoryScene, { warning: true })} id="8"
+    >Memory Test</button
+  >
 </div>
 
 <div bind:this={canvas} class="scene" id="scene " />

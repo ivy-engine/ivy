@@ -1,1 +1,0 @@
-import{I as s,a as c}from"./IvyScene.bf968ae4.js";import{d as i}from"./defaultLights.27a53020.js";import"./vendor.cc2cfa35.js";const e=new s("Text Scene");e.add(...i());const n=new c({text:"Ivy",font:{ttfFile:"Audiowide-Regular.ttf"},color:3403569});e.add(n);let t=0;n.update=({rot:a})=>{t++,a.y=Math.sin(t/70)*.2,a.x=Math.sin(t/50)*.16};const r=e;export{r as default};

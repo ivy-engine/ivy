@@ -28,7 +28,6 @@ const ivyText = new IvyObject({
 
 ivyScene.add(ivyText);
 
-
 ivyScene.onMount = (scene) => {
   if (scene.core?.controls) {
     scene.core.controls.autoRotate = true;
