@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import {
   EventDispatcher,
   MOUSE,
@@ -20,6 +22,9 @@ const _startEvent = { type: "start" };
 const _endEvent = { type: "end" };
 
 class OrbitControls extends EventDispatcher {
+	update() {}
+	dispose() {}
+
   // Set to false to disable this control
   enabled = true;
 

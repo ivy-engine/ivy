@@ -1,21 +1,23 @@
 import { Group, Object3D } from "three";
 
-export default function destroyObject(object: Object3D | Group) {
+export default function destroyObject(object: Object3D | Group) : void{
   if (!(object instanceof Object3D)) {
-      return false
+      return
   };
+
+  const o = object as any;
   // for better memory management and performance
-  if (object.geometry) {
-      object.geometry.dispose();
+  if (o.geometry) {
+      o.geometry.dispose();
   }
 
-  if (object.material) {
-      if (object.material instanceof Array) {
+  if (o.material) {
+      if (o.material instanceof Array) {
           // for better memory management and performance
-          object.material.forEach(material => material.dispose());
+          o.material.forEach((material: any) => material.dispose());
       } else {
           // for better memory management and performance
-          object.material.dispose();
+          o.material.dispose();
       }
   }
  

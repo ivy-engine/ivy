@@ -34,6 +34,7 @@ export default function createText(
   if (anyCenter) {
     textGeo.computeBoundingBox();
     const box = textGeo.boundingBox;
+    if (!box) return { object, position };
 
     if (centerX) {
       const centerOffsetX = -0.5 * (box.max.x - box.min.x);
