@@ -81,23 +81,11 @@ export default class IvyObject {
     this.geometry = options.geometry;
 
     this.initGeneral();
-
-    if (options.light) {
-      this.initAsLight();
-    } else if (options.text) {
-      this.initAsText();
-    } else {
-      this.initAsObject();
-    }
-
-    if (options.surfaceScattering) {
-      this.initSurfaceScattering(options.surfaceScattering);
-    }
   }
 
   initGeneral() {
     if (this.options.group) {
-      this.group = new Group();
+      this.setupGroup();
     }
 
     this.material =
@@ -111,6 +99,9 @@ export default class IvyObject {
     const {ttfFile} = this.options.font ?? {};
     const text = this.options.text!;
 
+    this.setupGroup();
+    
+
     if (!ttfFile) {
       throw new Error("No font file provided: `font.ttfFile`");
     };
@@ -118,16 +109,15 @@ export default class IvyObject {
     loadFont(ttfFile).then((font) => {
       if (!this.material) {
         throw new Error("Text requires material");
-      };
-      const textObject = createText(text, font, this.material, this.options.font!)
-      this.object = textObject;
-      this.scale.add(textObject.scale);
-      this.pos.add(textObject.position);
-      this.setObjectSize(textObject);
-      this._target?.add(textObject); 
+      }; 
+      const {object, position} = createText(text, font, this.material, this.options.font!)
+      this.object = object;
+      this.mountObject();
+
+      if (this.options.surfaceScattering) {
+        this.initSurfaceScattering(this.options.surfaceScattering, position);
+      }
     });
-
-
   }
 
   initAsObject() {
@@ -138,10 +128,33 @@ export default class IvyObject {
     if (this.material && this.geometry) {
       this.object = new Mesh(this.geometry, this.material);
     }
+
+    if (this.options.surfaceScattering) {
+      this.initSurfaceScattering(this.options.surfaceScattering);
+    }
+  }
+ 
+  setupGroup(): Group {
+    if (!this.group) {
+      this.group = new Group();
+      this.setObjectSize();
+    }
+
+    return this.group;
   }
 
   mount = () => {
+    this.destroy();
+
     const light = this.options.light;
+    if (this.options.light) {
+      this.initAsLight();
+    } else if (this.options.text) {
+      this.initAsText();
+    } else {
+      this.initAsObject();
+    }
+
     if (this.group) {
       this.scene?.threeScene.add(this.group);
     }
@@ -150,12 +163,12 @@ export default class IvyObject {
       this.mountLight();
     } else {
       this.mountObject();
-    }
+    } 
   };
 
-  setObjectSize = (source?: Object3D) => {
+  setObjectSize = () => {
     if (!this.object) return;
-    const target = this.group ? this.group : this.object;
+    const target = this.group ?? this.object;
 
     target.position.copy(this.pos ?? this.options.pos);
     this.pos = target.position;
@@ -187,9 +200,8 @@ export default class IvyObject {
     this.geometry = geometry;
     const material = this.material;
     this.material = material;
-    this.object = this.object ?? new Mesh(geometry, material);
 
-    if (this.options.addToScene !== false) {
+    if (this.object && this.options.addToScene !== false) {
       this._target?.add(this.object);
       if (this.options.shadow) {
         this.object.castShadow = true;
@@ -200,20 +212,19 @@ export default class IvyObject {
     this.setObjectSize();
   };
 
-  initSurfaceScattering = (options: SurfaceScatteringOptions) => {
-    if (!this.group) {
-      throw Error("Surface scattering requires a group");
-    }
+  initSurfaceScattering = (options: SurfaceScatteringOptions, position: Vector3 = new Vector3()) => {
+    const group = this.setupGroup();
     if (!this.object) {
       throw Error("Surface scattering requires an object");
     }
 
-    const points = surfaceSampler(this.object, options);
-    this.group.add(points);
+    const points = surfaceSampler(this.object, options, position);
+    group.add(points);
   };
 
   destroy = (): boolean => {
     this.object && destroyObject(this.object);
+    this.group && destroyObject(this.group); 
     return this.scene?.removeFromStack(this) ?? true;
   };
 }

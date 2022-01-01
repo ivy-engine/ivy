@@ -7,6 +7,7 @@
   import xScene from "./v1/demo/xScene";
   import surfaceScatteringScene from "./v1/demo/surfaceScatteringScene";
   import textScene from "./v1/demo/text/textScene";
+  import testScatterScene from "./v1/demo/text/testScatterScene";
 
   let ivy;
   let canvas;
@@ -32,7 +33,7 @@
       target: canvas,
     });
 
-    ivy.loadScene(textScene);
+    ivy.loadScene(testScatterScene);
   });
 
   onDestroy(() => {
@@ -48,6 +49,8 @@
     >Surface Scattering</button
   >
   <button on:click={handleClick(textScene)}>Text (TTF)</button>
+  <button on:click={handleClick(testScatterScene)}>Text Point Scattering</button
+  >
   <button on:click={handleClick(shadowScene)}>Shadow Scene</button>
   <button on:click={handleClick(testScene)}>Test Scene</button>
   <button on:click={handleClick(xScene)}>X Scene</button>
@@ -66,16 +69,19 @@
 <style>
   button {
     display: block;
-    width: 200px;
+    width: 100%;
   }
 
   .sidebar {
     color: white;
-    width: 200px;
+    width: 199px;
     height: 100%;
     position: fixed;
     top: 0;
+    border-right: 1px solid white;
     left: 0;
+    padding: 10px;
+    box-sizing: border-box;
   }
 
   .scene,

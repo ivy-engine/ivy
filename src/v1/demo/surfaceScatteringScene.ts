@@ -14,7 +14,6 @@ const colorPalette = [
 const obj = new IvyObject({
   geometry: new TorusKnotGeometry(3, 1.4, 100, 20, 2, 1) ,
   addToScene: false,
-  group: true,
   surfaceScattering: {
     count: 30000, 
     sampler: MeshSurfaceSampler,

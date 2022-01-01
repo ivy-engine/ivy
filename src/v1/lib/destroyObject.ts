@@ -18,6 +18,10 @@ export default function destroyObject(object: Object3D | Group) {
           object.material.dispose();
       }
   }
+ 
+  for (const child of object.children) {
+      destroyObject(child);
+  }
 
   if (object.parent) {
       object.parent.remove(object);

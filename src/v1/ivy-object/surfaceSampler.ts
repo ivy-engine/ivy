@@ -23,7 +23,8 @@ export interface SurfaceScatteringOptions {
 
 export default function surfaceSampler(
   object: Object3D,
-  { sampler, pointMaterial, count, color = 0xffffff }: any
+  { sampler, pointMaterial, count, color = 0xffffff }: any,
+  position: Vector3 = new Vector3(),
 ): Points {
   let uniqueColor = typeof color === "function";
   let colors: Float32Array = new Float32Array(0);
@@ -35,6 +36,8 @@ export default function surfaceSampler(
     pointMaterial.color.set(color);
   }
 
+  const offset = position.toArray();
+
   const samplerInstance = new sampler(object).build();
 
   const vertices = new Float32Array(count * 3);
@@ -44,7 +47,7 @@ export default function surfaceSampler(
 
   for (let i = 0; i < count; i++) {
     samplerInstance.sample(tmpPos);
-    vertices.set([tmpPos.x, tmpPos.y, tmpPos.z], i * 3);
+    vertices.set([offset[0] + tmpPos.x, offset[1] + tmpPos.y, offset[2] + tmpPos.z], i * 3);
 
     if (uniqueColor) {
       colors.set(color(i, tmpPos), i * 3);

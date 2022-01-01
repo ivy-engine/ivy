@@ -7,7 +7,6 @@ ivyScene.add(...defaultLights());
 
 const ivyText = new IvyObject({
   text: 'Ivy',
-  group: true, 
   font: {
     ttfFile: 'Audiowide-Regular.ttf',
     size: 8
