@@ -13,13 +13,11 @@ const ivyText = new IvyObject({
   font: {
     ttfFile: 'Audiowide-Regular.ttf',
     size: 20,
-    height: 2,
-    bevelThickness: 2,
-    bevelSize: 0.2
+    height: 4,
   },
   addToScene: false,
   surfaceScattering: {
-    count: 50000, 
+    count: 60000, 
     sampler: MeshSurfaceSampler,
     pointMaterial: new PointsMaterial({
       size: 0.01,
@@ -30,9 +28,12 @@ const ivyText = new IvyObject({
 
 ivyScene.add(ivyText);
 
-ivyText.update = ({rot}) => { 
-  rot.y += 0.01;
-}
+
+ivyScene.onMount = (scene) => {
+  if (scene.core?.controls) {
+    scene.core.controls.autoRotate = true;
+  }
+};
 
 const testScatterScene = ivyScene;
 export default testScatterScene;

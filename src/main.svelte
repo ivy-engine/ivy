@@ -39,7 +39,7 @@
       target: canvas,
     });
 
-    launch(skyScene)();
+    launch(testScatterScene)();
   });
 
   onDestroy(() => {
