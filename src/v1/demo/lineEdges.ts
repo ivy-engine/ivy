@@ -17,7 +17,7 @@ scene.add(
     color: 0xff2244,
     rot: new Euler(Math.PI, 0.3, 0), 
     geometry: new ConeGeometry(6, 6, 10),
-    line: { type: "segments", dashed: true, dashSize: 0.03, gapSize: 0.01 },
+    line: { type: "segments", dashed: true },
   })
 );
 
