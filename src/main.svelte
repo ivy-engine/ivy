@@ -1,5 +1,7 @@
 <script>
   import { onDestroy, onMount } from "svelte";
+  const lineScene = () => import("./v1/demo/lineScene");
+  const lineEdges = () => import("./v1/demo/lineEdges");
   import Ivy from "./v1/Ivy";
   const skyScene = () => import("./v1/demo/skyScene");
   const testScene = () => import("./v1/demo/testScene");
@@ -45,7 +47,7 @@
       target: canvas,
     });
 
-    const id = window.location.hash.split("#")[1];
+    const id = window.location.hash.split("#")[1] ?? "1";
     document.getElementById(id)?.click();
   });
 
@@ -55,6 +57,10 @@
 </script>
 
 <div class="sidebar">
+  <h3>Lines</h3>
+  <button on:click={launch(lineScene)} id="lines">Lines</button>
+  <button on:click={launch(lineEdges)} id="lines-edges">Edges</button>
+
   <h3>Sampling</h3>
   <button on:click={launch(surfaceScatteringScene)} id="1"
     >Surface Scattering</button

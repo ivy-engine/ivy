@@ -2,12 +2,17 @@ import {
   AmbientLight,
   BoxGeometry,
   BufferGeometry,
+  CatmullRomCurve3,
   Clock,
   Color,
+  EdgesGeometry,
   Euler,
   Float32BufferAttribute,
   Group,
   Light,
+  Line,
+  LineBasicMaterial,
+  LineSegments,
   Material,
   Mesh,
   MeshStandardMaterial,
@@ -17,6 +22,11 @@ import {
   PointsMaterial,
   Vector3,
 } from "three";
+import { Line2 } from "three/examples/jsm/lines/Line2";
+import { LineGeometry } from "three/examples/jsm/lines/LineGeometry";
+import { LineMaterial } from "three/examples/jsm/lines/LineMaterial";
+import { LineSegments2 } from "three/examples/jsm/lines/LineSegments2";
+import { LineSegmentsGeometry } from "three/examples/jsm/lines/LineSegmentsGeometry";
 import type { MeshSurfaceSampler } from "three/examples/jsm/math/MeshSurfaceSampler";
 import IvyScene from "../ivy-scene/IvyScene";
 import createText from "../lib/createText";
@@ -38,6 +48,20 @@ export interface IvyObjectFontOptions {
   bevelSize?: number;
   bevelThickness?: number;
 }
+
+type posXYZ = [x: number, y: number, z: number];
+type colRGB = [r: number, g: number, b: number];
+export interface IvyObjectLineOptions {
+  points?: Vector3[];
+  type?: "segments" | "edges";
+  linewidth?: number;
+  worldUnits?: boolean;
+  color?: (position: posXYZ) => colRGB;
+  dashed?: boolean; 
+  dashOffset?: number,
+  dashSize?: number,
+  gapSize?: number 
+}
 export interface IvyObjectOptions {
   name?: string;
   pos?: Vector3;
@@ -55,6 +79,7 @@ export interface IvyObjectOptions {
   text?: string;
   props?: { [key: string]: any };
   object?: Object3D;
+  line?: IvyObjectLineOptions;
 }
 
 export default class IvyObject {
@@ -105,6 +130,81 @@ export default class IvyObject {
   }
 
   initAsLight() {}
+
+  initAsLine() {
+    const lineOptions = this.options.line;
+    if (!lineOptions) {
+      throw new Error("No line options provided");
+    }
+
+    const positions: number[] = [];
+    const colors: number[] = [];
+    const point = new Vector3();
+    const color = new Color();
+
+    let points = lineOptions.points ?? [];
+    const vertexColors = Boolean(lineOptions.color);
+
+    const material = new LineMaterial({
+      color: vertexColors ? undefined : this.material?.color,
+      linewidth: lineOptions.linewidth ?? 0.04, // in world units with size attenuation, pixels otherwise
+      vertexColors,
+      worldUnits: lineOptions.worldUnits ?? true, 
+
+      // resolution:  // to be set by renderer, eventually
+      dashed: lineOptions.dashed ?? false,
+      dashOffset: lineOptions.dashOffset ?? 0,
+      dashSize: lineOptions.dashSize ?? 0.1,
+      gapSize: lineOptions.gapSize ?? 0.1,
+      alphaToCoverage: true,
+    });
+
+    if (lineOptions.type === "segments") {
+      const edges = new EdgesGeometry(this.geometry);
+      const g = new LineSegmentsGeometry();
+      const pos = edges.getAttribute("position");
+
+      for (let i = 0; i < pos.count; i++) {
+        const point: posXYZ = [pos.getX(i), pos.getY(i), pos.getZ(i)];
+        positions.push(...point);
+        if (lineOptions.color) {
+          const col = lineOptions.color(point);
+          colors.push(...col);
+        }
+      }
+
+      g.setPositions(positions);
+      if (lineOptions.color) {
+        console.log(color);
+        g.setColors(colors);
+      }
+      const l = new LineSegments2(g, material);
+      l.computeLineDistances();
+      l.scale.set(1, 1, 1);
+      this.object = l;
+    } else {
+      for (let i = 0, l = points.length; i < l; i++) {
+        const point = points[i];
+        const pointPos: posXYZ = [point.x, point.y, point.z];
+        positions.push(...pointPos);
+        if (lineOptions.color) {
+          const col = lineOptions.color(pointPos);
+          colors.push(...col);
+        }
+      }
+
+      const geometry = new LineGeometry();
+      geometry.setPositions(positions);
+      if (lineOptions.color) {
+        geometry.setColors(colors);
+      }
+
+      const line = new Line2(geometry, material);
+      line.computeLineDistances();
+      line.scale.set(1, 1, 1);
+      this.object = line;
+    }
+  }
 
   initAsText() {
     const { ttfFile } = this.options.font ?? {};
@@ -168,11 +268,12 @@ export default class IvyObject {
       return;
     }
 
-    
     if (this.options.light) {
       this.initAsLight();
     } else if (this.options.text) {
       this.initAsText();
+    } else if (this.options.line) {
+      this.initAsLine();
     } else {
       this.initAsObject();
     }
