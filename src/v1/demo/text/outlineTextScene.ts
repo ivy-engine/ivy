@@ -3,7 +3,7 @@ import defaultLights from "../../defaultLights";
 import IvyObject from "../../ivy-object/IvyObject";
 import { Vector3 } from "three";
 
-const ivyScene = new IvyScene("Text Scene");
+const ivyScene = new IvyScene("Text Scene Outline");
 ivyScene.add(...defaultLights());
 
 const ivyText = new IvyObject({
@@ -16,7 +16,7 @@ const ivyText = new IvyObject({
     curveSegments: 1,
   },
   line: {
-    type: "segments",
+    type: "outline",
     color: ([x, y, z]) => [Math.sin(z), Math.sin(x), Math.sin(x/4)],
   },
 });

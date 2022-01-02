@@ -1,25 +1,16 @@
 import {
-  AmbientLight,
   BoxGeometry,
   BufferGeometry,
-  CatmullRomCurve3,
   Clock,
   Color,
   EdgesGeometry,
   Euler,
-  Float32BufferAttribute,
   Group,
   Light,
-  Line,
-  LineBasicMaterial,
-  LineSegments,
   Material,
   Mesh,
   MeshStandardMaterial,
-  MeshToonMaterial,
   Object3D,
-  Points,
-  PointsMaterial,
   Vector3,
 } from "three";
 import { Line2 } from "three/examples/jsm/lines/Line2";
@@ -27,7 +18,8 @@ import { LineGeometry } from "three/examples/jsm/lines/LineGeometry";
 import { LineMaterial } from "three/examples/jsm/lines/LineMaterial";
 import { LineSegments2 } from "three/examples/jsm/lines/LineSegments2";
 import { LineSegmentsGeometry } from "three/examples/jsm/lines/LineSegmentsGeometry";
-import type { MeshSurfaceSampler } from "three/examples/jsm/math/MeshSurfaceSampler";
+import { WireframeGeometry2 } from "three/examples/jsm/lines/WireframeGeometry2";
+import { Wireframe } from "three/examples/jsm/lines/Wireframe";
 import IvyScene from "../ivy-scene/IvyScene";
 import createText from "../lib/createText";
 import destroyObject from "../lib/destroyObject";
@@ -53,14 +45,14 @@ type posXYZ = [x: number, y: number, z: number];
 type colRGB = [r: number, g: number, b: number];
 export interface IvyObjectLineOptions {
   points?: Vector3[];
-  type?: "segments" | "edges";
+  type?: "outline" | "wireframe";
   linewidth?: number;
   worldUnits?: boolean;
   color?: (position: posXYZ) => colRGB;
-  dashed?: boolean; 
-  dashOffset?: number,
-  dashSize?: number,
-  gapSize?: number 
+  dashed?: boolean;
+  dashOffset?: number;
+  dashSize?: number;
+  gapSize?: number;
 }
 export interface IvyObjectOptions {
   name?: string;
@@ -148,7 +140,7 @@ export default class IvyObject {
       color: vertexColors ? undefined : this.material?.color,
       linewidth: lineOptions.linewidth ?? 0.04, // in world units with size attenuation, pixels otherwise
       vertexColors,
-      worldUnits: lineOptions.worldUnits ?? true, 
+      worldUnits: lineOptions.worldUnits ?? true,
 
       // resolution:  // to be set by renderer, eventually
       dashed: lineOptions.dashed ?? false,
@@ -158,34 +150,54 @@ export default class IvyObject {
       alphaToCoverage: true,
     });
 
-    if (lineOptions.type === "segments") {
-      const edges = new EdgesGeometry(this.geometry);
-      const g = new LineSegmentsGeometry();
-      const pos = edges.getAttribute("position");
+    if (lineOptions.type === "outline" || lineOptions.type === "wireframe") {
+      if (lineOptions.type === "outline") {
+        const edges = new EdgesGeometry(this.geometry);
+        const g = new LineSegmentsGeometry();
+        const pos = edges.getAttribute("position");
 
-      for (let i = 0; i < pos.count; i++) {
-        const relative: colRGB = [pos.getX(i), pos.getY(i), pos.getZ(i)];
-        const point: posXYZ = [relative[0] + origin.x, relative[1] + origin.y, relative[2] + origin.z];
-        positions.push(...point);
-        if (lineOptions.color) {
-          const col = lineOptions.color(relative);
-          colors.push(...col);
+        for (let i = 0; i < pos.count; i++) {
+          const relative: colRGB = [pos.getX(i), pos.getY(i), pos.getZ(i)];
+          const point: posXYZ = [
+            relative[0] + origin.x,
+            relative[1] + origin.y,
+            relative[2] + origin.z,
+          ];
+          positions.push(...point);
+          if (lineOptions.color) {
+            const col = lineOptions.color(relative);
+            colors.push(...col);
+          }
         }
-      }
 
-      g.setPositions(positions);
-      if (lineOptions.color) {
-        console.log(color);
-        g.setColors(colors);
+        g.setPositions(positions);
+        if (lineOptions.color) {
+          console.log(color);
+          g.setColors(colors);
+        }
+        const l = new LineSegments2(g, material);
+        l.computeLineDistances();
+        l.scale.set(1, 1, 1);
+        this.object = l;
+      } else if (lineOptions.type === "wireframe") {
+        if (this.options.text) {
+          throw new Error("Wireframe not supported for text, use outline");
+        } 
+
+        const geometry = new WireframeGeometry2(this.geometry);
+        const wireframe = new Wireframe(geometry, material);
+        wireframe.computeLineDistances();
+        wireframe.scale.set(1, 1, 1);
+        this.object = wireframe;
       }
-      const l = new LineSegments2(g, material);
-      l.computeLineDistances();
-      l.scale.set(1, 1, 1);
-      this.object = l;
     } else {
       for (let i = 0, l = points.length; i < l; i++) {
         const point = points[i];
-        const pointPos: posXYZ = [point.x + origin.x, point.y + origin.y, point.z + origin.z];
+        const pointPos: posXYZ = [
+          point.x + origin.x,
+          point.y + origin.y,
+          point.z + origin.z,
+        ];
         positions.push(...pointPos);
         if (lineOptions.color) {
           const col = lineOptions.color(pointPos);
@@ -227,7 +239,7 @@ export default class IvyObject {
         this.options.font!
       );
       this.object = object;
-      this.geometry = object.geometry; 
+      this.geometry = object.geometry;
 
       if (this.options.line) {
         this.initAsLine();
