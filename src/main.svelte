@@ -1,5 +1,6 @@
 <script>
   import { onDestroy, onMount } from "svelte";
+  const outlineTextScene = () => import("./v1/demo/text/outlineTextScene");
   const lineScene = () => import("./v1/demo/lineScene");
   const lineEdges = () => import("./v1/demo/lineEdges");
   import Ivy from "./v1/Ivy";
@@ -68,6 +69,9 @@
 
   <h3>Text</h3>
   <button on:click={launch(textScene)} id="2">Text (TTF)</button>
+  <button on:click={launch(outlineTextScene)} id="text-outline"
+    >Text Outline</button
+  >
   <button on:click={launch(testScatterScene)} id="3"
     >Text Point Scattering</button
   >

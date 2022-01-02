@@ -9,10 +9,10 @@ ivyScene.add(...defaultLights());
 
 const ivyText = new IvyObject({
   text: 'Ivy',
-  pos: new Vector3(0, 2.5, 0), 
+  pos: new Vector3(0, 1, 0), 
   font: {
     ttfFile: 'Audiowide-Regular.ttf',
-    size: 20,
+    size: 12,
     height: 4,
   },
   addToScene: false,

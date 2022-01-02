@@ -3,26 +3,32 @@ import defaultLights from "../../defaultLights";
 import IvyObject from "../../ivy-object/IvyObject";
 import { Vector3 } from "three";
 
-const ivyScene = new IvyScene('Text Scene');
+const ivyScene = new IvyScene("Text Scene");
 ivyScene.add(...defaultLights());
 
 const ivyText = new IvyObject({
-  text: 'Ivy',
+  text: "Ivy",
   pos: new Vector3(0, 1, 0), 
   font: {
-    ttfFile: 'Audiowide-Regular.ttf',
+    ttfFile: "Audiowide-Regular.ttf",
+    size: 12,
+    height: 4,
+    curveSegments: 1,
   },
-  color: 0x33ef31,
+  line: {
+    type: "segments",
+    color: ([x, y, z]) => [Math.sin(z), Math.sin(x), Math.sin(x/4)],
+  },
 });
 
 ivyScene.add(ivyText);
 
 let i = 0;
-ivyText.update = ({rot}) => {
+ivyText.update = ({ rot }) => {
   i++;
   rot.y = Math.sin(i / 70) * 0.2;
   rot.x = Math.sin(i / 50) * 0.16;
-}
+};
 
-const textScene = ivyScene;
-export default textScene;
+const outlineTextScene = ivyScene;
+export default outlineTextScene;

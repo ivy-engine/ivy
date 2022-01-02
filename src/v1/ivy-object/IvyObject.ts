@@ -136,10 +136,9 @@ export default class IvyObject {
     if (!lineOptions) {
       throw new Error("No line options provided");
     }
-
+    const origin = this.object?.position ?? new Vector3();
     const positions: number[] = [];
     const colors: number[] = [];
-    const point = new Vector3();
     const color = new Color();
 
     let points = lineOptions.points ?? [];
@@ -165,10 +164,11 @@ export default class IvyObject {
       const pos = edges.getAttribute("position");
 
       for (let i = 0; i < pos.count; i++) {
-        const point: posXYZ = [pos.getX(i), pos.getY(i), pos.getZ(i)];
+        const relative: colRGB = [pos.getX(i), pos.getY(i), pos.getZ(i)];
+        const point: posXYZ = [relative[0] + origin.x, relative[1] + origin.y, relative[2] + origin.z];
         positions.push(...point);
         if (lineOptions.color) {
-          const col = lineOptions.color(point);
+          const col = lineOptions.color(relative);
           colors.push(...col);
         }
       }
@@ -185,7 +185,7 @@ export default class IvyObject {
     } else {
       for (let i = 0, l = points.length; i < l; i++) {
         const point = points[i];
-        const pointPos: posXYZ = [point.x, point.y, point.z];
+        const pointPos: posXYZ = [point.x + origin.x, point.y + origin.y, point.z + origin.z];
         positions.push(...pointPos);
         if (lineOptions.color) {
           const col = lineOptions.color(pointPos);
@@ -227,6 +227,12 @@ export default class IvyObject {
         this.options.font!
       );
       this.object = object;
+      this.geometry = object.geometry; 
+
+      if (this.options.line) {
+        this.initAsLine();
+      }
+
       this.mountObject();
 
       if (this.options.surfaceScattering) {
