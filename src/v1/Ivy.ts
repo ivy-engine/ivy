@@ -69,10 +69,14 @@ export default class Ivy {
     this.scene?.threeScene.remove(this.mainCamera);
     this.scene?.threeScene.add(this.mainCamera);
     this.controls?.dispose();
+
+    if (this.scene?.controls === 'orbit') {
     this.controls = new OrbitControls(
       this.mainCamera,
       this.renderer.domElement
     );
+    }
+
     this.updateSize();
     this.setupComposer();
   };

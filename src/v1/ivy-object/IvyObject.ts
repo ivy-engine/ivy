@@ -41,8 +41,8 @@ export interface IvyObjectFontOptions {
   bevelThickness?: number;
 }
 
-type posXYZ = [x: number, y: number, z: number];
-type colRGB = [r: number, g: number, b: number];
+export type posXYZ = [x: number, y: number, z: number];
+export type colRGB = [r: number, g: number, b: number];
 export interface IvyObjectLineOptions {
   points?: Vector3[];
   type?: "outline" | "wireframe";
@@ -185,6 +185,7 @@ export default class IvyObject {
         } 
 
         const geometry = new WireframeGeometry2(this.geometry);
+        this.geometry = geometry;
         const wireframe = new Wireframe(geometry, material);
         wireframe.computeLineDistances();
         wireframe.scale.set(1, 1, 1);
@@ -206,6 +207,7 @@ export default class IvyObject {
       }
 
       const geometry = new LineGeometry();
+      this.geometry = geometry;
       geometry.setPositions(positions);
       if (lineOptions.color) {
         geometry.setColors(colors);

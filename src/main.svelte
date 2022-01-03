@@ -1,5 +1,7 @@
 <script>
   import { onDestroy, onMount } from "svelte";
+  const mathScene = () => import("./v1/demo/mathScene");
+  const sineWavesSample = () => import("./v1/demo/samples/sineWavesSample");
   const outlineTextScene = () => import("./v1/demo/text/outlineTextScene");
   const lineScene = () => import("./v1/demo/lineScene");
   const lineEdges = () => import("./v1/demo/lineEdges");
@@ -58,12 +60,16 @@
 </script>
 
 <div class="sidebar">
+  <button on:click={launch(mathScene)} id="1">1</button>
+  <h3>Samples</h3>
+  <button on:click={launch(sineWavesSample)} id="waves">Waves</button>
+
   <h3>Lines</h3>
   <button on:click={launch(lineScene)} id="lines">Lines</button>
   <button on:click={launch(lineEdges)} id="lines-edges">Edges</button>
 
   <h3>Sampling</h3>
-  <button on:click={launch(surfaceScatteringScene)} id="1"
+  <button on:click={launch(surfaceScatteringScene)} id="surface-scattering">
     >Surface Scattering</button
   >
 
