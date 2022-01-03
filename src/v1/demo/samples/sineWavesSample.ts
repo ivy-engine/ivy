@@ -28,9 +28,9 @@ for (var v = 0; v < 20; v++) {
 }
 
 var uniforms = {
-  amplitude: {
-    type: 'f', // a float
-    value: 0
+  u_time: {
+    type: 'float', // a float
+    value:1.2
   }
 };
 
@@ -72,7 +72,7 @@ scene.onUpdate = (scene) => {
   const clock = scene.core.clock;
   // uniforms.amplitude.value = Math.sin(clock.getElapsedTime() * 10);
   // console.log(clock.getElapsedTime());
-  // material.uniforms[ 'uTime' ].value = clock.getElapsedTime();
+  material.uniforms[ 'u_time' ].value = clock.getElapsedTime();
   // waveMaterial.uniforms.time.value = 
 }
 
