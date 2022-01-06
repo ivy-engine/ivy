@@ -11,6 +11,7 @@ import {
   Mesh,
   MeshStandardMaterial,
   Object3D,
+  Scene,
   Vector3,
 } from "three";
 import { Line2 } from "three/examples/jsm/lines/Line2";
@@ -89,8 +90,13 @@ export default class IvyObject {
   group?: Group;
   props: { [key: string]: any };
   _active = false;
+  children: IvyObject[] = [];
+  parent?: IvyObject; 
 
-  get _target() {
+  get _target(): Group | Scene | undefined {
+    if (this.parent) {
+      return this.parent._target;
+    } 
     return this.group ?? this.scene?.threeScene;
   }
 
@@ -300,6 +306,7 @@ export default class IvyObject {
 
     if (this.group) {
       this.scene?.threeScene.add(this.group);
+      this.setObjectSize();
     }
 
     if (light) {
@@ -307,11 +314,15 @@ export default class IvyObject {
     } else {
       this.mountObject();
     }
+   
+    for (const child of this.children) {
+      child.mount();
+    }
   };
 
   setObjectSize = () => {
-    if (!this.object) return;
     const target = this.group ?? this.object;
+    if (!target) return;
 
     target.position.copy(this.pos ?? this.options.pos);
     this.pos = target.position;
@@ -368,9 +379,22 @@ export default class IvyObject {
     const points = surfaceSampler(this.object, options, position);
     group.add(points);
   };
+ 
+  add = (object: IvyObject) => {
+    object.parent = this;
+
+    if (!this.scene?.mounted) {
+      object.initialItem = true;
+    }
+    
+    this.children.push(object);
+  }
 
   destroy = () => {
     this._active = false;
+    for (const child of this.children) {
+      child.destroy();
+    }
     this.object && destroyObject(this.object);
     this.group && destroyObject(this.group);
   };

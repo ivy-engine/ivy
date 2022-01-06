@@ -1,5 +1,6 @@
 <script>
   import { onDestroy, onMount } from "svelte";
+  const redoMainScene = () => import("./v1/demo/redo/redoMainScene");
   const mathScene = () => import("./v1/demo/mathScene");
   const sineWavesSample = () => import("./v1/demo/samples/sineWavesSample");
   const outlineTextScene = () => import("./v1/demo/text/outlineTextScene");
@@ -60,6 +61,7 @@
 </script>
 
 <div class="sidebar">
+  <button on:click={launch(redoMainScene)} id="redo">redo</button>
   <button on:click={launch(mathScene)} id="1">1</button>
   <h3>Samples</h3>
   <button on:click={launch(sineWavesSample)} id="waves">Waves</button>
