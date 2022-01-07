@@ -87,8 +87,8 @@ for (let i = 0; i < perRow; i++) {
     );
 
     item.addInstance({
-      pos: [pos.x, pos.y, pos.z],
-      rot: [Math.PI / 2, 0, Math.PI / 6],
+      pos: new Vector3(pos.x, pos.y, pos.z),
+      rot: new Euler(Math.PI / 2, 0, Math.PI / 6),
       color: 0xffffff,
     });
   }
