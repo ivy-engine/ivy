@@ -192,7 +192,6 @@ export default class IvyObject {
 
         g.setPositions(positions);
         if (lineOptions.color) {
-          console.log(color);
           g.setColors(colors);
         }
         const l = new LineSegments2(g, material);
@@ -379,8 +378,6 @@ export default class IvyObject {
       }
     }
    
-    console.log(this)
-
     this.setObjectSize();
   };
 

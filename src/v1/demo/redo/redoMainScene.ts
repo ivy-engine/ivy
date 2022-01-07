@@ -17,8 +17,8 @@ import IvyObject from "../../ivy-object/IvyObject";
 import IvyScene from "../../ivy-scene/IvyScene";
 
 const camera = new PerspectiveCamera();
-camera.position.copy(new Vector3(0, 25, 0));
-const scene = new IvyScene("Shadow Scene", {
+camera.position.copy(new Vector3(0, 15, 0));
+const scene = new IvyScene("Instanced Scene", {
   camera: camera,
 });
 
@@ -48,7 +48,7 @@ const createHexagon = (): Shape => {
 };
 
 const extrudeSettings = {
-  depth: 2,
+  depth: 1,
   bevelSegments: 1,
   steps: 1,
   bevelSize: bezelSize,
@@ -63,11 +63,8 @@ const floor = new IvyObject({
   group: true,
 });
 
-const perRow = 100;
-const perColumn = 100;
-
-const offsetX = SQ2d3 * -1 + SQ2d3 * perRow;
-const offsetY = (0.75 * hexSize * perColumn) / 2;
+const perRow = 30;
+const perColumn = 30;
 
 const item = new IvyObject({
   name: 'grid' ,
@@ -75,7 +72,9 @@ const item = new IvyObject({
   instanced: perRow * perColumn,
 });
 
-console.log(item.object)
+
+const offsetX = SQ2d3 * -1 + SQ2d3 * perRow;
+const offsetY = (0.75 * hexSize * perColumn) / 2;
 
 for (let i = 0; i < perRow; i++) {
   for (let j = 0; j < perColumn; j++) {
