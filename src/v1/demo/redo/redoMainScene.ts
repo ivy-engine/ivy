@@ -1,8 +1,13 @@
 import {
   BoxGeometry,
+  Color,
   CylinderGeometry,
   Euler,
   ExtrudeGeometry,
+  IcosahedronGeometry,
+  InstancedMesh,
+  Matrix4,
+  MeshPhongMaterial,
   PerspectiveCamera,
   Shape,
   Vector3,
@@ -12,7 +17,7 @@ import IvyObject from "../../ivy-object/IvyObject";
 import IvyScene from "../../ivy-scene/IvyScene";
 
 const camera = new PerspectiveCamera();
-camera.position.copy(new Vector3(0, 10, 0));
+camera.position.copy(new Vector3(0, 25, 0));
 const scene = new IvyScene("Shadow Scene", {
   camera: camera,
 });
@@ -23,7 +28,7 @@ const SQ2d3 = 0.86602540378;
 const hexSize = 2;
 const bezelSize = 0.05;
 
-const finalHexSize = hexSize - (bezelSize * 2.2999999999999998);
+const finalHexSize = hexSize - bezelSize * 2.2999999999999998;
 const a = finalHexSize / 2;
 
 const createHexagon = (): Shape => {
@@ -58,29 +63,39 @@ const floor = new IvyObject({
   group: true,
 });
 
-const perRow = 40;
-const perColumn = 40;
+const perRow = 100;
+const perColumn = 100;
 
-const offsetX = (SQ2d3 * -1) + (SQ2d3 * perRow);
-const offsetY = (0.75 * hexSize * perColumn / 2);
-    
+const offsetX = SQ2d3 * -1 + SQ2d3 * perRow;
+const offsetY = (0.75 * hexSize * perColumn) / 2;
+
+const item = new IvyObject({
+  name: 'grid' ,
+  geometry,
+  instanced: perRow * perColumn,
+});
+
+console.log(item.object)
+
 for (let i = 0; i < perRow; i++) {
   for (let j = 0; j < perColumn; j++) {
-    const oddOffset = j % 2 === 0 ? SQ2d3 * -.5 : SQ2d3 * .5;
- 
-    const item = new IvyObject({
-      geometry,
-      pos: new Vector3(
-        ((i * SQ2d3 * hexSize)) - offsetX + oddOffset, 
-        0,
-        (j * (0.75 * hexSize)) - offsetY
-      ),
-      rot: new Euler(Math.PI / 2, 0, Math.PI / 6),
+    const oddOffset = j % 2 === 0 ? SQ2d3 * -0.5 : SQ2d3 * 0.5;
+
+    const pos = new Vector3(
+      i * SQ2d3 * hexSize - offsetX + oddOffset,
+      0,
+      j * (0.75 * hexSize) - offsetY
+    );
+
+    item.addInstance({
+      pos: [pos.x, pos.y, pos.z],
+      rot: [Math.PI / 2, 0, Math.PI / 6],
+      color: 0xffffff,
     });
-    floor.add(item);
   }
 }
 
+floor.add(item);
 scene.add(floor);
 
 const redoMainScene = scene;

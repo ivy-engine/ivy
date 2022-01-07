@@ -6,9 +6,12 @@ import {
   EdgesGeometry,
   Euler,
   Group,
+  InstancedMesh,
   Light,
   Material,
+  Matrix4,
   Mesh,
+  MeshPhongMaterial,
   MeshStandardMaterial,
   Object3D,
   Scene,
@@ -73,6 +76,7 @@ export interface IvyObjectOptions {
   props?: { [key: string]: any };
   object?: Object3D;
   line?: IvyObjectLineOptions;
+  instanced?: number;
 }
 
 export default class IvyObject {
@@ -89,14 +93,16 @@ export default class IvyObject {
   geometry?: BufferGeometry;
   group?: Group;
   props: { [key: string]: any };
-  _active = false;
   children: IvyObject[] = [];
-  parent?: IvyObject; 
+  parent?: IvyObject;
+  _dummyObject = new Object3D();
+  _instanceCount = 0;
+  _active = false;
 
   get _target(): Group | Scene | undefined {
     if (this.parent) {
       return this.parent._target;
-    } 
+    }
     return this.group ?? this.scene?.threeScene;
   }
 
@@ -125,6 +131,14 @@ export default class IvyObject {
     this.material =
       this.options.material ??
       new MeshStandardMaterial({ color: this.options.color ?? 0xffffff });
+
+    if (this.options.instanced) {
+      this.object = new InstancedMesh(
+        this.geometry,
+        this.material,
+        this.options.instanced
+      );
+    }
   }
 
   initAsLight() {}
@@ -188,7 +202,7 @@ export default class IvyObject {
       } else if (lineOptions.type === "wireframe") {
         if (this.options.text) {
           throw new Error("Wireframe not supported for text, use outline");
-        } 
+        }
 
         const geometry = new WireframeGeometry2(this.geometry);
         this.geometry = geometry;
@@ -266,10 +280,10 @@ export default class IvyObject {
       this.geometry = new BoxGeometry(1, 1, 1);
     }
 
-    if (this.material && this.geometry) {
-      this.object = new Mesh(this.geometry, this.material);
+    if (!this.object && this.material && this.geometry && this.options.addToScene !== false) {
+        this.object = new Mesh(this.geometry, this.material);
     }
-
+   
     if (this.options.surfaceScattering) {
       this.initSurfaceScattering(this.options.surfaceScattering);
     }
@@ -284,7 +298,7 @@ export default class IvyObject {
     return this.group;
   }
 
-  mount = () => {
+  mount() {
     this.destroy();
 
     const light = this.options.light;
@@ -314,11 +328,12 @@ export default class IvyObject {
     } else {
       this.mountObject();
     }
-   
+
     for (const child of this.children) {
+      child.scene = this.scene;
       child.mount();
     }
-  };
+  }
 
   setObjectSize = () => {
     const target = this.group ?? this.object;
@@ -363,6 +378,8 @@ export default class IvyObject {
         this.object.receiveShadow = true;
       }
     }
+   
+    console.log(this)
 
     this.setObjectSize();
   };
@@ -379,23 +396,42 @@ export default class IvyObject {
     const points = surfaceSampler(this.object, options, position);
     group.add(points);
   };
- 
+
   add = (object: IvyObject) => {
-    object.parent = this;
+    object.parent = this; 
 
     if (!this.scene?.mounted) {
       object.initialItem = true;
     }
-    
+
     this.children.push(object);
-  }
+  };
+
+  addInstance = (options: {
+    pos: [x: number, y: number, z: number];
+    rot: [x: number, y: number, z: number];
+    color: number;
+  }) => {
+    const mesh = this.object as InstancedMesh;
+    if (!(mesh instanceof InstancedMesh)) {
+      console.warn("No instance mesh");
+      return;
+    }
+    const o = this._dummyObject;
+    o.position.set(...options.pos);
+    o.rotation.set(...options.rot) 
+    o.updateMatrix(); 
+    mesh.setMatrixAt(this._instanceCount, o.matrix);
+    mesh.setColorAt(this._instanceCount, new Color());
+    this._instanceCount++;
+  };
 
   destroy = () => {
     this._active = false;
     for (const child of this.children) {
       child.destroy();
     }
-    this.object && destroyObject(this.object);
+    // this.object && destroyObject(this.object);
     this.group && destroyObject(this.group);
   };
 }
