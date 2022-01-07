@@ -41,7 +41,7 @@
     right: 0;
     bottom: 0;
     width: 240px;
-    background: rgba(120, 120, 120, 0.5);
+    backdrop-filter: contrast(0.7) blur(8px) brightness(0.3);
     z-index: 99999;
     border-left: 1px solid #00eee0;
     color: white;
