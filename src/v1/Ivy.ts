@@ -31,6 +31,7 @@ export default class Ivy {
   composer?: EffectComposer;
   renderScene?: Pass;
   composerLayers: Pass[] = [];
+  listener?: (event:string, ivy: Ivy) => void; 
 
   constructor(options: IvyOptions) {
     this.mainCamera = new PerspectiveCamera();
@@ -45,6 +46,10 @@ export default class Ivy {
     window.addEventListener("resize", this.updateSize);
 
     this.refresh();
+  }
+
+  logEvent(event: string): void {
+    this.listener?.(event, this); 
   }
 
   resetCamera(): void {
@@ -77,6 +82,8 @@ export default class Ivy {
     );
     }
 
+    this.logEvent("camera changed");
+
     this.updateSize();
     this.setupComposer();
   };
@@ -88,6 +95,7 @@ export default class Ivy {
     this.target.innerHTML = "";
     window.removeEventListener("resize", this.updateSize);
     this.renderer.dispose();
+    this.logEvent("destroyed");
   };
 
   loadScene = (scene: IvyScene) => {
@@ -107,6 +115,7 @@ export default class Ivy {
 
     scene.mount();
     this.render();
+    this.logEvent("scene loaded");
   };
 
   setupComposer(): void {

@@ -3,7 +3,7 @@ import IvyObject from "./ivy-object/IvyObject";
 
 const lightA = () =>
   new IvyObject({
-    name: "lightA",
+    name: "Default Light 1",
     pos: new Vector3(2, 4, 1),
     light: new DirectionalLight(0xffffff, 1),
     shadow: true,
@@ -11,7 +11,7 @@ const lightA = () =>
 
 const lightB = () =>
   new IvyObject({
-    name: "lightB",
+    name: "Default Light 2",
     light: new AmbientLight(0xffffff, 0.3),
   });
 

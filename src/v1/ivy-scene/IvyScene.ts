@@ -46,6 +46,8 @@ export default class IvyScene {
       } else {
         object.initialItem = true;
       }
+     
+      this.core?.logEvent(`object added`);
     }
   };
 
@@ -72,6 +74,7 @@ export default class IvyScene {
     }
 
     this.onMount?.(this);
+    this.core?.logEvent(`scene mounted`);
   };
 
   update = (clock: Clock) => {
@@ -99,5 +102,6 @@ export default class IvyScene {
     }
 
     this.objectStack = this.objectStack.filter((o) => o?.initialItem);
+    this.core?.logEvent(`scene destroyed`); 
   };
 }

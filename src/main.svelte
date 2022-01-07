@@ -51,6 +51,7 @@
     ivy = new Ivy({
       target: canvas,
     });
+    window.ivyInstance = ivy;
 
     const id = window.location.hash.split("#")[1] ?? "1";
     document.getElementById(id)?.click();
