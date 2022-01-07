@@ -62,7 +62,7 @@ const perRow = 40;
 const perColumn = 40;
 
 const offsetX = (SQ2d3 * -1) + (SQ2d3 * perRow);
-const offsetY = 0
+const offsetY = (0.75 * hexSize * perColumn / 2);
     
 for (let i = 0; i < perRow; i++) {
   for (let j = 0; j < perColumn; j++) {
