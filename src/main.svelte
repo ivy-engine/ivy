@@ -1,5 +1,6 @@
 <script>
   import { onDestroy, onMount } from "svelte";
+  const instancedScene = () => import("./v1/demo/instancedScene");
   const redoMainScene = () => import("./v1/demo/redo/redoMainScene");
   const mathScene = () => import("./v1/demo/mathScene");
   const sineWavesSample = () => import("./v1/demo/samples/sineWavesSample");
@@ -64,6 +65,7 @@
   <button on:click={launch(redoMainScene)} id="redo">redo</button>
   <button on:click={launch(mathScene)} id="1">1</button>
   <h3>Samples</h3>
+  <button on:click={launch(instancedScene)} id="waves">Instanced Mesh</button>
   <button on:click={launch(sineWavesSample)} id="waves">Waves</button>
 
   <h3>Lines</h3>

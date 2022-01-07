@@ -405,18 +405,18 @@ export default class IvyObject {
   };
 
   addInstance = (options: {
-    pos: [x: number, y: number, z: number];
-    rot: [x: number, y: number, z: number];
-    color: number;
+    pos?: Vector3;
+    rot?: Euler;
+    color?: number;
   }) => {
     const mesh = this.object as InstancedMesh;
+    const o = this._dummyObject;
     if (!(mesh instanceof InstancedMesh)) {
       console.warn("No instance mesh");
       return;
     }
-    const o = this._dummyObject;
-    o.position.set(...options.pos);
-    o.rotation.set(...options.rot) 
+    if (options.pos) o.position.copy(options.pos);
+    if (options.rot) o.rotation.copy(options.rot);
     o.updateMatrix(); 
     mesh.setMatrixAt(this._instanceCount, o.matrix);
     mesh.setColorAt(this._instanceCount, new Color());
