@@ -431,7 +431,7 @@ export default class IvyObject {
     for (const child of this.children) {
       child.destroy();
     }
-    // this.object && destroyObject(this.object);
+    this.object && destroyObject(this.object);
     this.group && destroyObject(this.group);
   };
 }
