@@ -2,7 +2,6 @@
   import { onDestroy, onMount } from "svelte";
   const instancedScene = () => import("./v1/demo/instancedScene");
   const redoMainScene = () => import("./v1/demo/redo/redoMainScene");
-  const mathScene = () => import("./v1/demo/mathScene");
   const sineWavesSample = () => import("./v1/demo/samples/sineWavesSample");
   const outlineTextScene = () => import("./v1/demo/text/outlineTextScene");
   const lineScene = () => import("./v1/demo/lineScene");
@@ -64,7 +63,6 @@
 
 <div class="sidebar">
   <button on:click={launch(redoMainScene)} id="redo">redo</button>
-  <button on:click={launch(mathScene)} id="1">1</button>
   <h3>Samples</h3>
   <button on:click={launch(instancedScene)} id="waves">Instanced Mesh</button>
   <button on:click={launch(sineWavesSample)} id="waves">Waves</button>
@@ -75,7 +73,7 @@
 
   <h3>Sampling</h3>
   <button on:click={launch(surfaceScatteringScene)} id="surface-scattering">
-    >Surface Scattering</button
+    Surface Scattering</button
   >
 
   <h3>Text</h3>
@@ -97,9 +95,7 @@
   <h3>Other</h3>
   <button on:click={launch(shadowScene)} id="6">Shadow Scene</button>
   <button on:click={launch(testScene)} id="7">Test Scene</button>
-  <button on:click={launch(memoryScene, { warning: true })} id="8"
-    >Memory Test</button
-  >
+  <button on:click={launch(memoryScene)} id="8">Memory Test</button>
 </div>
 
 <div bind:this={canvas} class="scene" id="scene " />

@@ -108,7 +108,7 @@ export default class IvyObject {
 
   constructor(options: IvyObjectOptions = {}) {
     this.options = options;
-    this.name = options.name ?? "unnamed";
+    this.name = options.name ?? "";
     this.pos = options.pos ?? new Vector3();
     this.rot = options.rot ?? new Euler();
     this.scale = options.scale ?? new Vector3(1, 1, 1);
@@ -279,7 +279,7 @@ export default class IvyObject {
       this.geometry = new BoxGeometry(1, 1, 1);
     }
 
-    if (!this.object && this.material && this.geometry && this.options.addToScene !== false) {
+    if (!this.object && this.material && this.geometry) {
         this.object = new Mesh(this.geometry, this.material);
     }
    
@@ -364,7 +364,7 @@ export default class IvyObject {
   };
 
   mountObject = () => {
-    this._active = true;
+    this._active = true; 
     const geometry = this.geometry;
     this.geometry = geometry;
     const material = this.material;

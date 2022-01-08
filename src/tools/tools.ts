@@ -1,3 +1,4 @@
+import 'boxicons';
 import Main from './tools.svelte';
 
 const el = document.createElement('div')

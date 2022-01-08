@@ -17,7 +17,7 @@ import {
 const cam = new PerspectiveCamera();
 cam.position.copy(new Vector3(0, 0, 13));
 
-const ivyScene = new IvyScene("Text Scene", {
+const ivyScene = new IvyScene("Area Light", {
   camera: cam,
 });
 
@@ -26,20 +26,19 @@ const renderLightPlane = true;
 const createLight = (pos: Vector3, color: number) => {
   const width = 6;
   const height = 20;
-  const l = []
-  l.push(new IvyObject({
+  const o = new IvyObject({
     pos,
     rot: new Euler(0, Math.PI, 0),
     light: new RectAreaLight(color, 5, width, height),
-  }));
+  });
 
-  if (renderLightPlane) l.push(new IvyObject({
-    pos: l[0].pos,
+  if (renderLightPlane) o.add(new IvyObject({
+    pos: o.pos,
     geometry: new PlaneGeometry(width, height, 1, 1),
     material: new MeshBasicMaterial({ color: color }),
   }));
 
-  return l;
+  return [o];
 };
 
 RectAreaLightUniformsLib.init();
