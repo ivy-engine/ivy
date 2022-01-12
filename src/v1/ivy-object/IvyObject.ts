@@ -105,6 +105,10 @@ export default class IvyObject {
     }
     return this.group ?? this.scene?.threeScene;
   }
+ 
+  get _sceneElement(): Group | Object3D | undefined {
+    return this.group ?? this.object;
+  }
 
   constructor(options: IvyObjectOptions = {}) {
     this.options = options;
@@ -302,8 +306,8 @@ export default class IvyObject {
 
     const light = this.options.light;
 
-    if (this.options.object) {
-      this._target?.add(this.options.object);
+    if (this.object) {
+      this._target?.add(this.object);
       return;
     }
 
@@ -354,6 +358,7 @@ export default class IvyObject {
     this.object = light;
     light.position.copy(this.options.pos ?? this.pos);
 
+    console.log('light', this);
     if (this.options.addToScene !== false) {
       this._target?.add(this.object);
     }
@@ -394,8 +399,12 @@ export default class IvyObject {
     group.add(points);
   };
 
-  add = (object: IvyObject) => {
-    object.parent = this; 
+  add(object: IvyObject) {
+    if (!this.group) {
+      throw new Error("Object have a group for adding children");
+    }
+
+    object.parent = this;
 
     if (!this.scene?.mounted) {
       object.initialItem = true;

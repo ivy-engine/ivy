@@ -14,17 +14,18 @@
 
   let icon = "dice-4";
   const isLight = type.toLowerCase().includes("light");
-  const isGroup = object.children.length > 0;
+  const isGroup = !!object.group;
   let groupOpen = false;
 
   if (isLight) icon = "sun";
   // if (isGroup) icon = "collection";
 
   console.log(type, object);
+  const element = object._sceneElement;
 
   const toggleVisibility = () => {
-    object.object.visible = !object.object.visible;
-    visible = object.object.visible;
+    element.visible = !element.visible;
+    visible = element.visible;
     update();
   };
 </script>

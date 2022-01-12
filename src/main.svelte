@@ -1,23 +1,7 @@
 <script>
   import { onDestroy, onMount } from "svelte";
-  const instancedScene = () => import("./v1/demo/instancedScene");
-  const redoMainScene = () => import("./v1/demo/redo/redoMainScene");
-  const sineWavesSample = () => import("./v1/demo/samples/sineWavesSample");
-  const outlineTextScene = () => import("./v1/demo/text/outlineTextScene");
-  const lineScene = () => import("./v1/demo/lineScene");
-  const lineEdges = () => import("./v1/demo/lineEdges");
-  import Ivy from "./v1/Ivy";
-  const skyScene = () => import("./v1/demo/skyScene");
-  const testScene = () => import("./v1/demo/testScene");
-  const memoryScene = () => import("./v1/demo/memoryScene");
-  const shadowScene = () => import("./v1/demo/shadowScene");
-  const xScene = () => import("./v1/demo/xScene");
-  const surfaceScatteringScene = () =>
-    import("./v1/demo/surfaceScatteringScene");
-  const textScene = () => import("./v1/demo/text/textScene");
-  const testScatterScene = () => import("./v1/demo/text/testScatterScene");
-  const areaLightScene = () => import("./v1/demo/lights/areaLightScene");
-  const bloomScene = () => import("./v1/demo/bloomScene");
+  import Ivy from "./v2/core/Ivy";
+  import AreaLight from "./v2/scenes/AreaLights";
 
   let ivy;
   let canvas;
@@ -36,9 +20,11 @@
       const disabled = window.localStorage.getItem("ivy-warning") === "false";
       if (!disabled) showWarning = !!options.warning;
 
-      scene().then((res) => {
-        ivy.loadScene(res.default);
-      });
+      ivy.loadScene(scene);
+
+      // scene().then((res) => {
+      //   ivy.loadScene(res.default);
+      // });
     };
 
   const disableWarning = () => {
@@ -54,48 +40,17 @@
 
     const id = window.location.hash.split("#")[1] ?? "1";
     document.getElementById(id)?.click();
+
+    ivy.loadScene(AreaLight);
   });
 
   onDestroy(() => {
-    ivy.destroy();
+    ivy.dispose();
   });
 </script>
 
 <div class="sidebar">
-  <button on:click={launch(redoMainScene)} id="redo">redo</button>
-  <h3>Samples</h3>
-  <button on:click={launch(instancedScene)} id="waves">Instanced Mesh</button>
-  <button on:click={launch(sineWavesSample)} id="waves">Waves</button>
-
-  <h3>Lines</h3>
-  <button on:click={launch(lineScene)} id="lines">Lines</button>
-  <button on:click={launch(lineEdges)} id="lines-edges">Edges</button>
-
-  <h3>Sampling</h3>
-  <button on:click={launch(surfaceScatteringScene)} id="surface-scattering">
-    Surface Scattering</button
-  >
-
-  <h3>Text</h3>
-  <button on:click={launch(textScene)} id="2">Text (TTF)</button>
-  <button on:click={launch(outlineTextScene)} id="text-outline"
-    >Text Outline</button
-  >
-  <button on:click={launch(testScatterScene)} id="3"
-    >Text Point Scattering</button
-  >
-
-  <h3>Light</h3>
-  <button on:click={launch(areaLightScene)} id="4">Light Area Rect</button>
-  <button on:click={launch(bloomScene)} id="bloom">Bloom</button>
-
-  <h3>Sky</h3>
-  <button on:click={launch(skyScene)} id="5">Sky Sunset</button>
-
-  <h3>Other</h3>
-  <button on:click={launch(shadowScene)} id="6">Shadow Scene</button>
-  <button on:click={launch(testScene)} id="7">Test Scene</button>
-  <button on:click={launch(memoryScene)} id="8">Memory Test</button>
+  <button on:click={launch(AreaLight)} id="redo">redo</button>
 </div>
 
 <div bind:this={canvas} class="scene" id="scene " />

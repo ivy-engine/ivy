@@ -15,10 +15,19 @@ testScene.add(new IvyObject({
   shadow: true, 
 }))
 
-testScene.add(new IvyObject({
+const a = new IvyObject({
   name: 'box',
   shadow: true, 
   color: 0xaa3300,
-}))
+  group: true, 
+})
+
+const o = new IvyObject({
+  pos: new Vector3(1, 1, 0),
+});
+
+a.add(o);
+
+testScene.add(a);
 
 export default testScene;

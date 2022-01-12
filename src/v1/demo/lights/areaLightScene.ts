@@ -27,26 +27,34 @@ const createLight = (pos: Vector3, color: number) => {
   const width = 6;
   const height = 20;
   const o = new IvyObject({
+    name: `Color Group ${color}`, 
     pos,
-    rot: new Euler(0, Math.PI, 0),
-    light: new RectAreaLight(color, 5, width, height),
+    group: true, 
+    addToScene: false, 
+    rot: new Euler(0, Math.PI, 0), 
   });
 
+  o.add(new IvyObject({
+    name: `Light ${color}`,
+    light: new RectAreaLight(color, 5, width, height),
+  }))
+
   if (renderLightPlane) o.add(new IvyObject({
-    pos: o.pos,
+    name: `Light Plane ${color}`, 
     geometry: new PlaneGeometry(width, height, 1, 1),
+    rot: new Euler(0, Math.PI, 0), 
     material: new MeshBasicMaterial({ color: color }),
   }));
 
-  return [o];
+  return o;
 };
 
 RectAreaLightUniformsLib.init();
 
 const lights = [
-  ...createLight(new Vector3(-7, 0, -5), 0xff0000),
-  ...createLight(new Vector3(0, 0, -5), 0x0000ff),
-  ...createLight(new Vector3(7, 0, -5), 0x00ff00),
+  createLight(new Vector3(-7, 0, -5), 0xff0000),
+  createLight(new Vector3(0, 0, -5), 0x0000ff),
+  createLight(new Vector3(7, 0, -5), 0x00ff00),
 ];
 
 const obj = new IvyObject({

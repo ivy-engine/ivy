@@ -19,7 +19,7 @@ scene.add(...defaultLights());
 const count = 20;
 const total = count ** 3;
 
-const item = new IvyObject({
+const items = new IvyObject({
   geometry: new BoxGeometry(),
   instanced: total,
   material: new MeshStandardMaterial({color: 0xeeeeee}),
@@ -31,7 +31,7 @@ console.time("instancing");
 for (let x = 0; x < count; x++) {
   for (let y = 0; y < count; y++) {
     for (let z = 0; z < count; z++) {
-      item.addInstance({
+      items.addInstance({
         pos: new Vector3(x * space, y * space, z * space).sub(offset),
       });
     }
@@ -39,7 +39,7 @@ for (let x = 0; x < count; x++) {
 }
 console.timeEnd("instancing");
 
-scene.add(item);
+scene.add(items);
 
 scene.onMount = () => {
   if (scene.core?.controls) {

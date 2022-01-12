@@ -3,7 +3,7 @@
   import IvyScene from "../v1/ivy-scene/IvyScene";
 
   const scene = {
-    name: ":(",
+    name: "",
     mainCamera: undefined,
   };
 
@@ -20,7 +20,16 @@
       scene.name = ivy.scene.name;
       scene.mainCamera = ivy.mainCamera;
       objects = [...ivy.scene.objectStack];
+      return;
     }
+
+    if (e === "scene destroyed") {
+      objects = [];
+      scene.name = "";
+      scene.mainCamera = undefined;
+      return;
+    }
+    console.log(e);
   };
 
   const toggleOpen = () => {
