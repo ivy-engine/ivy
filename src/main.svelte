@@ -21,10 +21,6 @@
       if (!disabled) showWarning = !!options.warning;
 
       ivy.loadScene(scene);
-
-      // scene().then((res) => {
-      //   ivy.loadScene(res.default);
-      // });
     };
 
   const disableWarning = () => {
@@ -50,7 +46,7 @@
 </script>
 
 <div class="sidebar">
-  <button on:click={launch(AreaLight)} id="redo">redo</button>
+  <button on:click={launch(AreaLight)} id="area-light">Area Light</button>
 </div>
 
 <div bind:this={canvas} class="scene" id="scene " />

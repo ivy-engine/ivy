@@ -4,6 +4,7 @@ import Ivy from "../Ivy";
 
 interface ISceneOptions {
   camera?: Camera; 
+  controls?: 'orbit';
 }
 
 export default class IScene {
@@ -11,9 +12,11 @@ export default class IScene {
   threeScene = new Scene(); 
   elList: IEl[] = []; 
   core?: Ivy;
+  controls?: string;
 
   constructor(options: ISceneOptions = {}) {
     this.o = options;
+    this.controls = options.controls || 'orbit';
   }
  
   add(...els: IEl[]) {
@@ -34,6 +37,10 @@ export default class IScene {
     //  console.log(this.core, this.o.camera) 
     //   this.core.mainCamera = this.o.camera;
     // }
+  }
+ 
+  render() {
+    this.elList.forEach(el => el.update?.(el));
   }
  
   remove(el: IEl) {

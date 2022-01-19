@@ -5,6 +5,7 @@ import type IGroup from "./Elements/IGroup";
 export interface IElOptions {
   pos?: Vector3; 
   rot?: Euler;
+  update?: (el: IEl) => void; 
 }
 
 export default class IEl {
@@ -19,6 +20,8 @@ export default class IEl {
     this.o = options;
     this.pos = options.pos ?? new Vector3();
     this.rot = options.rot ?? new Euler();
+   
+    this.update = options.update;
   }
  
   init() {
@@ -47,5 +50,7 @@ export default class IEl {
     return new IEl({ ...this.o, ...options });
   }
 
-  dispose() {}
+  dispose() { }
+ 
+  update?: (el: IEl) => void;
 }

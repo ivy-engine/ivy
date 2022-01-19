@@ -53,8 +53,8 @@ export default class Ivy {
     this.activeScene = scene;
     scene.core = this;
     scene.mount();
-    
-    console.log('load scene')
+
+    console.log("load scene");
     if (initial) this.render();
   }
 
@@ -62,6 +62,7 @@ export default class Ivy {
     if (!this.activeScene) return;
 
     stats.begin();
+    this.activeScene.render(); 
     this.renderer.render(this.activeScene.threeScene, this.mainCamera);
     stats.end();
 
@@ -85,19 +86,19 @@ export default class Ivy {
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(window.devicePixelRatio);
   }
- 
+
   setMainCamera = (camera: Camera) => {
     this.mainCamera = camera;
     this.activeScene?.threeScene.remove(this.mainCamera);
     this.activeScene?.threeScene.add(this.mainCamera);
     this.controls?.dispose();
 
-    // if (this.activeScene?.controls === 'orbit') {
-    // this.controls = new OrbitControls(
-    //   this.mainCamera,
-    //   this.renderer.domElement
-    // );
-    // }
+    if (this.activeScene?.controls === "orbit") {
+      this.controls = new OrbitControls(
+        this.mainCamera,
+        this.renderer.domElement
+      );
+    }
 
     this.updateSize();
   };
