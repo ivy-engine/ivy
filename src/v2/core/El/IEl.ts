@@ -1,9 +1,10 @@
-import { Object3D, Vector3 } from "three";
+import { Euler, Object3D, Vector3 } from "three";
 import IScene from "../Scene/IScene";
 import type IGroup from "./Elements/IGroup";
 
 export interface IElOptions {
- pos?: Vector3 
+  pos?: Vector3; 
+  rot?: Euler;
 }
 
 export default class IEl {
@@ -12,15 +13,24 @@ export default class IEl {
   o: IElOptions;
   initiated = false;
   pos: Vector3; 
+  rot: Euler; 
 
   constructor(options: IElOptions) {
     this.o = options;
     this.pos = options.pos ?? new Vector3();
+    this.rot = options.rot ?? new Euler();
   }
  
   init() {
     this.initiated = true;
-   console.log('init', this) 
+    console.log('init', this) 
+    
+    if (!this.object) return;
+    this.object.position.copy(this.pos);
+    this.pos = this.object.position;
+
+    this.object.rotation.copy(this.rot);
+    this.rot = this.object.rotation;
   }
  
   mount() {

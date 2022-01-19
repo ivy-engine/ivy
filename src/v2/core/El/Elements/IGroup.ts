@@ -11,11 +11,7 @@ export default class IGroup extends IEl {
 
   constructor(options: IGroupOptions) {
     super(options);
-    this.elList = options.items ?? [];
-    
-    this.group.position.copy(this.pos);
-    this.pos = this.group.position;
-    
+    this.elList = options.items ?? [];   
     this.object = this.group;
   }
  

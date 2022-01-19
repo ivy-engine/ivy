@@ -85,4 +85,20 @@ export default class Ivy {
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(window.devicePixelRatio);
   }
+ 
+  setMainCamera = (camera: Camera) => {
+    this.mainCamera = camera;
+    this.activeScene?.threeScene.remove(this.mainCamera);
+    this.activeScene?.threeScene.add(this.mainCamera);
+    this.controls?.dispose();
+
+    // if (this.activeScene?.controls === 'orbit') {
+    // this.controls = new OrbitControls(
+    //   this.mainCamera,
+    //   this.renderer.domElement
+    // );
+    // }
+
+    this.updateSize();
+  };
 }

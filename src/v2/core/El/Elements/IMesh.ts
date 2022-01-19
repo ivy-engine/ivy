@@ -7,7 +7,7 @@ interface IMeshOptions extends IElOptions {
   material?: Material;
 }
 
-const defaultMaterial = new MeshStandardMaterial({ color: 0xffffff });
+const defaultMaterial = () => new MeshStandardMaterial({ color: 0xffffff });
 
 export default class IMesh extends IEl {
   color: Color;
@@ -19,12 +19,9 @@ export default class IMesh extends IEl {
     super(options);
     this.geometry = options.geometry;
     this.color = new Color(options.color ?? 0xffffff);
-    this.material = options.material ?? defaultMaterial;
+    this.material = options.material ?? defaultMaterial();
     this.mesh = new Mesh(this.geometry, this.material);
     this.object = this.mesh;
-    
-    this.mesh.position.copy(this.pos);
-    this.pos = this.mesh.position;
   }
  
   init() {

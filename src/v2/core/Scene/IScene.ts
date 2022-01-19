@@ -1,8 +1,9 @@
-import { Scene } from "three";
+import { Camera, Scene } from "three";
 import IEl from "../El/IEl";
 import Ivy from "../Ivy";
 
 interface ISceneOptions {
+  camera?: Camera; 
 }
 
 export default class IScene {
@@ -24,7 +25,15 @@ export default class IScene {
   }
  
   mount() { 
+    if (this.o.camera) {
+      this.core?.setMainCamera(this.o.camera); 
+    }
+
     this.elList.forEach(el => el.mount());
+    // if (this.core && this.o.camera) {
+    //  console.log(this.core, this.o.camera) 
+    //   this.core.mainCamera = this.o.camera;
+    // }
   }
  
   remove(el: IEl) {
