@@ -26,8 +26,6 @@ export default class IEl {
  
   init() {
     this.initiated = true;
-    console.log('init', this) 
-    
     if (!this.object) return;
     this.object.position.copy(this.pos);
     this.pos = this.object.position;

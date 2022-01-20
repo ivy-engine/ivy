@@ -8,7 +8,7 @@ interface IMeshOptions extends IElOptions {
   shadow?: boolean | 'cast' | 'receive'; 
 }
 
-const defaultMaterial = () => new MeshStandardMaterial({ color: 0xffffff });
+const DEFAULT_MATERIAL = new MeshStandardMaterial({ color: 0xffffff });
 
 export default class IMesh extends IEl {
   color: Color;
@@ -20,7 +20,7 @@ export default class IMesh extends IEl {
     super(options);
     this.geometry = options.geometry;
     this.color = new Color(options.color ?? 0xffffff);
-    this.material = options.material ?? defaultMaterial();
+    this.material = options.material ?? DEFAULT_MATERIAL;
     this.mesh = new Mesh(this.geometry, this.material);
     this.object = this.mesh;
    

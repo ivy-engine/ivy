@@ -1,11 +1,7 @@
 import {
   CircleGeometry,
-  ConeGeometry,
   DirectionalLight,
   Euler,
-  PlaneGeometry,
-  SphereGeometry,
-  TorusGeometry,
   TorusKnotGeometry,
   Vector3,
 } from "three";

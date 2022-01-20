@@ -4,6 +4,8 @@
   import AreaLight from "./v2/scenes/AreaLights";
   import ShadowBasic from "./v2/scenes/ShadowBasic";
   import TextSimple from "./v2/scenes/ShadowBasic";
+  import TextBasic from "./v2/scenes/TextBasic";
+  import TextTroika from "./v2/scenes/TextTroika";
 
   let ivy;
   let canvas;
@@ -55,6 +57,8 @@
   <button on:click={launch(ShadowBasic)} id="shadow-simple"
     >Shadow Simple</button
   >
+  <button on:click={launch(TextBasic)} id="text-simple">Text Simple</button>
+  <button on:click={launch(TextTroika)} id="text-troika">Text Troika</button>
 </div>
 
 <div bind:this={canvas} class="scene" id="scene " />
