@@ -5,6 +5,7 @@ interface IMeshOptions extends IElOptions {
   geometry: BufferGeometry;
   color?: number | Color; 
   material?: Material;
+  shadow?: boolean | 'cast' | 'receive'; 
 }
 
 const defaultMaterial = () => new MeshStandardMaterial({ color: 0xffffff });
@@ -22,8 +23,17 @@ export default class IMesh extends IEl {
     this.material = options.material ?? defaultMaterial();
     this.mesh = new Mesh(this.geometry, this.material);
     this.object = this.mesh;
+   
+    if (options.shadow === true) {
+      this.mesh.castShadow = true;
+      this.mesh.receiveShadow = true;
+    } else if (options.shadow === 'cast') {
+      this.mesh.castShadow = true;
+    } else if (options.shadow === 'receive') {
+      this.mesh.receiveShadow = true;
+    }
   }
- 
+
   init() {
     super.init();
     // this.material.color = this.color;

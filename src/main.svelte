@@ -2,6 +2,8 @@
   import { onDestroy, onMount } from "svelte";
   import Ivy from "./v2/core/Ivy";
   import AreaLight from "./v2/scenes/AreaLights";
+  import ShadowBasic from "./v2/scenes/ShadowBasic";
+  import TextSimple from "./v2/scenes/ShadowBasic";
 
   let ivy;
   let canvas;
@@ -35,9 +37,12 @@
     window.ivyInstance = ivy;
 
     const id = window.location.hash.split("#")[1] ?? "1";
-    document.getElementById(id)?.click();
 
-    ivy.loadScene(AreaLight);
+    if (id) {
+      document.getElementById(id)?.click();
+    } else {
+      ivy.loadScene(AreaLight);
+    }
   });
 
   onDestroy(() => {
@@ -47,6 +52,9 @@
 
 <div class="sidebar">
   <button on:click={launch(AreaLight)} id="area-light">Area Light</button>
+  <button on:click={launch(ShadowBasic)} id="shadow-simple"
+    >Shadow Simple</button
+  >
 </div>
 
 <div bind:this={canvas} class="scene" id="scene " />

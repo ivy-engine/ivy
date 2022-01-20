@@ -1,5 +1,4 @@
 import {
-  BoxGeometry,
   Euler,
   MeshBasicMaterial,
   MeshStandardMaterial,
@@ -42,7 +41,7 @@ const material = new MeshStandardMaterial({
 });
 
 const torus = new IMesh({
-  geometry: new TorusKnotGeometry(.9, 0.4, 200, 20, 1, 1),
+  geometry: new TorusKnotGeometry(.9, 0.4, 200, 50, 1, 1),
   material,
   rot: new Euler(0, Math.PI / 2, 0),
   update: ({ rot }) => {

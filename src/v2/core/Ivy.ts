@@ -1,4 +1,4 @@
-import { Camera, PerspectiveCamera, WebGLRenderer } from "three";
+import { Camera, PCFShadowMap, PCFSoftShadowMap, PerspectiveCamera, WebGLRenderer } from "three";
 import { OrbitControls } from "../../v1/ivy-three/controls/OrbitControls";
 import Stats from "stats.js";
 import IScene from "./Scene/IScene";
@@ -27,14 +27,9 @@ export default class Ivy {
   constructor(options: IvyOptions) {
     this.o = options;
     this.target = options.target;
-    this.mainCamera = new PerspectiveCamera();
-    this.mainCamera.position.z = 15;
-    this.mainCamera.position.y = 8;
 
-    this.controls = new OrbitControls(
-      this.mainCamera,
-      this.renderer.domElement
-    );
+    this.mainCamera = this.createCamera();
+    this.setMainCamera(this.mainCamera);
 
     this.target = options.target;
     this.target.innerHTML = "";
@@ -44,17 +39,24 @@ export default class Ivy {
     window.removeEventListener("resize", this.updateSize);
     window.addEventListener("resize", this.updateSize);
     this.updateSize();
-
-    // this.refresh();
+  }
+ 
+  createCamera(): Camera { 
+    const camera = new PerspectiveCamera();
+    camera.position.z = 12;
+    camera.position.y = 2;
+    camera.lookAt(0, 0, 0); 
+    return camera;
   }
 
   loadScene(scene: IScene) {
     const initial = this.activeScene === undefined;
+    this.activeScene?.dispose();
     this.activeScene = scene;
     scene.core = this;
+    this.setMainCamera(this.mainCamera);
     scene.mount();
 
-    console.log("load scene");
     if (initial) this.render();
   }
 

@@ -1,48 +1,43 @@
-import { Camera, Scene } from "three";
+import { Camera, Euler, Scene, Vector3 } from "three";
 import IEl from "../El/IEl";
 import Ivy from "../Ivy";
 
 interface ISceneOptions {
-  camera?: Camera; 
-  controls?: 'orbit';
+  camera?: Camera;
+  controls?: "orbit";
 }
 
 export default class IScene {
   o: ISceneOptions;
-  threeScene = new Scene(); 
-  elList: IEl[] = []; 
+  threeScene = new Scene();
+  elList: IEl[] = [];
   core?: Ivy;
   controls?: string;
 
   constructor(options: ISceneOptions = {}) {
     this.o = options;
-    this.controls = options.controls || 'orbit';
+    this.controls = options.controls || "orbit";
   }
- 
+
   add(...els: IEl[]) {
     for (let el of els) {
       this.elList.push(el);
-      el.parent = this; 
-      el.init(); 
+      el.parent = this;
+      el.init();
     }
   }
- 
-  mount() { 
-    if (this.o.camera) {
-      this.core?.setMainCamera(this.o.camera); 
-    }
 
-    this.elList.forEach(el => el.mount());
-    // if (this.core && this.o.camera) {
-    //  console.log(this.core, this.o.camera) 
-    //   this.core.mainCamera = this.o.camera;
-    // }
+  mount() {
+    const camera = this.o.camera || this.core?.createCamera();
+    if (camera) this.core?.setMainCamera(camera);
+
+    this.elList.forEach((el) => el.mount());
   }
- 
+
   render() {
-    this.elList.forEach(el => el.update?.(el));
+    this.elList.forEach((el) => el.update?.(el));
   }
- 
+
   remove(el: IEl) {
     this.elList.splice(this.elList.indexOf(el), 1);
   }
@@ -50,7 +45,7 @@ export default class IScene {
   removeAll() {
     this.elList = [];
   }
- 
+
   dispose() {
     for (let el of this.elList) {
       el.dispose();
