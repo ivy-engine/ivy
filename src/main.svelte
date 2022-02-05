@@ -2,6 +2,7 @@
   import { onDestroy, onMount } from "svelte";
   import Ivy from "./v2/core/Ivy";
   import AreaLight from "./v2/scenes/AreaLights";
+  import PhysicsSimple from "./v2/scenes/PhysicsSimple";
   import ShadowBasic from "./v2/scenes/ShadowBasic";
   import TextSimple from "./v2/scenes/ShadowBasic";
   import TextBasic from "./v2/scenes/TextBasic";
@@ -35,6 +36,7 @@
   onMount(() => {
     ivy = new Ivy({
       target: canvas,
+      physics: true,
     });
     window.ivyInstance = ivy;
 
@@ -59,6 +61,9 @@
   >
   <button on:click={launch(TextBasic)} id="text-simple">Text Simple</button>
   <button on:click={launch(TextTroika)} id="text-troika">Text Troika</button>
+  <button on:click={launch(PhysicsSimple)} id="physics-simple"
+    >Physics Simple</button
+  >
 </div>
 
 <div bind:this={canvas} class="scene" id="scene " />

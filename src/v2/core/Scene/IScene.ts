@@ -1,4 +1,4 @@
-import { Camera, Euler, Scene, Vector3 } from "three";
+import { Camera, Clock, Euler, Scene, Vector3 } from "three";
 import IEl from "../El/IEl";
 import Ivy from "../Ivy";
 
@@ -31,11 +31,11 @@ export default class IScene {
     const camera = this.o.camera || this.core?.createCamera();
     if (camera) this.core?.setMainCamera(camera);
 
-    this.elList.forEach((el) => el.mount());
+    this.elList.forEach((el) => el.mount(this));
   }
 
-  render() {
-    this.elList.forEach((el) => el.update?.(el));
+  render(clock: Clock) {
+    this.elList.forEach((el) => el.render(el, clock));
   }
 
   remove(el: IEl) {

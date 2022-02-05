@@ -1,4 +1,5 @@
-import { Group } from "three";
+import { Clock, Group } from "three";
+import IScene from "../../Scene/IScene";
 import IEl, { IElOptions } from "../IEl"
 
 interface IGroupOptions extends IElOptions { 
@@ -28,9 +29,9 @@ export default class IGroup extends IEl {
     return new IGroup({ ...this.o, ...options, items });
   }
 
-  mount() {
-    super.mount();
-    this.elList.forEach(el => el.mount());
+  mount(scene: IScene) {
+    super.mount(scene);
+    this.elList.forEach(el => el.mount(scene));
   }
 
   add(el: IEl) {
@@ -49,5 +50,11 @@ export default class IGroup extends IEl {
     for (let el of this.elList) {
       el.dispose();
     }
+    this.group.parent?.remove(this.group); 
+  }
+ 
+  render(el: IEl, clock: Clock) {
+    super.render(el, clock);
+    this.elList.forEach(el => el.render(el, clock));
   }
 }
