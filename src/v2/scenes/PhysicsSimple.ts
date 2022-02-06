@@ -1,5 +1,6 @@
 import {
   BoxGeometry,
+  Euler,
   MeshStandardMaterial,
   SphereGeometry,
   TextureLoader,
@@ -18,15 +19,9 @@ const ball = (x: number) =>
     pos: new Vector3(x, 4, 0),
     mass: 1,
     shadow: true,
-    update: ({ body }) => {
+    update: ({ body, pos }) => {
       if (body) {
-        if (
-          body.position.y < -10 ||
-          body.position.x < -10 ||
-          body.position.x > 10 ||
-          body.position.z < -10 ||
-          body.position.z > 10
-        ) {
+        if (pos.distanceTo(new Vector3(0, 0, 0)) > 20) {
           // reset
           body.position = new Vec3(x, 4, 0);
           body.velocity = new Vec3(0, 0, 0);

@@ -2,18 +2,14 @@ import {
   BufferGeometry,
   Clock,
   Color,
-  Event,
   Material,
   Mesh,
   MeshStandardMaterial,
-  Object3D,
   Vector3,
 } from "three";
-import IvyScene from "../../../../v1/ivy-scene/IvyScene";
 import IScene from "../../Scene/IScene";
 import IEl, { IElOptions } from "../IEl";
 import * as CANNON from "cannon-es";
-import { Vec3 } from "math/Vec3";
 
 interface IMeshOptions extends IElOptions {
   geometry: BufferGeometry;
@@ -81,6 +77,7 @@ export default class IMesh extends IEl {
       if (this.shape) {
         this.body = new CANNON.Body({ mass: this.o.mass ?? 0 });
         this.body.addShape(this.shape);
+        this.body.material = this.o.physicsMaterial; 
         const worldPos = this.object?.getWorldPosition(new Vector3());
         if (worldPos) {
           this.body.position.x = worldPos.x;
@@ -99,6 +96,7 @@ export default class IMesh extends IEl {
   }
 
   updatePhysics = (el: IEl, clock: Clock) => {
+    if (this.staticBody) return;
     if (!this.body || typeof this.o.mass !== "number") return;
     const pos = this.getLocalBodyPosition(this.body.position);
     this.pos.copy(pos);
@@ -112,13 +110,21 @@ export default class IMesh extends IEl {
 
   dispose(): void {
     super.dispose();
-    this.geometry.dispose();
-    this.material.dispose();
-    this.mesh.parent?.remove(this.mesh);
+    // this.geometry.dispose();
+    // if (Array.isArray(this.material)) {
+    //   for (const m of this.material) {
+    //     m.dispose();
+    //   }
+    // } else {
+    //   this.material.dispose();
+    // }
 
-    // remove CANNON object from world
+    // // this.mesh.parent?.remove(this.mesh);
+
+    // // remove CANNON object from world
     if (this.scene?.world && this.body) {
       this.scene.world.removeBody(this.body);
     }
+    this.body = undefined;
   }
 }

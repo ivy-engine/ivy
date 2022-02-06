@@ -1,12 +1,13 @@
 <script>
   import { onDestroy, onMount } from "svelte";
   import Ivy from "./v2/core/Ivy";
-  import AreaLight from "./v2/scenes/AreaLights";
-  import PhysicsSimple from "./v2/scenes/PhysicsSimple";
-  import ShadowBasic from "./v2/scenes/ShadowBasic";
-  import TextSimple from "./v2/scenes/ShadowBasic";
-  import TextBasic from "./v2/scenes/TextBasic";
-  import TextTroika from "./v2/scenes/TextTroika";
+  const AreaLight = () => import("./v2/scenes/AreaLights");
+  const PhysicsGroup = () => import("./v2/scenes/PhysicsGroup");
+  const PhysicsSimple = () => import("./v2/scenes/PhysicsSimple");
+  const ShadowBasic = () => import("./v2/scenes/ShadowBasic");
+  const TextSimple = () => import("./v2/scenes/ShadowBasic");
+  const TextBasic = () => import("./v2/scenes/TextBasic");
+  const TextTroika = () => import("./v2/scenes/TextTroika");
 
   let ivy;
   let canvas;
@@ -25,7 +26,9 @@
       const disabled = window.localStorage.getItem("ivy-warning") === "false";
       if (!disabled) showWarning = !!options.warning;
 
-      ivy.loadScene(scene);
+      scene().then((s) => {
+        ivy.loadScene(s.default);
+      });
     };
 
   const disableWarning = () => {
@@ -45,7 +48,9 @@
     if (id) {
       document.getElementById(id)?.click();
     } else {
-      ivy.loadScene(AreaLight);
+      AreaLight().then(s => {
+        ivy.loadScene(s.default);
+      });
     }
   });
 
@@ -64,6 +69,7 @@
   <button on:click={launch(PhysicsSimple)} id="physics-simple"
     >Physics Simple</button
   >
+  <button on:click={launch(PhysicsGroup)} id="physics-group">Physics Group</button>
 </div>
 
 <div bind:this={canvas} class="scene" id="scene " />

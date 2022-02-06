@@ -7,6 +7,7 @@ interface ISceneOptions {
   camera?: Camera;
   controls?: "orbit";
   physics?: boolean;
+  onReady?: (scene: IScene) => void; 
 }
 
 export default class IScene {
@@ -27,7 +28,8 @@ export default class IScene {
       this.world = world;
       world.gravity.set(0, -9.82, 0);
       // world.broadphase = new CANNON.NaiveBroadphase();
-      // (world.solver as CANNON.GSSolver).iterations = 10
+      (world.solver as CANNON.GSSolver).iterations = 20;
+      (world.solver as CANNON.GSSolver).tolerance = 0;
       // world.allowSleep = true
     }
   }
@@ -41,10 +43,13 @@ export default class IScene {
   }
 
   mount() {
+    this.o.onReady?.(this);
+    if (this.mounted) return;
+    
     const camera = this.o.camera || this.core?.createCamera();
+
     this.mounted = true;
     if (camera) this.core?.setMainCamera(camera);
-
     this.elList.forEach((el) => el.mount(this));
   }
 

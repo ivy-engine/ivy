@@ -8,26 +8,32 @@ export interface IElOptions {
   pos?: Vector3;
   rot?: Euler;
   update?: (el: IEl) => void;
+  name?: string;
+  staticBody?: boolean;
+  physicsMaterial: CANNON.Material; 
   // updatePhysics?: (el: IEl) => void;
 }
 
 export default class IEl {
+  name: string; 
   object?: Object3D;
   parent?: IScene | IGroup;
   o: IElOptions;
   initiated = false;
+  mounted = false; 
   scene?: IScene;
   pos: Vector3;
   rot: Euler;
+  staticBody = false; 
   body?: CANNON.Body;
 
   constructor(options: IElOptions) {
+    this.name = options.name ?? "";
     this.o = options;
+    this.update = options.update;
     this.pos = options.pos ?? new Vector3();
     this.rot = options.rot ?? new Euler();
-
-    this.update = options.update;
-    // this.updatePhysics = options.updatePhysics;
+    this.staticBody = options.staticBody ?? false;
   }
 
   init() {
@@ -37,10 +43,11 @@ export default class IEl {
     this.pos = this.object.position;
 
     this.object.rotation.copy(this.rot);
-    this.rot = this.object.rotation;
+   
   }
 
   mount(scene: IScene) {
+    if (this.mounted) return;
     if (!this.object) return;
     this.scene = scene;
 
@@ -62,11 +69,13 @@ export default class IEl {
     );
   };
 
-  clone(options: IElOptions = {}) {
-    return new IEl({ ...this.o, ...options });
-  }
+  // clone(options: IElOptions = {}) {
+  //   return new IEl({ ...this.o, ...options });
+  // }
 
-  dispose() {}
+  dispose() {
+    this.mounted = false;
+  }
 
   render(el: IEl, clock: Clock) {
     this.updatePhysics?.(el, clock);

@@ -52,7 +52,7 @@ export default class IText extends IEl {
       this.object = object;
       this.pos = position;
 
-      this.mount();
+      if (this.scene) this.mount(this.scene);
     });
   }
 
