@@ -1,7 +1,7 @@
-import './style.css'
+import "./style.css";
 
-import Main from './main.svelte';
+import Main from "./main.svelte";
 
 new Main({
-  target: document.querySelector('#app'),
+  target: document.querySelector("#app"),
 });

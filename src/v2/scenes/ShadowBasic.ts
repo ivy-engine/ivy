@@ -13,11 +13,11 @@ import IScene from "../core/Scene/IScene";
 const torus = new IMesh({
   geometry: new TorusKnotGeometry(1.5, 0.15, 300, 20, 1, 3),
   rot: new Euler(0, Math.PI / 2, 0),
-  pos: new Vector3(0, 1, 0), 
+  pos: new Vector3(0, 1, 0),
   shadow: true,
   update: ({ rot }) => {
-    rot.x += .006;
-    rot.y += .006;
+    rot.x += 0.006;
+    rot.y += 0.006;
   },
 });
 
@@ -26,7 +26,7 @@ const floor = new IMesh({
   geometry: new CircleGeometry(3, 100),
   rot: new Euler(-Math.PI / 2, 0, 0),
   pos: new Vector3(0, -2, 0),
-  shadow: 'receive',
+  shadow: "receive",
 });
 
 // light from top down
@@ -36,7 +36,7 @@ const light = new ILight({
   mapSize: {
     width: 1024,
     height: 1024,
-  }, 
+  },
   shadow: true,
 });
 

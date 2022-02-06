@@ -1,8 +1,14 @@
-import { Camera, Clock, PCFShadowMap, PCFSoftShadowMap, PerspectiveCamera, WebGLRenderer } from "three";
+import {
+  Camera,
+  Clock,
+  PCFShadowMap,
+  PCFSoftShadowMap,
+  PerspectiveCamera,
+  WebGLRenderer,
+} from "three";
 import { OrbitControls } from "../../v1/ivy-three/controls/OrbitControls";
 import Stats from "stats.js";
 import IScene from "./Scene/IScene";
-import * as CANNON from 'cannon-es'
 
 var stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -13,7 +19,7 @@ document.body.appendChild(el);
 
 interface IvyOptions {
   target: HTMLElement;
-  physics?: boolean; 
+  physics?: boolean;
 }
 export default class Ivy {
   o: IvyOptions;
@@ -24,8 +30,7 @@ export default class Ivy {
     antialias: true,
   });
   mainCamera: Camera;
-  world?: CANNON.World; 
-  clock = new Clock()
+  clock = new Clock();
 
   constructor(options: IvyOptions) {
     this.o = options;
@@ -42,21 +47,13 @@ export default class Ivy {
     window.removeEventListener("resize", this.updateSize);
     window.addEventListener("resize", this.updateSize);
     this.updateSize();
-
-
-    const world = new CANNON.World();
-    this.world = world;
-    world.gravity.set(0, -9.82, 0)
-    // world.broadphase = new CANNON.NaiveBroadphase();
-    // (world.solver as CANNON.GSSolver).iterations = 10
-    world.allowSleep = true
   }
- 
-  createCamera(): Camera { 
+
+  createCamera(): Camera {
     const camera = new PerspectiveCamera();
     camera.position.z = 12;
     camera.position.y = 2;
-    camera.lookAt(0, 0, 0); 
+    camera.lookAt(0, 0, 0);
     return camera;
   }
 
@@ -75,9 +72,7 @@ export default class Ivy {
     if (!this.activeScene) return;
 
     stats.begin();
-    const delta = this.clock.getDelta()
-    this.world?.step(delta)
-    this.activeScene.render(this.clock); 
+    this.activeScene.render(this.clock);
     this.renderer.render(this.activeScene.threeScene, this.mainCamera);
     stats.end();
 

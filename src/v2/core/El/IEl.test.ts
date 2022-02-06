@@ -1,9 +1,9 @@
 import IEl from "./IEl";
 
-describe('IEl', () => {
+describe("IEl", () => {
   const el = new IEl({});
-  
-  it('should work', () => {
+
+  it("should work", () => {
     expect(el).toBeDefined();
-  })
-})
+  });
+});

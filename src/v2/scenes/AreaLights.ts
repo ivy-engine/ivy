@@ -41,11 +41,11 @@ const material = new MeshStandardMaterial({
 });
 
 const torus = new IMesh({
-  geometry: new TorusKnotGeometry(.9, 0.4, 200, 50, 1, 1),
+  geometry: new TorusKnotGeometry(0.9, 0.4, 200, 50, 1, 1),
   material,
   rot: new Euler(0, Math.PI / 2, 0),
   update: ({ rot }) => {
-    rot.z += .01;
+    rot.z += 0.01;
   },
 });
 

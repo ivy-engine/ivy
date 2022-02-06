@@ -19,15 +19,15 @@ export default function createText(
 
   const textGeo = new TextGeometry(text, {
     font: font,
-    size: ((options.size || 1.6) * 0.8) * scale,
-    height: ((options.height || 0.05) * 0.98) * scale,
+    size: (options.size || 1.6) * 0.8 * scale,
+    height: (options.height || 0.05) * 0.98 * scale,
     curveSegments: options.curveSegments || 14,
     bevelEnabled: options.bevelEnabled || true,
     bevelSegments: options.bevelSegments || 7,
     bevelSize: (options.bevelSize || 0.02) * scale,
     bevelThickness: (options.bevelThickness || 0.1) * scale,
   });
- 
+
   const anyCenter = centerX || centerY || centerZ;
   const object = new Mesh(textGeo, material);
 
@@ -55,5 +55,5 @@ export default function createText(
   return {
     object,
     position,
-  }
+  };
 }

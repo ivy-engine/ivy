@@ -1,22 +1,35 @@
 import { Camera, Clock, Euler, Scene, Vector3 } from "three";
 import IEl from "../El/IEl";
 import Ivy from "../Ivy";
+import * as CANNON from "cannon-es";
 
 interface ISceneOptions {
   camera?: Camera;
   controls?: "orbit";
+  physics?: boolean;
 }
 
 export default class IScene {
   o: ISceneOptions;
+  mounted = false;
   threeScene = new Scene();
   elList: IEl[] = [];
   core?: Ivy;
   controls?: string;
+  world?: CANNON.World;
 
   constructor(options: ISceneOptions = {}) {
     this.o = options;
     this.controls = options.controls || "orbit";
+
+    if (options.physics) {
+      const world = new CANNON.World();
+      this.world = world;
+      world.gravity.set(0, -9.82, 0);
+      // world.broadphase = new CANNON.NaiveBroadphase();
+      // (world.solver as CANNON.GSSolver).iterations = 10
+      // world.allowSleep = true
+    }
   }
 
   add(...els: IEl[]) {
@@ -29,12 +42,17 @@ export default class IScene {
 
   mount() {
     const camera = this.o.camera || this.core?.createCamera();
+    this.mounted = true;
     if (camera) this.core?.setMainCamera(camera);
 
     this.elList.forEach((el) => el.mount(this));
   }
 
   render(clock: Clock) {
+    if (!this.core || !this.mounted) return;
+    const delta = this.core.clock.getDelta();
+    this.world?.step(delta);
+
     this.elList.forEach((el) => el.render(el, clock));
   }
 
@@ -47,6 +65,7 @@ export default class IScene {
   }
 
   dispose() {
+    this.mounted = false;
     for (let el of this.elList) {
       el.dispose();
     }

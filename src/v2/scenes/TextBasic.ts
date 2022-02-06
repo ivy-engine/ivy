@@ -4,11 +4,11 @@ import IText from "../core/El/Elements/IText";
 import defaultLights from "../core/lib/defaultLights";
 import IScene from "../core/Scene/IScene";
 
-const text = new IText({ 
+const text = new IText({
   text: "Hello Ivy",
-})
+});
 
-// const light = 
+// const light =
 
 const TextBasic = new IScene();
 TextBasic.add(text, ...defaultLights());

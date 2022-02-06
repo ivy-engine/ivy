@@ -6,13 +6,12 @@ const defaultLights = () => {
     new ILight({
       light: new DirectionalLight(0xffffff, 0.9),
       pos: new Vector3(1, 10, 3),
-      shadow: true, 
+      shadow: true,
     }),
     new ILight({
       light: new AmbientLight(0xffffff, 0.3),
     }),
   ];
 };
-
 
 export default defaultLights;

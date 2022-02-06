@@ -1,17 +1,17 @@
 import { Color, Light } from "three";
-import IEl, { IElOptions } from "../IEl"
+import IEl, { IElOptions } from "../IEl";
 
 interface ILightOptions extends IElOptions {
   light: Light;
-  shadow?: boolean; 
+  shadow?: boolean;
   mapSize?: {
     width: number;
     height: number;
-  } 
+  };
 }
 
 export default class ILight extends IEl {
-  light: Light; 
+  light: Light;
 
   constructor(options: ILightOptions) {
     super(options);
@@ -19,7 +19,7 @@ export default class ILight extends IEl {
     // this.color = new Color(options.color ?? 0xffffff);
     this.object = this.light;
     // this.light.color = this.color;
-   
+
     if (options.shadow === true) {
       this.light.castShadow = true;
     }

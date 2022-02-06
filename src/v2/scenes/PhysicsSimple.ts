@@ -20,7 +20,14 @@ const ball = (x: number) =>
     shadow: true,
     update: ({ body }) => {
       if (body) {
-        if (body.position.y < -10) {
+        if (
+          body.position.y < -10 ||
+          body.position.x < -10 ||
+          body.position.x > 10 ||
+          body.position.z < -10 ||
+          body.position.z > 10
+        ) {
+          // reset
           body.position = new Vec3(x, 4, 0);
           body.velocity = new Vec3(0, 0, 0);
           body.angularVelocity = new Vec3(0, 0, 0);
@@ -83,7 +90,9 @@ loader.load(
   undefined
 );
 
-const PhysicsSimple = new IScene();
+const PhysicsSimple = new IScene({
+  physics: true,
+});
 PhysicsSimple.add(...balls, floor, ...defaultLights());
 
 export default PhysicsSimple;

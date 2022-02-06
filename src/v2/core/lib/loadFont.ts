@@ -3,7 +3,6 @@ import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader";
 
 const fontCache: Record<string, Font> = {};
 
-
 export default async function loadFont(fontFile: string): Promise<Font> {
   if (fontCache[fontFile]) {
     return fontCache[fontFile];
@@ -11,8 +10,8 @@ export default async function loadFont(fontFile: string): Promise<Font> {
 
   const loader = new TTFLoader();
   return new Promise((resolve) => {
-    loader.load( fontFile, function ( json ) {
-      const font = new Font( json );
+    loader.load(fontFile, function (json) {
+      const font = new Font(json);
       fontCache[fontFile] = font;
       resolve(font);
     });

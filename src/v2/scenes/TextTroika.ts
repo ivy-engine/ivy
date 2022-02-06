@@ -3,7 +3,7 @@ import IScene from "../core/Scene/IScene";
 
 const text = new ITextTroika({
   text: "Hello Ivy",
-})
+});
 
 const TextTroika = new IScene();
 TextTroika.add(text);
