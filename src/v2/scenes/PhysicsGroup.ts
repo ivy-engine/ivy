@@ -50,7 +50,6 @@ const balls = [ball(0)];
 const floor = new IGroup({
   name: 'floor', 
   rot: new Euler(Math.PI / 2, 0, 0),
-//  pos: new Vector3(0 , 2, 0), 
   update: ({ rot }) => {
     rot.y -= 0.005;
   }

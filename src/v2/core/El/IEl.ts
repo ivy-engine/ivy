@@ -10,7 +10,7 @@ export interface IElOptions {
   update?: (el: IEl) => void;
   name?: string;
   staticBody?: boolean;
-  physicsMaterial: CANNON.Material; 
+  physicsMaterial?: CANNON.Material; 
   // updatePhysics?: (el: IEl) => void;
 }
 
@@ -43,7 +43,7 @@ export default class IEl {
     this.pos = this.object.position;
 
     this.object.rotation.copy(this.rot);
-   
+    this.rot = this.object.rotation;
   }
 
   mount(scene: IScene) {

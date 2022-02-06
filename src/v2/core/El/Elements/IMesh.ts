@@ -56,7 +56,7 @@ export default class IMesh extends IEl {
   mount(scene: IScene) {
     super.mount(scene);
 
-    if (this.scene?.world) {
+    if (this.scene && this.scene.o.physics && this.scene.world) {
       const { width, height, depth, radius } = this.geometry.parameters;
       const type = this.geometry.type;
 
@@ -77,7 +77,7 @@ export default class IMesh extends IEl {
       if (this.shape) {
         this.body = new CANNON.Body({ mass: this.o.mass ?? 0 });
         this.body.addShape(this.shape);
-        this.body.material = this.o.physicsMaterial; 
+        this.body.material = this.o.physicsMaterial ?? null; 
         const worldPos = this.object?.getWorldPosition(new Vector3());
         if (worldPos) {
           this.body.position.x = worldPos.x;
@@ -110,14 +110,14 @@ export default class IMesh extends IEl {
 
   dispose(): void {
     super.dispose();
-    // this.geometry.dispose();
-    // if (Array.isArray(this.material)) {
-    //   for (const m of this.material) {
-    //     m.dispose();
-    //   }
-    // } else {
-    //   this.material.dispose();
-    // }
+    this.geometry.dispose();
+    if (Array.isArray(this.material)) {
+      for (const m of this.material) {
+        m.dispose();
+      }
+    } else {
+      this.material.dispose();
+    }
 
     // // this.mesh.parent?.remove(this.mesh);
 
