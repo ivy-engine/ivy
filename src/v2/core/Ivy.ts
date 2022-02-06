@@ -1,14 +1,12 @@
 import {
   Camera,
   Clock,
-  PCFShadowMap,
-  PCFSoftShadowMap,
   PerspectiveCamera,
   WebGLRenderer,
 } from "three";
-import { OrbitControls } from "../../v1/ivy-three/controls/OrbitControls";
 import Stats from "stats.js";
 import IScene from "./Scene/IScene";
+import { OrbitControls } from "../../helpers/OrbitControls";
 
 var stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -108,6 +106,10 @@ export default class Ivy {
         this.mainCamera,
         this.renderer.domElement
       );
+     
+      this.controls.enableDamping = true;
+      this.controls.dampingFactor = 0.4;
+      this.controls.screenSpacePanning = false;
     }
 
     this.updateSize();
