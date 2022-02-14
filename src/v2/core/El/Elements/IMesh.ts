@@ -2,6 +2,8 @@ import {
   BufferGeometry,
   Clock,
   Color,
+  DynamicDrawUsage,
+  InstancedMesh,
   Material,
   Mesh,
   MeshStandardMaterial,
@@ -13,16 +15,18 @@ import * as CANNON from "cannon-es";
 
 interface IMeshOptions extends IElOptions {
   geometry: BufferGeometry;
-  color?: number | Color;
   material?: Material | Material[];
   shadow?: boolean | "cast" | "receive";
   mass?: number;
+  instanced?: {
+    count: number;
+    position: () => Vector3;
+  } 
 }
 
 const DEFAULT_MATERIAL = new MeshStandardMaterial({ color: 0xffffff });
 
 export default class IMesh extends IEl {
-  color: Color;
   o: IMeshOptions;
   geometry: BufferGeometry;
   material: Material | Material[];
@@ -33,7 +37,6 @@ export default class IMesh extends IEl {
     super(options);
     this.o = options;
     this.geometry = options.geometry;
-    this.color = new Color(options.color ?? 0xffffff);
     this.mesh = new Mesh(this.geometry, options.material ?? DEFAULT_MATERIAL);
     this.material = this.mesh.material;
     this.object = this.mesh;
@@ -50,7 +53,6 @@ export default class IMesh extends IEl {
 
   init() {
     super.init();
-    // this.material.color = this.color;
   }
 
   mount(scene: IScene) {
