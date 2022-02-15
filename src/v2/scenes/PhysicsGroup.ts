@@ -1,6 +1,5 @@
 import {
   BoxGeometry,
-  ConeGeometry,
   Euler,
   MeshStandardMaterial,
   SphereGeometry,
@@ -16,8 +15,8 @@ import { Vec3 } from "cannon-es";
 import * as CANNON from "cannon-es";
 
 const slipperyMat = new CANNON.Material();
-const friction = 0.99;
-const restitution = 0.01;
+const friction = 0.95;
+const restitution = 0.05;
 const slipperyContact = new CANNON.ContactMaterial(slipperyMat,slipperyMat,{
   friction: friction,
   restitution: restitution,
