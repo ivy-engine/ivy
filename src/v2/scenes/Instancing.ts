@@ -50,6 +50,6 @@ const Instancing = new IScene({
   camera: mainCamera,
 });
 
-Instancing.add(...defaultLights(), cube);
+Instancing.add(defaultLights()[0], cube);
 
 export default Instancing;

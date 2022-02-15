@@ -7,7 +7,7 @@ import { Vec3 } from "cannon-es";
 export interface IElOptions {
   pos?: Vector3;
   rot?: Euler;
-  update?: (el: IEl) => void;
+  update?: (el: IEl, clock: Clock) => void;
   name?: string;
   staticBody?: boolean;
   physicsMaterial?: CANNON.Material; 

@@ -9,6 +9,7 @@
   const TextBasic = () => import("./v2/scenes/TextBasic");
   const TextTroika = () => import("./v2/scenes/TextTroika");
   const Instancing = () => import("./v2/scenes/Instancing");
+  const PhysicsGroupAuto = () => import("./v2/scenes/PhysicsGroupAuto");
 
   let ivy;
   let canvas;
@@ -71,6 +72,7 @@
     >Physics Simple</button
   >
   <button on:click={launch(PhysicsGroup)} id="physics-group">Physics Group</button>
+  <button on:click={launch(PhysicsGroupAuto)} id="physics-floor">Physics Group Auto</button>
   <button on:click={launch(Instancing)} id="instancing">Instancing</button>
 </div>
 

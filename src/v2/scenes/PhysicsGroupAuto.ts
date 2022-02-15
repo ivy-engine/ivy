@@ -52,7 +52,8 @@ const floor = new IGroup({
   rot: new Euler(Math.PI / 2, 0, 0),
   update: ({ rot }) => {
     rot.y -= 0.005;
-  }
+  },
+  autoSetVelocity: true,
 });
 
 
@@ -92,12 +93,12 @@ loader.load(
   undefined
 );
 
-const PhysicsGroup = new IScene({
+const PhysicsGroupAuto = new IScene({
   physics: true,
   onReady: ({world}) => {
     if (world) world.addContactMaterial(slipperyContact);
   }
 });
-PhysicsGroup.add(...balls, floor, ...defaultLights());
+PhysicsGroupAuto.add(...balls, floor, ...defaultLights());
 
-export default PhysicsGroup;
+export default PhysicsGroupAuto;

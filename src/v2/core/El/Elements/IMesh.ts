@@ -69,7 +69,11 @@ export default class IMesh extends IEl {
       }
 
       if (type === "PlaneGeometry") {
-        this.shape = new CANNON.Plane();
+        console.log(this.geometry.parameters);
+        // this.shape = new CANNON.Plane();
+        this.shape = new CANNON.Box(
+          new CANNON.Vec3(width / 2, height / 2, 0.0001)
+        );
       }
 
       if (type === "SphereGeometry") {

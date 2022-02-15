@@ -1,9 +1,11 @@
+import { Vec3 } from "cannon-es";
 import { Clock, Euler, Group, Quaternion, Vector3 } from "three";
 import IScene from "../../Scene/IScene";
 import IEl, { IElOptions } from "../IEl";
 
 interface IGroupOptions extends IElOptions {
   items?: IEl[];
+  autoSetVelocity?: boolean; 
 }
 
 export default class IGroup extends IEl {
@@ -78,13 +80,19 @@ export default class IGroup extends IEl {
         if (!el.object) return;
         const pos = el.object.getWorldPosition(new Vector3());
         const q = el.object.getWorldQuaternion(new Quaternion()); 
-        el.body.position.x = pos.x;
-        el.body.position.y = pos.y;
-        el.body.position.z = pos.z;
-        el.body.quaternion.x = q.x;
-        el.body.quaternion.y = q.y;
-        el.body.quaternion.z = q.z;
-        el.body.quaternion.w = q.w;
+
+        if (this.o.autoSetVelocity) {
+          const elementVelocity = new Vec3(
+            pos.x - el.body.position.x ,
+            pos.y - el.body.position.y ,
+            pos.z - el.body.position.z 
+          ).scale(54);
+  
+          el.body.velocity.copy(elementVelocity); 
+        }
+        
+        el.body.position.set(pos.x, pos.y, pos.z);
+        el.body.quaternion.set(q.x, q.y, q.z, q.w);
       }
     });
 
