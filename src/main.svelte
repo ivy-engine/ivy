@@ -72,7 +72,7 @@
     >Physics Simple</button
   >
   <button on:click={launch(PhysicsGroup)} id="physics-group">Physics Group</button>
-  <button on:click={launch(PhysicsGroupAuto)} id="physics-floor">Physics Group Auto</button>
+  <button on:click={launch(PhysicsGroupAuto)} id="auto-set-velocity">Physics Auto Set Velocity</button>
   <button on:click={launch(Instancing)} id="instancing">Instancing</button>
 </div>
 
