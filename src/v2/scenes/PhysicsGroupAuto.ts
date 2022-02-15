@@ -15,8 +15,8 @@ import { Vec3 } from "cannon-es";
 import * as CANNON from "cannon-es";
 
 const slipperyMat = new CANNON.Material();
-const friction = 0.95;
-const restitution = 0.05;
+const friction = 0.05;
+const restitution = 0.1;
 const slipperyContact = new CANNON.ContactMaterial(slipperyMat,slipperyMat,{
   friction: friction,
   restitution: restitution,
@@ -56,7 +56,7 @@ const floor = new IGroup({
 });
 
 
-const items = 14;
+const items = 16;
 const rad = 4;
 for (let i = 0; i < items; i++) {
   const floorMaterial = new MeshStandardMaterial({ color: 0xffffff });

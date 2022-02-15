@@ -86,7 +86,7 @@ export default class IGroup extends IEl {
             pos.x - el.body.position.x ,
             pos.y - el.body.position.y ,
             pos.z - el.body.position.z 
-          ).scale(54);
+          ).scale(51);
   
           el.body.velocity.copy(elementVelocity); 
         }
