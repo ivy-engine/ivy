@@ -71,10 +71,11 @@ export default class IGroup extends IEl {
     this.group.parent?.remove(this.group);
   }
 
-  render(el: IEl, clock: Clock) {
-    super.render(el, clock);
+  render(el: IEl, delta: number, clock: Clock) {
+    const fps = (1 / delta) * 0.85; 
+    super.render(el, delta, clock);
     this.elList.forEach((el) => {
-      el.render(el, clock);
+      el.render(el, delta, clock);
 
       if (el.staticBody && el.body) {
         if (!el.object) return;
@@ -86,7 +87,7 @@ export default class IGroup extends IEl {
             pos.x - el.body.position.x ,
             pos.y - el.body.position.y ,
             pos.z - el.body.position.z 
-          ).scale(51);
+          ).scale(fps);
   
           el.body.velocity.copy(elementVelocity); 
         }

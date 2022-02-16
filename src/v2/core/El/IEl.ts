@@ -77,11 +77,11 @@ export default class IEl {
     this.mounted = false;
   }
 
-  render(el: IEl, clock: Clock) {
-    this.updatePhysics?.(el, clock);
-    this.update?.(el, clock);
+  render(el: IEl, delta: number, clock: Clock) {
+    this.updatePhysics?.(el, delta, clock);
+    this.update?.(el, delta, clock);
   }
 
-  updatePhysics?: (el: IEl, clock: Clock) => void;
-  update?: (el: IEl, clock: Clock) => void;
+  updatePhysics?: (el: IEl, delta: number, clock: Clock) => void;
+  update?: (el: IEl, delta: number, clock: Clock) => void;
 }

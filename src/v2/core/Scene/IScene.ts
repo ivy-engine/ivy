@@ -58,7 +58,7 @@ export default class IScene {
     const delta = this.core.clock.getDelta();
     this.world?.step(delta);
 
-    this.elList.forEach((el) => el.render(el, clock));
+    this.elList.forEach((el) => el.render(el, delta, clock));
   }
 
   remove(el: IEl) {
